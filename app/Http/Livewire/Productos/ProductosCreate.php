@@ -31,7 +31,7 @@ class ProductosCreate extends Component
     public $modelos = [];
     public $marca_id = "", $sucursal_id = "" ,$modelo_id = "", $categoria_id = "", $proveedor_id ="";
     public $limitacion_sucursal = true;
-    public $ff;
+    public $ff, $descuento, $stock_minimo, $vencimiento;
 
     protected $listeners = ['refreshimg'];
 
@@ -42,13 +42,23 @@ class ProductosCreate extends Component
          'precio_letal' => 'required|numeric',
          'precio_mayor' => 'required|numeric',
          'cantidad' => 'required|numeric',
-         'puntos' => 'required|numeric',
+       //  'puntos' => 'required|numeric',
          'categoria_id' => 'required',
          'marca_id' => 'required',
          'modelo_id' => 'required',
          'proveedor_id' => 'required',
          'sucursal_id' => 'required',
          'estado' => 'required',
+         'descuento' => 'required',
+         'presentacion' => 'required',
+         'stock_minimo' => 'required|numeric',
+         'vencimiento' => 'required',
+         'tipo_garantia' => 'required',
+
+
+         
+
+
 
          'file' => 'max:1024',
       ];

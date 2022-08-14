@@ -25,7 +25,7 @@ class CreateProductosTable extends Migration
             $table->integer('cantidad');
             $table->string('observaciones')->nullable();
 
-            $table->enum('presentacion',['Unidad','Libra','Kg','Caja','Paquete','Lata','Galon','Botella','Tira','Sobre','Bola','Saco','Tarjeta','Otro'])->default('Unidad');
+            $table->enum('presentacion',['Unidad','Libra','Kg','Caja','Paquete','Lata','Galon','Botella','Tira','Sobre','Saco','Tarjeta','Otro'])->default('Unidad');
             $table->integer('stock_minimo');
             $table->integer('descuento');
             $table->enum('vencimiento',['Si','No'])->default('No');

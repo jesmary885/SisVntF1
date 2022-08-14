@@ -78,7 +78,7 @@
 
             <div class="flex">
                 <i class="fas fa-luggage-cart mt-1 mr-2"></i>
-                <h2 class="text-lg">Cantidad a registrar y valor en puntos</h2>
+                <h2 class="text-lg">Cantidades, descuento y presentación</h2>
             </div>
 
             <div class="flex w-full mt-3 mr-2">
@@ -87,45 +87,72 @@
                     <x-input-error for="cantidad" />
                 </div>
 
-                {{-- <div class="w-full mr-2">
-                    <input wire:model="inventario_min" type="number" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Stock minimo">
-                    <x-input-error for="inventario_min" />
-                </div> --}}
-                {{-- <div class="w-full"> --}}
-                    {{-- <input wire:model="percepcion" type="text" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="percepcion">
-                    <x-input-error for="percepcion" /> --}}
-                    {{-- <select wire:model.lazy="presentacion" id="presentacion" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="presentacion">
-                        <option value="" selected>Seleccione la presentación</option>
-                        <option value="1">Unidades</option>
-                        <option value="2">Juegos</option>
-                        <option value="3">Kilogramos</option>
-                        <option value="4">Gramos</option>
-                        <option value="5">Litros</option>
-                        <option value="6">Metros</option>
-                        <option value="7">Atados</option>
-                    </select>
-                    <x-input-error for="presentacion" />
-                </div> --}}
-                <div class="w-1/4">
-                    <input wire:model="puntos" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Puntos">
-                <x-input-error for="puntos" />
+                <div class="w-1/4 mr-2">
+                    <input wire:model="stock_minimo" type="number" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Stock minimo">
+                    <x-input-error for="stock_minimo" />
+                </div>
+                <div class="w-1/4 mr-2">
+                    <input wire:model="descuento" type="text" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Descuento en venta">
+                    <x-input-error for="descuento" />
                 </div>
 
-           
-
+                <div class="w-1/2">
+                <select wire:model.lazy="presentacion" id="presentacion" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="presentación">
+                        <option value="" selected>Seleccione la presentación</option>
+                        <option value="1">Unidad</option>
+                        <option value="2">Libra</option>
+                        <option value="3">Kilogramos</option>
+                        <option value="4">Caja</option>
+                        <option value="5">Paquete</option>
+                        <option value="6">Lata</option>
+                        <option value="7">Galon</option>
+                        <option value="8">Botella</option>
+                        <option value="9">Tira</option>
+                        <option value="10">Sobre</option>
+                        <option value="11">Saco</option>
+                        <option value="12">Tarjeta</option>
+                        <option value="13">Otros</option>
+                    </select>
+                    <x-input-error for="presentacion" />
+                </div>
+                <!-- <div class="w-1/4">
+                    <input wire:model="puntos" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Puntos">
+                <x-input-error for="puntos" />
+                </div> -->
             </div>
 
             <hr class="mb-2">
 
-            
+            <div class="flex">
+                <i class="fas fa-calendar-alt mt-1 mr-2"></i>
+                <h2 class="text-lg">Vencimiento del producto</h2>
+            </div>
 
+            <div class="flex w-1/2">
+                <div class="w-1/4">
+                    <div class="flex">
+                        <input type="radio" class=" ml-1" wire:model="vencimiento" value="si">
+                        <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">Si vence</p>
+                    </div>
+                    <div class="flex">
+                        <input type="radio" class=" ml-1" wire:model="vencimiento" value="no">
+                        <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">No vence</p>
+                    </div>
+                    <x-input-error for="vencimiento" />
+                </div>
 
-          
+                <div class="w-1/2 ml-2 mt-10">
+                    <x-input.date wire:model.lazy="fecha_vencimiento" id="fecha_vencimiento" placeholder="Fecha de vencimiento" class="px-4 outline-none"/>
+                    <x-input-error for="fecha_vencimiento"/>
+                </div>
+            </div>
+
+            <hr class="mb-2">
 
          
-            {{-- <div class="flex mt-4">
+            <div class="flex mt-4">
                 <i class="fas fa-history mt-3 mr-2"></i>
-                <h2 class="text-lg inline mt-2 underline decoration-gray-400">Garantia de fabrica y puntos</h2>
+                <h2 class="text-lg inline mt-2 underline decoration-gray-400">Garantia de fabrica</h2>
             </div>
 
             <div class="flex justify-start w-full mt-3">
@@ -141,15 +168,13 @@
                     </select>
                     <x-input-error for="tipo_garantia" />
                 </div>
-
                 <div class="W-1/4 mr-2">
-                    <input wire:model="garantia" type="number" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Tiempo de garantia">
-                    <x-input-error for="garantia" />
-
+                    <input wire:model="unidad_tiempo_garantia" type="number" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Tiempo de garantia">
+                    <x-input-error for="unidad_tiempo_garantia" />
                 </div>
+            </div> 
 
-             
-            </div> --}}
+            <hr class="mb-2">
       
             <div class="flex ">
                 <i class="fas fa-truck-loading mt-1 mr-2"></i>

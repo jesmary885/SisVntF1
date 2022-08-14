@@ -18,15 +18,17 @@ class CreateVentasTable extends Migration
             $table->timestamps();
             $table->date('fecha');
             $table->enum('tipo_pago',['Debito','Credito'])->default('Debito');
-            $table->enum('metodo_pago',['Tarjeta de Credito',
-                                        'Tarjeta de Debito',
+            $table->enum('metodo_pago',['Tarjeta de Debito',
+                                        'Tarjeta de Credito',
                                         'Efectivo',
                                         'Transferencia',
-                                        'Binance',
                                         'Pago movil',
+                                        'Biopago',
+                                        'Binance',
                                         'Zelle',
                                         'PayPal',
-                                        'Binance']);
+                                        'Otro']);
+            $table->string('Observaciones');
             $table->string('estado_entrega');
             $table->float('descuento');
             $table->float('subtotal');
