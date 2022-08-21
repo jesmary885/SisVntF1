@@ -11,7 +11,7 @@
                         <th class="text-center ">Cant</th>
                         <th class="text-center">Prod</th>
                         <th class="text-center">Subt</th>
-                        <th class="text-center">Pts</th>
+                        <!-- <th class="text-center">Pts</th> -->
                         <th colspan="1"></th>
                     </tr>
                 </thead>
@@ -23,21 +23,21 @@
                             </td>
                             <td class="flex text-center text-sm bg-white">
                                 <h3 class="mr-4 text-md text-gray-600">{{$item->name}} {{$item->options['modelo']}}</h3>
-                                @if ($puntos_canjeo >  $item->options['puntos'])
+                                <!-- @if ($puntos_canjeo >  $item->options['puntos'])
                                             <a class="font-bold text-xl" href="#"
                                             wire:loading.attr="disabled"
                                             wire:target="canjear"
                                             wire:click="canjear('{{$item->id}}}')">
                                             <i class="fas fa-award"></i>
                                             </a>  
-                                     @endif
+                                     @endif -->
                             </td>
                             <td class="text-center text-sm bg-white">
                                 <span>S/ {{ $item->price }}</span>
                             </td>
-                            <td class="text-center text-sm bg-white">
+                            <!-- <td class="text-center text-sm bg-white">
                                 <span>{{ $item->options['puntos'] }}</span>
-                            </td>
+                            </td> -->
                             <td class="text-center">
                                 <a class="text-center cursor-pointer hover:text-red-600"
                                     wire:click="delete('{{$item->rowId}}')"
@@ -123,8 +123,8 @@
                         <div class=" w-full ml-2">
                       
                             <select id="tipo_pago" wire:model="tipo_pago" title="Tipo de pago" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_pago">
-                                <option value="" selected>*Tipo de pago</option>
-                                <option value="1">Contado</option>
+                                <!-- <option value="" selected>*Tipo de pago</option> -->
+                                <option value="1" selected>Contado</option>
                                 <option value="2">Crédito</option>
                             </select>
                             <x-input-error for="tipo_pago" />
@@ -133,10 +133,16 @@
                             <select id="metodo_pago" wire:model="metodo_pago" title="Método de pago" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_garantia">
                                 <option value="" selected>*Método de pago</option>
                                 <option value="1">Efectivo</option>
-                                <option value="2">Tarjeta Credito</option>
-                                <option value="3">Tarjeta Debito </option>
-                                <option value="4">Efectivo y Tarjeta Debito</option>
-                                <option value="5">Efectivo y Tarjeta Credito</option>
+                                <option value="2">Tarjeta Debito</option>
+                                <option value="3">Pago movil</option>
+                                <option value="4">Biopago</option>
+                                <option value="5">Efectivo y otro</option>
+                                <option value="6">Tarjeta Credito</option>
+                                <option value="7">Transferencia</option>
+                                <option value="8">Binance</option>
+                                <option value="9">Zelle</option>
+                                <option value="10">PayPal</option>
+                                <option value="11">Otros</option>
                             </select>
                             <x-input-error for="metodo_pago" />
                         </div>
@@ -146,8 +152,8 @@
                     <div class="flex justify-between w-full h-full mt-2">
                         <div class="ml-2 mr-2 w-full">
                             <select id="estado_entrega" wire:model="estado_entrega" title="Estado de la entrega" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_garantia">
-                                <option value="" selected>*Estado de entrega</option>
-                                <option value="1">Entregado</option>
+                                <!-- <option value="" selected>*Estado de entrega</option> -->
+                                <option value="1" selected>Entregado</option>
                                 <option value="2">Por entregar</option>
                             </select>
                             <x-input-error for="estado_entrega" />
@@ -168,13 +174,18 @@
                             </div>
                     </div>
 
-                    <div class="flex justify-between w-full" :class="{'hidden': (metodo_pago != 1)}">
-                        <div class="mt-2 mr-1 ml-2 w-full">
+                    <div class="flex justify-between w-full">
+                        <div class="mt-2 mr-1 ml-2 w-full" :class="{'hidden': metodo_pago != 1}" :class="{'hidden': metodo_pago != 5}">
                             <input wire:model="cash_received" type="number" title="Efectivo recibido" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Efectivo recibido">
                             <x-input-error for="cash_received" />
                         </div>
-                     
-                        <div class="mr-2 ml-2 py-1 mt-2 w-full">
+
+                        <div  :class="{'hidden': metodo_pago != 5}" class="mt-2 mr-1 ml-2 w-full">
+                            <input wire:model="other_method" type="number" title="Recibido en otro metodo" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Recibido en otro metodo">
+                            <x-input-error for="other_method" />
+                        </div>
+
+                        <div :class="{'hidden': metodo_pago != 1}" :class="{'hidden': metodo_pago != 5}" class="mr-2 ml-2 py-1 mt-2 w-full">
                             <span class="text-green-700 font-bold"><i class="far fa-money-bill-alt"></i> Cambio {{ $cambio}}</span>
                         </div>
 

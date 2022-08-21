@@ -16,7 +16,7 @@ class SucursalSeeder extends Seeder
     {
         $sucursales = [
             [
-               'nombre' => 'Casa matriz',
+               'nombre' => 'Principal',
                'direccion' => 'avenida x',
                'telefono' => '555555',
                'estado_id' => '1',
@@ -25,7 +25,7 @@ class SucursalSeeder extends Seeder
                'status' => '1',
             ],
             [
-                'nombre' => 'Tienda Lima 1',
+                'nombre' => 'Tienda 1',
                'direccion' => 'avenida x',
                'telefono' => '555555',
                'estado_id' => '1',
@@ -34,7 +34,7 @@ class SucursalSeeder extends Seeder
                'status' => '1',
              ],
              [
-                'nombre' => 'Movox',
+                'nombre' => 'Tienda 2',
                'direccion' => 'avenida x',
                'telefono' => '555555',
                'estado_id' => '1',

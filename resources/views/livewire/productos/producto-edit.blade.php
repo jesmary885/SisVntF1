@@ -43,26 +43,39 @@
                                 <x-input-error for="precio_mayor" />
                             </div>
                         </div>
-                        {{-- <div class="flex mt-2 justify-between w-full">
+                        <div class="flex mt-2 justify-between w-full">
                             <input wire:model.defer="cantidad" name="cantidad" type="text" title="Cantidad" class="mr-2 px-2 appearance-none block w-full bg-gray-100 text-gray-400 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Cantidad">
                             <x-input-error for="cantidad" />
-                            <input wire:model.defer="inventario_min" name="inventario_min" title="Stock minimo" type="text" class="mr-2 px-2 appearance-none block w-full bg-gray-100 text-gray-400 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Stock minimo">
-                            <x-input-error for="inventario_min" />
-                            <select wire:model="presentacion" id="presentacion" title="Presentación" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="presentacion">
-                                <option value="" selected>Presentación</option>
-                                <option value="1">Unidades</option>
-                                <option value="2">Juegos</option>
-                                <option value="3">Kilogramos</option>
-                                <option value="4">Gramos</option>
-                                <option value="5">Litros</option>
-                                <option value="6">Metros</option>
-                                <option value="7">Atados</option>
-                            </select>
-                            <x-input-error for="presentacion" />
-                        </div> --}}
+                            <input wire:model.defer="stock_minimo" name="stock_minimo" title="Stock minimo" type="text" class=" px-2 appearance-none block w-full bg-gray-100 text-gray-400 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Stock minimo">
+                            <x-input-error for="stock_minimo" />
+                        </div>
                         <div class="flex mt-2 justify-between w-full">
                             <div class="w-full mr-2">
-                                <select wire:model="categoria_id" title="Categoría" class="mr-1 block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                <select wire:model="presentacion" id="presentacion" title="Presentación" class="w-full selection:block bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="presentacion">
+                                        <option value="" selected>Presentación</option>
+                                        <option value="Unidad">Unidad</option>
+                                        <option value="Libra">Libra</option>
+                                        <option value="Kilogramos">Kilogramos</option>
+                                        <option value="Caja">Caja</option>
+                                        <option value="Paquete">Paquete</option>
+                                        <option value="Lata">Lata</option>
+                                        <option value="Galon">Galon</option>
+                                        <option value="Botella">Botella</option>
+                                        <option value="Tira">Tira</option>
+                                        <option value="Sobre">Sobre</option>
+                                        <option value="Saco">Saco</option>
+                                        <option value="Tarjeta">Tarjeta</option>
+                                        <option value="Otros">Otros</option>
+                                </select>
+                                <x-input-error for="presentacion" />
+                            </div>
+                            
+                            <input wire:model.defer="descuento" name="descuento" title="descuento" type="text" class="px-2 appearance-none block w-full bg-gray-100 text-gray-400 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Descuento">
+                            <x-input-error for="descuento" />
+                        </div>  
+                        <div class="flex mt-2 justify-between w-full">
+                            <div class="w-full mr-2">
+                                <select wire:model="categoria_id" title="Categoría" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                                     <option value="" selected>Seleccione la categoría</option>
                                     @foreach ($categorias as $categoria)
                                         <option value="{{$categoria->id}}">{{$categoria->nombre}}</option>
@@ -91,15 +104,15 @@
                                 <x-input-error for="modelo_id" />
                             </div>
                         </div>
-                        <hr>
-                        <div class="flex mt-3">
+                        <!--<hr>
+                         <div class="flex mt-3">
                             <i class="fas fa-luggage-cart mr-2"></i>
                             <h2 class="text-md">Valor en puntos</h2>
                         </div>
                         <div class="w-1/4">
                             <input title="Puntos" wire:model="puntos" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Puntos">
                             <x-input-error for="puntos" />
-                        </div>
+                        </div> -->
                 
                         <hr>
                             
@@ -109,7 +122,6 @@
                             <h2 class="text-md inline">Información de almacenamiento</h2>
                         </div>
                         <div class="flex mt-2 justify-between w-full">
-                           
                             <div class="w-full mr-2">
                                 @if ($limitacion_sucursal)
                                     <select wire:model="sucursal_id" title="Sucursal" class="mr-2 block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
@@ -122,26 +134,68 @@
                                 @else
                                     <input type="text" readonly value="Sucursal {{$sucursal_nombre}}" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" >
                                 @endif   
-                                
                             </div>
+
                             <div class="w-full">
                                 <select id="estado" wire:model="estado" title="Estado del producto" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="estado">
                                     <option value="" selected>Estado del producto</option>
-                                    <option value="1">Habilitado</option>
-                                    <option value="2">Deshabilitado</option>
+                                    <option value="Habilitado">Habilitado</option>
+                                    <option value="Deshabilitado">Deshabilitado</option>
                                 </select>
                                 <x-input-error for="estado" />
                             </div>
                         </div>
-
-                    
-
-                        
                         <div class="mt-2">
-                            <textarea title="Observaciones" wire:model="observaciones" class="mt-2 mr-3 resize-none rounded-md outline-none px-2 appearance-none block bg-gray-100 text-gray-400 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="observaciones" cols="60" rows="2" required placeholder="Observaciones"></textarea>
-                            <x-input-error for="observaciones" />
+                            <textarea title="Observaciones" wire:model="observaciones" class="w-full mt-2 resize-none rounded-md outline-none px-2 appearance-none block bg-gray-100 text-gray-400 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="observaciones" cols="60" rows="2" required placeholder="Observaciones"></textarea>
+                            <x-input-error for="observaciones"/>
                         </div>
+
                         <hr>
+
+                        <div class="flex">
+                            <i class="fas fa-calendar-alt mr-2"></i>
+                            <h2 class="text-sm">Vencimiento del producto</h2>
+                        </div>
+
+                        <div class="flex">
+
+                            <input type="radio" class=" ml-1" wire:model="vencimiento" value="Si">
+                            <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">Si vence</p>
+                        </div>
+                            <div class="flex">
+                            <input type="radio" class=" ml-1" wire:model="vencimiento" value="No">
+                            <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">No vence</p>
+                        </div>
+                            <x-input-error for="vencimiento" />
+
+                        <hr>
+
+                        <div class="flex mt-4">
+                            <i class="fas fa-history mt-3 mr-2"></i>
+                            <h2 class="text-sm inline mt-2 underline decoration-gray-400">Garantia de fabrica</h2>
+                        </div>
+
+                        <div class="flex justify-start w-full mt-3">
+                            <div class="W-1/4 mr-2">
+                                <select id="tipo_garantia" wire:model.lazy="tipo_garantia" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_garantia">
+                                    <option value="" selected>Unidad de tiempo</option>
+                                    <option value="N/A">N/A</option>
+                                    <option value="Semanas">Semanas</option>
+                                    <option value="Mes">Mes</option>
+                                    <option value="Meses">Meses</option>
+                                    <option value="Ano">Ano</option>
+                                    <option value="Anos">Anos</option>
+                                </select>
+                                <x-input-error for="tipo_garantia" />
+                            </div>
+                            <div class="W-1/4 mr-2">
+                                <input wire:model="unidad_tiempo_garantia" type="number" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Tiempo de garantia">
+                                <x-input-error for="unidad_tiempo_garantia" />
+                            </div>
+                        </div> 
+
+                        <hr>
+
                         <div class="flex mt-3">
                             <i class="far fa-image mr-2"></i>
                             <h2 class="text-sm">Foto o imagen del producto</h2>

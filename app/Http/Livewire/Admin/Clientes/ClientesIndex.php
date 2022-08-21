@@ -27,9 +27,9 @@ class ClientesIndex extends Component
     {
 
         $clientes = Cliente::where('nombre', 'LIKE', '%' . $this->search . '%')
-                    ->orwhere('nro_documento', 'LIKE', '%' . $this->search . '%')
-                    ->latest('id')
-                    ->paginate(5);
+            ->orwhere('nro_documento', 'LIKE', '%' . $this->search . '%')
+            ->latest('id')
+            ->paginate(5);
 
         return view('livewire.admin.clientes.clientes-index',compact('clientes'));
     }

@@ -21,18 +21,15 @@ class CreateProductosTable extends Migration
             $table->string('precio_letal')->nullable();
             $table->string('precio_mayor')->nullable();
             $table->string('cod_barra');
-            $table->enum('estado',['Activo','Inactivo'])->default('Activo');
+            $table->enum('estado',['Habilitado','Deshabilitado'])->default('Habilitado');
             $table->integer('cantidad');
             $table->string('observaciones')->nullable();
-
             $table->enum('presentacion',['Unidad','Libra','Kg','Caja','Paquete','Lata','Galon','Botella','Tira','Sobre','Saco','Tarjeta','Otro'])->default('Unidad');
             $table->integer('stock_minimo');
-            $table->integer('descuento');
+            $table->integer('descuento')->nullable();
             $table->enum('vencimiento',['Si','No'])->default('No');
-            $table->date('fecha_vencimiento')->nullable();
             $table->integer('unidad_tiempo_garantia')->nullable();
             $table->enum('tipo_garantia',['N/A','Dias','Semanas','Mes','Meses','Año','Años'])->default('N/A');
-
             $table->unsignedBigInteger('categoria_id');
             $table->foreign('categoria_id')->references('id')->on('categorias');
             $table->unsignedBigInteger('modelo_id');

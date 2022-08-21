@@ -14,64 +14,88 @@ class CiudadSeeder extends Seeder
      */
     public function run()
     {
-
-
         $ciudades = [
             [
-                'nombre' => 'Lima',
-                'estado_id' => '8',
+                'nombre' => 'Ciudad Bolívar',
+                'estado_id' => '6',
             ],
             [
-                'nombre' => 'Barranca',
-                'estado_id' => '1',
+                'nombre' => 'Caracas',
+                'estado_id' => '10',
             ],
             [
-                'nombre' => 'BSupe',
-                'estado_id' => '1',
+                'nombre' => 'Maracaibo',
+                'estado_id' => '25',
             ],
             [
-                'nombre' => 'Paramonga',
-                'estado_id' => '1',
+                'nombre' => 'Valencia',
+                'estado_id' => '7',
             ],
             [
-                'nombre' => 'Pativilca',
-                'estado_id' => '1',
+                'nombre' => 'Maracay',
+                'estado_id' => '4',
             ],
             [
-                'nombre' => 'Supe Puerto',
-                'estado_id' => '1',
+                'nombre' => 'San Cristobal',
+                'estado_id' => '22',
             ],
             [
-                'nombre' => 'Arahuay',
+                'nombre' => 'Barcelona',
                 'estado_id' => '2',
             ],
             [
-                'nombre' => 'Canta',
+                'nombre' => 'El Tigre',
                 'estado_id' => '2',
             ],
             [
-                'nombre' => 'Lachaqui',
+                'nombre' => 'El Tigrito',
                 'estado_id' => '2',
             ],
             [
-                'nombre' => 'San Buenaventura',
+                'nombre' => 'Anaco',
                 'estado_id' => '2',
             ],
             [
-                'nombre' => 'Mala',
+                'nombre' => 'San Tomé',
+                'estado_id' => '2',
+            ],
+            [
+                'nombre' => 'Maturín',
+                'estado_id' => '17',
+            ],
+            [
+                'nombre' => 'Guanare',
+                'estado_id' => '20',
+            ],
+            [
+                'nombre' => 'San Fernando de Apure',
                 'estado_id' => '3',
             ],
             [
-                'nombre' => 'Imperial',
-                'estado_id' => '3',
+                'nombre' => 'Barquisimeto',
+                'estado_id' => '14',
             ],
             [
-                'nombre' => 'Nuevo Imperial',
-                'estado_id' => '3',
+                'nombre' => 'Los Teques',
+                'estado_id' => '16',
             ],
-            
+            [
+                'nombre' => 'San Juan de los Morros',
+                'estado_id' => '12',
+            ],
+            [
+                'nombre' => 'La Asunción',
+                'estado_id' => '19',
+            ],
+            [
+                'nombre' => 'San Felipe',
+                'estado_id' => '24',
+            ],
+            [
+                'nombre' => 'Puerto Ayacucho',
+                'estado_id' => '1',
+            ],
         ];
-
         foreach ($ciudades as $ciudad) {
             Ciudad::create($ciudad);
         }

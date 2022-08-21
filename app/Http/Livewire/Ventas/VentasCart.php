@@ -72,16 +72,16 @@ class VentasCart extends Component
     public function mount()
     {
         $this->cliente_select = "";
-        $this->puntos_canjeo = 0;
-        $this->canjeo = false;
-        $this->puntos_canjeados = 0;
+        //$this->puntos_canjeo = 0;
+        //$this->canjeo = false;
+        //$this->puntos_canjeados = 0;
         $this->empresa = Empresa::first();
     }
 
     public function select_u($cliente_id){
         $this->client = Cliente::where('id',$cliente_id)->first();
         $this->cliente_select = $this->client->nombre." ".$this->client->apellido;
-        $this->puntos_canjeo = $this->client->puntos;
+        //$this->puntos_canjeo = $this->client->puntos;
     }
 
     public function render()
@@ -89,7 +89,7 @@ class VentasCart extends Component
         $caracter=",";
         $this->subtotal = str_replace($caracter,"",Cart::subtotal());
           
-        if($this->canjeo==false){
+       // if($this->canjeo==false){
             if($this->descuento != null){
             $this->descuento_total = $this->subtotal  * $this->descuento / 100;
             $this->total_venta = $this->subtotal  - $this->descuento_total;
@@ -98,7 +98,7 @@ class VentasCart extends Component
                 $this->total_venta = $this->subtotal ;
                 $this->descuento_total = 0;
             } 
-        }else{
+        /*}else{
             $this->porcentaje_descuento_puntos = $this->empresa->porcentaje_puntos;
             if($this->descuento != null){
             $this->descuento_total = $this->subtotal  * (($this->descuento / 100) + ($this->porcentaje_descuento_puntos / 100));
@@ -106,9 +106,9 @@ class VentasCart extends Component
             }
             $this->descuento_total = $this->subtotal  * ($this->porcentaje_descuento_puntos / 100); 
             $this->total_venta = ($this->subtotal ) - $this->descuento_total;
-        } 
+        } */
 
-        if($this->cash_received != null) $this->cambio = abs($this->total_venta - $this->cash_received);
+        if($this->cash_received != null) $this->cambio = abs(($this->total_venta - $this->cash_received)-($this->other_method));
         else $this->cambio = 0;
 
         $clientes = Cliente::where('nombre', 'LIKE', '%' . $this->search . '%')
@@ -120,13 +120,13 @@ class VentasCart extends Component
         return view('livewire.ventas.ventas-cart',compact('clientes'));
     }
 
-    public function canjear($producto_id){
+   /* public function canjear($producto_id){
         $this->puntos_canjeo = "1";
         $this->canjeo = true;
         $this->porcentaje_descuento_puntos = $this->empresa->porcentaje_puntos;
         $product_canje = Producto::where('id',$producto_id)->first();
         $this->puntos_canjeados = $product_canje->puntos;
-    }
+    }*/
 
     public function save(){
         if ($this->tipo_pago == "1"){

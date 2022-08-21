@@ -1,7 +1,4 @@
 @extends('adminlte::page')
-
-@section('title', 'TechPeru')
-
 @section('content_header')
    
     <h1 class="text-lg ml-2"><i class="fas fa-warehouse"></i> Listado de sucursales</h1>

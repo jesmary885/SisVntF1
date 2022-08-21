@@ -3,7 +3,7 @@
     <head>
       <meta charset="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>TechPeru</title>
+      <title>Tu Negocio</title>
       <link 
         rel="stylesheet" 
         href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" /> 
@@ -21,7 +21,7 @@
     height: 450px;
     border: 1px solid #CCC;
     box-shadow: 10px 5px 5px gray;
-    background: url(https://images.pexels.com/photos/3473569/pexels-photo-3473569.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940) center center no-repeat;
+    background: url(https://images.pexels.com/photos/760645/pexels-photo-760645.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1) center center no-repeat;
     background-size: cover;
     margin: 30px auto;
     border-radius: 20px;

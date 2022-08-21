@@ -16,32 +16,84 @@ class EstadoSeeder extends Seeder
     {
         $estados = [
             [
-                'nombre' => 'Barranca',
+                'nombre' => 'Amazonas',
             ],
             [
-                'nombre' => 'Cajatambo',
+                'nombre' => 'Anzoátegui',
             ],
             [
-                'nombre' => 'Canta',
+                'nombre' => 'Apure',
             ],
             [
-                'nombre' => 'Cañete',
+                'nombre' => 'Aragua',
             ],
             [
-                'nombre' => 'Huaral',
+                'nombre' => 'Barinas',
             ],
             [
-                'nombre' => 'Huarochirí',
+                'nombre' => 'Bolívar',
             ],
             [
-                'nombre' => 'Huaura',
+                'nombre' => 'Carabobo',
             ],
             [
-                'nombre' => 'Lima',
+                'nombre' => 'Cojedes',
             ],
-            
+            [
+                'nombre' => 'Delta Amacuro',
+            ],
+            [
+                'nombre' => 'Distrito Capital',
+            ],
+            [
+                'nombre' => 'Falcón',
+            ],
+            [
+                'nombre' => 'Guárico',
+            ],
+            [
+                'nombre' => 'La Guaira',
+            ],
+            [
+                'nombre' => 'Lara',
+            ],
+            [
+                'nombre' => 'Mérida',
+            ],
+            [
+                'nombre' => 'Miranda',
+            ],
+            [
+                'nombre' => 'Monagas',
+            ],
+            [
+                'nombre' => 'Cojedes',
+            ],
+            [
+                'nombre' => 'Nueva Esparta',
+            ],
+            [
+                'nombre' => 'Portuguesa',
+            ],
+            [
+                'nombre' => 'Sucre',
+            ],
+            [
+                'nombre' => 'Táchira',
+            ],
+            [
+                'nombre' => 'Trujillo',
+            ],
+            [
+                'nombre' => 'Yaracuy',
+            ],
+            [
+                'nombre' => 'Zulia',
+            ],
+            [
+                'nombre' => 'Sucre',
+            ],
         ];
-
         foreach ($estados as $estado) {
             Estado::create($estado);
         }

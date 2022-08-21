@@ -54,6 +54,10 @@ class Producto extends Model
         return $this->hasMany(ProductosTraslado::class);
     }
 
+    public function producto_lote(){
+        return $this->hasMany(Producto_lote::class);
+    }
+
     //Relacion muchos a muchos
     public function sucursals(){
         return $this->belongsToMany(Sucursal::class)->withPivot('cantidad', 'id', 'producto_id');

@@ -34,7 +34,7 @@ class ProductosIndex extends Component
 
             $productos = Producto::whereHas('modelo',function(Builder $query){
                 $query->where('nombre','LIKE', '%' . $this->search . '%');
-            })->where('estado',1)->paginate(5);
+            })->where('estado','Habilitado')->paginate(5);
 
             $this->item_buscar = "el modelo del producto a buscar";
         }
@@ -42,7 +42,7 @@ class ProductosIndex extends Component
 
             $productos = Producto::whereHas('categoria',function(Builder $query){
                 $query->where('nombre','LIKE', '%' . $this->search . '%')
-                ->where('estado',1);
+                ->where('estado','Habilitado');
             })->paginate(5);
 
             $this->item_buscar = "la categoria del producto a buscar";
@@ -51,22 +51,22 @@ class ProductosIndex extends Component
 
             $productos = Producto::whereHas('marca',function(Builder $query){
                 $query->where('nombre','LIKE', '%' . $this->search . '%')
-                ->where('estado',1);
+                ->where('estado','Habilitado');
             })->paginate(5);
 
             $this->item_buscar = "la marca del producto a buscar";
         }
 
-        elseif($this->buscador == 3){
+        else{
             $productos = Producto::where('cod_barra', 'LIKE', '%' . $this->search . '%')
-            ->where('estado','1')
+            ->orwhere('nombre', 'LIKE', '%' . $this->search . '%')
+            ->where('estado','Habilitado')
             ->paginate(5);
             
             $this->item_buscar = "el código de barra o nombre del producto a buscar";
         }
 
         return view('livewire.productos.productos-index',compact('productos','sucursales'));
-
     }
 
     public function delete($productoId){

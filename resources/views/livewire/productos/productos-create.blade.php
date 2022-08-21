@@ -1,4 +1,4 @@
-<div>
+<div x-data="{vencimiento: @entangle('vencimiento')}">
     <div class="card">
         <h5 class="modal-title py-0 text-lg text-gray-800 ml-4"> <i class="fas fa-database"></i>  Registro de equipo</h5>
     </div>
@@ -21,7 +21,6 @@
                     <x-input-error for="nombre" />
                 </div>
                 <div class="w-1/4">
-                   
                     <input wire:model="cod_barra" type="text" class="px-2 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 ml-2" placeholder="Código de barra">
                     <x-input-error for="cod_barra" />
                 </div>
@@ -99,19 +98,19 @@
                 <div class="w-1/2">
                 <select wire:model.lazy="presentacion" id="presentacion" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="presentación">
                         <option value="" selected>Seleccione la presentación</option>
-                        <option value="1">Unidad</option>
-                        <option value="2">Libra</option>
-                        <option value="3">Kilogramos</option>
-                        <option value="4">Caja</option>
-                        <option value="5">Paquete</option>
-                        <option value="6">Lata</option>
-                        <option value="7">Galon</option>
-                        <option value="8">Botella</option>
-                        <option value="9">Tira</option>
-                        <option value="10">Sobre</option>
-                        <option value="11">Saco</option>
-                        <option value="12">Tarjeta</option>
-                        <option value="13">Otros</option>
+                        <option value="Unidad">Unidad</option>
+                        <option value="Libra">Libra</option>
+                        <option value="Kilogramos">Kilogramos</option>
+                        <option value="Caja">Caja</option>
+                        <option value="Paquete">Paquete</option>
+                        <option value="Lata">Lata</option>
+                        <option value="Galon">Galon</option>
+                        <option value="Botella">Botella</option>
+                        <option value="Tira">Tira</option>
+                        <option value="Sobre">Sobre</option>
+                        <option value="Saco">Saco</option>
+                        <option value="Tarjeta">Tarjeta</option>
+                        <option value="Otros">Otros</option>
                     </select>
                     <x-input-error for="presentacion" />
                 </div>
@@ -141,7 +140,7 @@
                     <x-input-error for="vencimiento" />
                 </div>
 
-                <div class="w-1/2 ml-2 mt-10">
+                <div :class="{'hidden': (vencimiento != 'si')}" class="w-1/2 ml-2 mt-10">
                     <x-input.date wire:model.lazy="fecha_vencimiento" id="fecha_vencimiento" placeholder="Fecha de vencimiento" class="px-4 outline-none"/>
                     <x-input-error for="fecha_vencimiento"/>
                 </div>
@@ -159,12 +158,12 @@
                 <div class="W-1/4 mr-2">
                     <select id="tipo_garantia" wire:model.lazy="tipo_garantia" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_garantia">
                         <option value="" selected>Unidad de tiempo</option>
-                        <option value="1">N/A</option>
-                        <option value="2">Semanas</option>
-                        <option value="3">Mes</option>
-                        <option value="4">Meses</option>
-                        <option value="5">Ano</option>
-                        <option value="6">Anos</option>
+                        <option value="N/A">N/A</option>
+                        <option value="Semanas">Semanas</option>
+                        <option value="Mes">Mes</option>
+                        <option value="Meses">Meses</option>
+                        <option value="Ano">Ano</option>
+                        <option value="Anos">Anos</option>
                     </select>
                     <x-input-error for="tipo_garantia" />
                 </div>
@@ -217,8 +216,8 @@
                   
                     <select id="estado" wire:model.lazy="estado" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="estado">
                         <option value="" selected>Estado del producto</option>
-                        <option value="1">Habilitado</option>
-                        <option value="2">Deshabilitado</option>
+                        <option value="Habilitado">Habilitado</option>
+                        <option value="Deshabilitado">Deshabilitado</option>
                     </select>
                     <x-input-error for="estado" />
                 </div>
@@ -276,8 +275,6 @@
             </div>  --}}
 
             <hr>
-
-
        
             <div class="mt-4">
                 <button type="submit" class="btn btn-primary" wire:click="save">

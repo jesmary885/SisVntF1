@@ -1,7 +1,4 @@
 @extends('adminlte::page')
-
-@section('title', 'TechPeru')
-
 @section('content_header')
 
 <div class="flex">

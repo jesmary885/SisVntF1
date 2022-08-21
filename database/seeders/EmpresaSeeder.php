@@ -15,10 +15,10 @@ class EmpresaSeeder extends Seeder
     public function run()
     {
         Empresa::create([
-            'nombre' => 'techperu',
-            'email' => 'techperu@gmail.com',
-            'telefono' => '015017327',
-            'direccion' => 'av. argentina n 428   galeria mesa redonda stand g112',
+            'nombre' => 'Tu negocio',
+            'email' => 'tunegocio@gmail.com',
+            'telefono' => '04555555555',
+            'direccion' => 'av. Venezuela',
             'tipo_documento' => '2',
             'nro_documento' => '20603739176',
             'nombre_impuesto' => 'IVA',

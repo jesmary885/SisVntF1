@@ -9,11 +9,13 @@ use App\Models\Modelo;
 use App\Models\Movimiento;
 use App\Models\Producto;
 use App\Models\Producto_cod_barra_serial;
+use App\Models\Producto_lote;
 use App\Models\Producto_sucursal;
 use App\Models\ProductoSerialSucursal;
 use App\Models\Proveedor;
 use App\Models\Sucursal;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Livewire\Component;
@@ -31,7 +33,7 @@ class ProductosCreate extends Component
     public $modelos = [];
     public $marca_id = "", $sucursal_id = "" ,$modelo_id = "", $categoria_id = "", $proveedor_id ="";
     public $limitacion_sucursal = true;
-    public $ff, $descuento, $stock_minimo, $vencimiento;
+    public $ff, $fecha_vencimiento, $descuento, $stock_minimo, $vencimiento = "no", $unidad_tiempo_garantia;
 
     protected $listeners = ['refreshimg'];
 
@@ -54,12 +56,6 @@ class ProductosCreate extends Component
          'stock_minimo' => 'required|numeric',
          'vencimiento' => 'required',
          'tipo_garantia' => 'required',
-
-
-         
-
-
-
          'file' => 'max:1024',
       ];
 
@@ -120,10 +116,10 @@ class ProductosCreate extends Component
             $producto->nombre = $this->nombre;
             if($this->cod_barra) $producto->cod_barra = $this->cod_barra;
             else $producto->cod_barra = Str::random(8);
-            // $producto->presentacion = $this->presentacion;
+            $producto->presentacion = $this->presentacion;
             $producto->precio_entrada = $this->precio_entrada;
             $producto->precio_letal = $this->precio_letal;
-            $producto->puntos = $this->puntos;
+           // $producto->puntos = $this->puntos;
             $producto->precio_mayor = $this->precio_mayor;
             $producto->modelo_id = $this->modelo_id;
             $producto->marca_id = $this->marca_id;
@@ -131,6 +127,11 @@ class ProductosCreate extends Component
             $producto->categoria_id = $this->categoria_id;
             $producto->observaciones = $this->observaciones;
             $producto->estado = $this->estado;
+            $producto->stock_minimo = $this->stock_minimo;
+            $producto->descuento = $this->descuento;
+            $producto->vencimiento = $this->vencimiento;
+            $producto->unidad_tiempo_garantia = $this->unidad_tiempo_garantia;
+            $producto->tipo_garantia = $this->tipo_garantia;
             $producto->save();
             //agregando imagen de producto en tabla imagenes
 
@@ -154,9 +155,15 @@ class ProductosCreate extends Component
             $compra->sucursal_id = $this->sucursal_id;
             $compra->producto_id = $producto->id;
             $compra->save();
+
+            //registrando en tabla producto_lotes
+            $lote = new Producto_lote();
+            $lote->lote = '1';
+            $lote->proveedor_id = $this->proveedor_id;
+            $lote->producto_id = $producto->id;
+            $lote->fecha_vencimiento = Carbon::parse($this->fecha_vencimiento);
+            $lote->save();
            
-
-
             //registrando moviemientos en tabla movimientos
             $producto->movimientos()->create([
                 'fecha' => $this->fecha_actual,
@@ -188,7 +195,7 @@ class ProductosCreate extends Component
                 }
             }
 
-            $this->reset(['nombre','generar_serial','puntos','cantidad','cod_barra','inventario_min','presentacion','precio_entrada','precio_letal','precio_mayor','modelo_id','categoria_id','observaciones','tipo_garantia','garantia','estado','proveedor_id','marca_id','file']);
+            $this->reset(['nombre','stock_minimo','descuento','sucursal_id','fecha_vencimiento','generar_serial','puntos','cantidad','cod_barra','inventario_min','presentacion','precio_entrada','precio_letal','precio_mayor','modelo_id','categoria_id','observaciones','tipo_garantia','garantia','estado','proveedor_id','marca_id','file']);
             $this->emit('alert','Producto creado correctamente');
             $this->emitTo('productos.productos-index','render');
         }

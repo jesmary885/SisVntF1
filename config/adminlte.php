@@ -326,7 +326,7 @@ return [
             
         ],*/
 
-        [
+        /*[
             'text'    => 'MOVIMIENTOS EN CAJA',
             'icon'    => 'fas fa-cash-register',
             'submenu' => [
@@ -342,7 +342,7 @@ return [
                 ],
 
             ],
-        ],
+        ],*/
 
         [
             'text'    => 'PRODUCTOS',

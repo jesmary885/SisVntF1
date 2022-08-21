@@ -6,6 +6,7 @@ use App\Models\Categoria;
 use App\Models\Imagen;
 use App\Models\Marca;
 use App\Models\Modelo;
+use App\Models\Producto_lote;
 use App\Models\Proveedor;
 use App\Models\Sucursal;
 use App\Models\User;
@@ -32,10 +33,13 @@ class ProductoEdit extends Component
         'modelo_id' => 'required',
         'sucursal_id' => 'required',
         'estado' => 'required',
-        'puntos' => 'required',
+       // 'puntos' => 'required',
         'nombre' => 'required',
+        'vencimiento' => 'required',
+        'presentacion' => 'required',
+        'stock_minimo' => 'required',
+        'tipo_garantia' => 'required',
      ];
-
 
     public function updatedMarcaId($value)
     {
@@ -62,16 +66,18 @@ class ProductoEdit extends Component
          $this->precio_letal = $this->producto->precio_letal;
          $this->precio_mayor = $this->producto->precio_mayor;
          $this->cantidad = $this->producto->sucursals->find($this->sucursal_id)->pivot->cantidad;
-      //   $this->inventario_min = $this->producto->inventario_min;
+         $this->stock_minimo = $this->producto->stock_minimo;
          $this->modelo_id = $this->producto->modelo_id;
          $this->categoria_id = $this->producto->categoria_id;
-
-     //    $this->tipo_garantia = $this->producto->tipo_garantia;
-    //     $this->garantia = $this->producto->garantia;
-        $this->marca_id = $this->producto->marca_id;
-        $this->puntos = $this->producto->puntos;
-     //    $this->presentacion = $this->producto->presentacion;
+         $this->tipo_garantia = $this->producto->tipo_garantia;
+         $this->descuento = $this->producto->descuento;
+         $this->marca_id = $this->producto->marca_id;
+         //$this->puntos = $this->producto->puntos;
+         $this->vencimiento = $this->producto->vencimiento;
+         $this->presentacion = $this->producto->presentacion;
          $this->observaciones = $this->producto->observaciones;
+         $this->tipo_garantia = $this->producto->tipo_garantia;
+         $this->unidad_tiempo_garantia = $this->producto->unidad_tiempo_garantia;
          $this->estado = $this->producto->estado;
          $this->modelos=Modelo::all();
          $this->marcas=Marca::all();
@@ -97,8 +103,6 @@ class ProductoEdit extends Component
         $rules = $this->rules;
         $this->validate($rules);
 
-     
-
         $rule_cod_barra = [
             'cod_barra'=>'required|unique:productos,cod_barra,' .$this->producto->id,
         ];
@@ -106,7 +110,6 @@ class ProductoEdit extends Component
         //$this->validate($rule_nombre);
         $this->validate($rule_cod_barra);
         $this->fecha_actual = date('Y-m-d');
-
         $usuario_auth = Auth::id();
            
         if($this->observaciones == '') $this->observaciones = 'Sin observaciones';
@@ -122,27 +125,35 @@ class ProductoEdit extends Component
                 'precio_mayor' => $this->precio_mayor,
                 'modelo_id' => $this->modelo_id,
                 'categoria_id' => $this->categoria_id,
-                'puntos' => $this->puntos,
+                //'puntos' => $this->puntos,
                 'marca_id' => $this->marca_id,
                 'observaciones' => $this->observaciones,
-                'estado' => $this->estado
+                'estado' => $this->estado,
+                'stock_minimo' => $this->stock_minimo,
+                'presentacion' => $this->presentacion,
+                'descuento' => $this->descuento,
+                'vencimiento' => $this->vencimiento,
+                'tipo_garantia' => $this->tipo_garantia,
+                'unidad_tiempo_garantia' => $this->unidad_tiempo_garantia
             ]);
 
-            
-    
+            if($this->vencimiento == "no"){
+                $lote = Producto_lote::where('producto_id',$this->producto->id)->first();
+                $lote->update([
+                    'fecha_vencimiento' => 'NULL',
+                ]);
+            }
+
             if ($this->file){
                 $imagen = Imagen::where('imageable_id',$this->producto->id)->first();
                 $url = Storage::put('public/productos', $this->file);
                 if($imagen) $this->producto->imagen()->update(['url' => $url]);
                 else $this->producto->imagen()->create(['url' => $url]);
              }
-    
-          
+
             $this->reset(['isopen']);
             $this->emitTo('productos.productos-index','render');
             $this->emit('alert','Producto modificado correctamente');
         }
-
-        
     }
 }

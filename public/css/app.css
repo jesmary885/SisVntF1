@@ -580,11 +580,11 @@ Ensure the default browser behavior of the `hidden` attribute.
 .mb-1 {
   margin-bottom: 0.25rem;
 }
-.mr-3 {
-  margin-right: 0.75rem;
-}
 .ml-3 {
   margin-left: 0.75rem;
+}
+.mr-3 {
+  margin-right: 0.75rem;
 }
 .mb-6 {
   margin-bottom: 1.5rem;
@@ -842,9 +842,9 @@ Ensure the default browser behavior of the `hidden` attribute.
   --tw-bg-opacity: 1;
   background-color: rgb(254 240 138 / var(--tw-bg-opacity));
 }
-.bg-yellow-600 {
+.bg-yellow-500 {
   --tw-bg-opacity: 1;
-  background-color: rgb(202 138 4 / var(--tw-bg-opacity));
+  background-color: rgb(234 179 8 / var(--tw-bg-opacity));
 }
 .bg-green-600 {
   --tw-bg-opacity: 1;
@@ -1129,6 +1129,22 @@ Ensure the default browser behavior of the `hidden` attribute.
 }
 .ease-in-out {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.selection\:block *::-moz-selection {
+  display: block;
+}
+
+.selection\:block *::selection {
+  display: block;
+}
+
+.selection\:block::-moz-selection {
+  display: block;
+}
+
+.selection\:block::selection {
+  display: block;
 }
 
 .hover\:bg-red-500:hover {

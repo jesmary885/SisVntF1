@@ -42,16 +42,16 @@
                                 <th class="text-center">Stock</th>
                                 <th class="text-center">Unitario</th>
                                 <th class="text-center">Mayor</th>
-                                <th class="text-center">Puntos</th>
+                           
                                 <th colspan="4"></th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($productos as $producto)
                               <?php
-                                        if($producto->cantidad <= 10) $estado_bg = 'bg-red-600';
-                                        elseif($producto->cantidad > 10 && $producto->cantidad <= 50) $estado_bg = 'bg-yellow-600';
-                                        elseif($producto->cantidad > 50) $estado_bg = 'bg-green-600';
+                                        if($producto->cantidad <= $producto->stock_minimo) $estado_bg = 'bg-red-600';
+                                        elseif($producto->cantidad > $producto->stock_minimo  && $producto->cantidad <= ($producto->stock_minimo + 30)) $estado_bg = 'bg-yellow-500';
+                                        elseif($producto->cantidad >= ($producto->stock_minimo + 31)) $estado_bg = 'bg-green-600';
                                     ?>  
                                 <tr >
                                     <td align="center">
@@ -69,9 +69,6 @@
                                         {{-- <b>{{$sucursal->nombre}}</b> = {{$producto->sucursals->find($sucursal)->pivot->cantidad}}, --}}
                                     <td class="text-center">{{$producto->precio_letal}}</td>
                                     <td class="text-center">{{$producto->precio_mayor}}</td>
-                                    <td class="text-center">{{$producto->puntos}}</td>
-                                    
-                                        
                                     <td width="10px">
                                         @livewire('productos.productos-add', ['producto' => $producto],key(02.,'$producto->id'))
                                     </td>

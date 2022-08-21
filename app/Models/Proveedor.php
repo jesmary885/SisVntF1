@@ -23,7 +23,11 @@ class Proveedor extends Model
 
      //Relacion uno a muchos
    
-     public function compras(){
+    public function compras(){
         return $this->hasMany(Compra::class);
+    }
+
+    public function producto_lote(){
+        return $this->hasMany(Producto_lote::class);
     }
 }
