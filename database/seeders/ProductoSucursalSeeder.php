@@ -20,10 +20,10 @@ class ProductoSucursalSeeder extends Seeder
              foreach ($productos as $producto){
                 $producto->sucursals()->attach([
                     1 => [
-                        'cantidad' => 0
+                        'cantidad' => 25
                     ],
                     2 => [
-                        'cantidad' => 0
+                        'cantidad' => 25
                     ],
                     3 => [
                         'cantidad' => 0

@@ -16,7 +16,19 @@ class CategoriaSeeder extends Seeder
     {
         $categorias = [
             [
-               'nombre' => 'TACTIL',
+               'nombre' => 'Categoria 1',
+            ],
+            [
+               'nombre' => 'Categoria 2',
+            ],
+            [
+               'nombre' => 'Categoria 3',
+            ],
+            [
+               'nombre' => 'Categoria 4',
+            ],
+            [
+               'nombre' => 'Categoria 5',
             ],
            /* [
                 'nombre' => 'LCD',

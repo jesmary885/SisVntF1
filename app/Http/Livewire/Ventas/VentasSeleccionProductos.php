@@ -39,7 +39,7 @@ class VentasSeleccionProductos extends Component
         ->whereHas('modelo',function(Builder $query){
             $query->where('nombre', 'LIKE', '%' . $this->search . '%');
          })->latest('id')
-         ->paginate(10);
+         ->paginate(15);
 
          $this->item_buscar = "el modelo del producto a buscar";
         }
@@ -51,7 +51,7 @@ class VentasSeleccionProductos extends Component
             ->whereHas('marca',function(Builder $query){
                 $query->where('nombre', 'LIKE', '%' . $this->search . '%');
              })->latest('id')
-             ->paginate(10);
+             ->paginate(15);
     
              $this->item_buscar = "la marca del producto a buscar";
         }
@@ -63,7 +63,7 @@ class VentasSeleccionProductos extends Component
             ->whereHas('categoria',function(Builder $query){
                 $query->where('nombre', 'LIKE', '%' . $this->search . '%');
              })->latest('id')
-             ->paginate(10);
+             ->paginate(15);
     
              $this->item_buscar = "la categoria del producto a buscar";
         }
@@ -72,7 +72,7 @@ class VentasSeleccionProductos extends Component
             $productos = Producto::where('estado', 1)
             ->where('cod_barra', 'LIKE', '%' . $this->search . '%')
             ->latest('id')
-             ->paginate(10);
+             ->paginate(15);
     
              $this->item_buscar = "el código de barra del producto a buscar";
         }

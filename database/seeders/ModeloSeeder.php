@@ -16,9 +16,41 @@ class ModeloSeeder extends Seeder
     {
         $modelos = [
             [
-               'nombre' => 'Otro',
+               'nombre' => 'Modelo 1',
                'marca_id' => '1',
             ],
+            [
+                'nombre' => 'Modelo 2',
+                'marca_id' => '1',
+             ],
+             [
+                'nombre' => 'Modelo 3',
+                'marca_id' => '2',
+             ],
+             [
+                'nombre' => 'Modelo 4',
+                'marca_id' => '2',
+             ],
+             [
+                'nombre' => 'Modelo 5',
+                'marca_id' => '3',
+             ],
+             [
+                'nombre' => 'Modelo 6',
+                'marca_id' => '5',
+             ],
+             [
+                'nombre' => 'Modelo 7',
+                'marca_id' => '4',
+             ],
+             [
+                'nombre' => 'Modelo 8',
+                'marca_id' => '5',
+             ],
+             [
+                'nombre' => 'Modelo 9',
+                'marca_id' => '5',
+             ],
           
 
             ];

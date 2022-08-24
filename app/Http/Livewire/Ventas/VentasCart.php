@@ -21,12 +21,12 @@ class VentasCart extends Component
     use WithPagination;
 
     public $sucursal,$producto,$cambio;
-    public $cash_received,$tipo_pago,$tipo_comprobante,$send_mail,$imprimir,$ticket = 0, $impresoras, $impresora_id ="";
+    public $cash_received,$tipo_pago = "Contado",$tipo_comprobante,$send_mail,$imprimir,$ticket = 0, $impresoras, $impresora_id ="";
     public $metodo_pago, $total, $client, $search;
-    public $cliente_select, $total_venta, $pago_cliente, $deuda_cliente, $descuento, $estado_entrega,$subtotal,$proforma;
+    public $cliente_select, $total_venta, $pago_cliente, $deuda_cliente, $descuento, $estado_entrega = "Entregado",$subtotal,$proforma;
     public $siguiente_venta = 0;
     public $iva, $carrito,$valor;
-    public $puntos_canjeo, $canjeo, $puntos_canjeados, $descuento_total,$porcentaje_descuento_puntos = 0,$empresa;
+    public $puntos_canjeo, $canjeo, $puntos_canjeados, $descuento_total,$porcentaje_descuento_puntos = 0,$empresa, $other_method;
 
     protected $listeners = ['render'];
     protected $paginationTheme = "bootstrap";
@@ -108,7 +108,9 @@ class VentasCart extends Component
             $this->total_venta = ($this->subtotal ) - $this->descuento_total;
         } */
 
-        if($this->cash_received != null) $this->cambio = abs(($this->total_venta - $this->cash_received)-($this->other_method));
+        //if($this->cash_received != null && $this->other_method == null) $this->cambio = abs($this->cash_received - $this->total_venta);
+        if($this->cash_received != null && $this->other_method == null) $this->cambio = $this->cash_received - $this->total_venta;
+        elseif($this->cash_received != null && $this->other_method != null) $this->cambio = (($this->cash_received + $this->other_method) - $this->total_venta);
         else $this->cambio = 0;
 
         $clientes = Cliente::where('nombre', 'LIKE', '%' . $this->search . '%')

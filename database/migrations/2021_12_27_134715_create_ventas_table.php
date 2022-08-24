@@ -28,7 +28,7 @@ class CreateVentasTable extends Migration
                                         'Zelle',
                                         'PayPal',
                                         'Otro']);
-            $table->string('Observaciones');
+          //  $table->string('Observaciones');
             $table->string('estado_entrega');
             $table->float('descuento');
             $table->float('subtotal');
