@@ -26,12 +26,8 @@
                   </thead>
                   <tbody>
                       @foreach ($ventas as $venta)
-                      <?php
-                      if($venta->tipo_pago == 1) $tipo_pago = 'Contado';
-                      else $tipo_pago = 'Credito';
-                      ?>
                           <tr>
-                              <td class="text-center">{{$tipo_pago}} </td>
+                              <td class="text-center">{{$venta->tipo_pago}} </td>
                               <td class="text-center">{{$venta->total_pagado_cliente}}</td>
                               <td class="text-center">{{$venta->total}}</td>
                               <td class="text-center">{{$venta->user->name}} {{$venta->user->apellido}}</td>

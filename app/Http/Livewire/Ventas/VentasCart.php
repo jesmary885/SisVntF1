@@ -25,7 +25,7 @@ class VentasCart extends Component
     public $metodo_pago, $total, $client, $search;
     public $cliente_select, $total_venta, $pago_cliente, $deuda_cliente, $descuento, $estado_entrega = "Entregado",$subtotal,$proforma;
     public $siguiente_venta = 0;
-    public $iva, $carrito,$valor;
+    public $iva, $carrito,$valor, $iva_empresa;
     public $puntos_canjeo, $canjeo, $puntos_canjeados, $descuento_total,$porcentaje_descuento_puntos = 0,$empresa, $other_method;
 
     protected $listeners = ['render'];
@@ -43,7 +43,6 @@ class VentasCart extends Component
         'estado_entrega' => 'required',
         'pago_cliente' => 'required',
         'cliente_select' => 'required',
-        
     ];
 
     public function updatingSearch(){
@@ -76,6 +75,7 @@ class VentasCart extends Component
         //$this->canjeo = false;
         //$this->puntos_canjeados = 0;
         $this->empresa = Empresa::first();
+        $this->iva_empresa = $this->empresa->impuesto;
     }
 
     public function select_u($cliente_id){
@@ -88,14 +88,18 @@ class VentasCart extends Component
     {
         $caracter=",";
         $this->subtotal = str_replace($caracter,"",Cart::subtotal());
+
           
        // if($this->canjeo==false){
             if($this->descuento != null){
-            $this->descuento_total = $this->subtotal  * $this->descuento / 100;
-            $this->total_venta = $this->subtotal  - $this->descuento_total;
+                $this->iva= ($this->empresa->impuesto / 100) * $this->subtotal;
+                
+                $this->descuento_total = $this->subtotal  * $this->descuento / 100;
+                $this->total_venta = ($this->subtotal  - $this->descuento_total) + $this->iva;
             }
             else{
-                $this->total_venta = $this->subtotal ;
+                $this->iva= ($this->empresa->impuesto / 100) * $this->subtotal;
+                $this->total_venta = $this->subtotal +  $this->iva;
                 $this->descuento_total = 0;
             } 
         /*}else{
@@ -131,14 +135,14 @@ class VentasCart extends Component
     }*/
 
     public function save(){
-        if ($this->tipo_pago == "1"){
+    /*    if ($this->tipo_pago == "1"){
             $rules = $this->rules;
             $this->validate($rules);
         }
         else{
             $rule_credito = $this->rule_credito;
             $this->validate($rule_credito);   
-        }
+        }*/
  
         $user_auth =  auth()->user()->id;
 
@@ -187,7 +191,7 @@ class VentasCart extends Component
             $saldo_caja_final = $caja_final->saldo;
 
              //PROCESO DE SUMAR O RESTAR PUNTOS EN TABLA DE CLIENTES
-            if($this->canjeo==false){
+           /* if($this->canjeo==false){
                 $nuevos_puntos = $this->client->puntos + round($this->total_venta,0);
                 //Agregando nuevos puntos al cliente
                 $this->client->update([
@@ -201,7 +205,7 @@ class VentasCart extends Component
                 $this->client->update([
                     'puntos' => round($nuevos_puntos),
                 ]);
-            }   
+            }   */
 
 
             //REGISTRANDO VENTA EN TABLA DE VENTAS
@@ -211,7 +215,7 @@ class VentasCart extends Component
             $venta->fecha = date('Y-m-d');
             $venta->tipo_pago = $this->tipo_pago;
             $venta->metodo_pago = $this->metodo_pago;
-            if ($this->tipo_pago == "2"){
+            if ($this->tipo_pago == "Credito"){
                 $venta->total_pagado_cliente = $this->pago_cliente;
                 $venta->deuda_cliente = $this->total_venta - $this->pago_cliente;
             }
@@ -222,9 +226,9 @@ class VentasCart extends Component
             $venta->subtotal =  $this->subtotal;
             $venta->total = $this->total_venta;
             $venta->sucursal_id = $this->sucursal;
-            $venta->estado_entrega = $entrega;
+            $venta->estado_entrega = $this->estado_entrega;
             $venta->descuento = $this->descuento_total;
-            //$venta->impuesto=$impuesto;
+            $venta->impuesto=$this->iva;
             $venta->estado='activa';
             $venta->save();
 
@@ -291,7 +295,7 @@ class VentasCart extends Component
         if($this->proforma == 'proforma') $venta_nro_p = '1';
         else $venta_nro_p = $venta->id;
     
-            if ($this->tipo_pago == "1"){
+            if ($this->tipo_pago == "Contado"){
                 $data = [
                     'cliente_nombre' => $this->client->nombre." ".$this->client->apellido,
                     'cliente_documento' =>$this->client->nro_documento,
@@ -307,6 +311,7 @@ class VentasCart extends Component
                     'subtotal_menos_descuento' =>  $this->subtotal - ($this->descuento_total),
                     'total' => $this->total_venta,
                     'proforma' =>$this->proforma,
+                    'iva_empresa' => $this->iva_empresa,
                     'iva' => $this->iva,];
 
                 if($this->tipo_comprobante == "1"){ 
@@ -360,7 +365,7 @@ class VentasCart extends Component
                     'subtotal' =>  $this->subtotal,
                     'total' => $this->total_venta,
                     'iva' => $this->iva,
-
+                    'iva_empresa' => $this->iva_empresa,
                 ];
                 if($this->tipo_comprobante == "1"){
                     $pdf = PDF::loadView('ventas.FacturaCredito',$data)->output();
@@ -399,7 +404,7 @@ class VentasCart extends Component
 
         cart::destroy();
         $this->siguiente_venta = '1';
-        $this->reset(['cliente_select','cash_received','total_venta','puntos_canjeo','pago_cliente','descuento','descuento_total','tipo_comprobante','send_mail','metodo_pago','tipo_pago','estado_entrega','subtotal']);
+        $this->reset(['cliente_select','send_mail','cash_received','total_venta','pago_cliente','descuento','descuento_total','tipo_comprobante','metodo_pago','tipo_pago','estado_entrega','subtotal']);
        
          
          if($this->imprimir == 1){

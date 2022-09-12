@@ -9,7 +9,13 @@
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title py-0 text-lg text-gray-800"> <i class="far fa-edit"></i>  Editar producto</h5>
+                        <div class="flex justify-between w-full">
+                            <div class="flex-1">
+                                <h5 class="modal-title py-0 text-lg text-gray-800"> <i class="far fa-edit"></i>  Editar producto</h5>
+                            </div>
+                            <button type="button" class="btn" data-dismiss="modal" wire:click="close"><i class="fas fa-window-close"></i></button>
+                        </div>
+                        
                     </div>
                     <div class="modal-body">
                         <h2 class="text-sm ml-2 m-0 p-0 text-gray-500 font-semibold"><i class="fas fa-info-circle"></i> Complete todos los campos y presiona Guardar</h2> 
@@ -34,23 +40,8 @@
        
                         </div>
                         <div class="flex mt-2 justify-between w-full">
-                            <div class="w-full mr-2">
-                                <input wire:model.defer="precio_letal" name="precio_letal" title="Precio al letal" type="number" min="0" class="mr-2 px-2 appearance-none block w-full bg-gray-100 text-gray-400 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Precio unitario">
-                                <x-input-error for="precio_letal" />
-                            </div>
-                            <div class="w-full">
-                                <input wire:model="precio_mayor" type="number" min="0" title="Precio al mayor" class="w-full px-2 appearance-none block bg-gray-100 text-gray-400 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Precio al mayor">
-                                <x-input-error for="precio_mayor" />
-                            </div>
-                        </div>
-                        <div class="flex mt-2 justify-between w-full">
-                            <input wire:model.defer="cantidad" name="cantidad" type="text" title="Cantidad" class="mr-2 px-2 appearance-none block w-full bg-gray-100 text-gray-400 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Cantidad">
-                            <x-input-error for="cantidad" />
-                            <input wire:model.defer="stock_minimo" name="stock_minimo" title="Stock minimo" type="text" class=" px-2 appearance-none block w-full bg-gray-100 text-gray-400 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Stock minimo">
-                            <x-input-error for="stock_minimo" />
-                        </div>
-                        <div class="flex mt-2 justify-between w-full">
-                            <div class="w-full mr-2">
+
+                        <div class="w-full mr-2">
                                 <select wire:model="presentacion" id="presentacion" title="Presentación" class="w-full selection:block bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="presentacion">
                                         <option value="" selected>Presentación</option>
                                         <option value="Unidad">Unidad</option>
@@ -69,10 +60,11 @@
                                 </select>
                                 <x-input-error for="presentacion" />
                             </div>
-                            
-                            <input wire:model.defer="descuento" name="descuento" title="descuento" type="text" class="px-2 appearance-none block w-full bg-gray-100 text-gray-400 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Descuento">
-                            <x-input-error for="descuento" />
-                        </div>  
+
+                            <input wire:model.defer="stock_minimo" name="stock_minimo" title="Stock minimo" type="text" class=" px-2 appearance-none block w-full bg-gray-100 text-gray-400 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Stock minimo">
+                            <x-input-error for="stock_minimo" />
+                        </div>
+          
                         <div class="flex mt-2 justify-between w-full">
                             <div class="w-full mr-2">
                                 <select wire:model="categoria_id" title="Categoría" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
@@ -104,6 +96,25 @@
                                 <x-input-error for="modelo_id" />
                             </div>
                         </div>
+                        <hr class="mb-2">
+
+                        <div class="flex">
+                            <i class="fas fa-balance-scale-left mt-1 mr-2"></i>
+                            <h2 class="text-md">Información sobre descuento e impuesto</h2>
+                        </div>
+                        <div class="flex w-full mr-2">
+
+                            <div class="w-1/4 mr-2 mt-3">
+                                <input title="Descuento en venta" wire:model="descuento" type="text" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Descuento (%) en venta">
+                                <x-input-error for="descuento" />
+                            </div>
+
+                            <div class="flex ml-4">
+                                <input type="checkbox" class="mt-2" wire:model="exento" value="1">
+                                <p class="text-sm font-semibold text-gray-500 ml-2 mt-4">Exento de IVA</p>
+                            </div>
+                        </div>
+                        
                         <!--<hr>
                          <div class="flex mt-3">
                             <i class="fas fa-luggage-cart mr-2"></i>

@@ -1,4 +1,4 @@
-<div x-data="{vencimiento: @entangle('vencimiento')}">
+<div x-data="{vencimiento: @entangle('vencimiento'),act_utilidades: @entangle('act_utilidades')}">
     <div class="card">
         <h5 class="modal-title py-0 text-lg text-gray-800 ml-4"> <i class="fas fa-database"></i>  Registro de equipo</h5>
     </div>
@@ -17,27 +17,12 @@
             </div>
             <div class="flex mt-2 mr-2">
                 <div class="w-3/4">
-                    <input wire:model="nombre" type="text" class="px-2 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Nombre del producto">
+                    <input wire:model="nombre" type="text" class="px-2 appearance-none block w-full text-gray-700 bg-gray-50 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Nombre del producto">
                     <x-input-error for="nombre" />
                 </div>
                 <div class="w-1/4">
-                    <input wire:model="cod_barra" type="text" class="px-2 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 ml-2" placeholder="Código de barra">
+                    <input wire:model="cod_barra" type="text" class="px-2 appearance-none block w-full bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500 ml-2" placeholder="Código de barra">
                     <x-input-error for="cod_barra" />
-                </div>
-            </div>
-
-            <div class="flex justify-between w-full mt-3 mr-2">
-                <div class="w-full mr-2">
-                    <input wire:model="precio_entrada" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Precio de compra">
-                    <x-input-error for="precio_entrada" />
-                </div>
-                <div class="w-full mr-2">
-                    <input wire:model="precio_letal" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Precio de venta unitario">
-                    <x-input-error for="precio_letal" />
-                </div>
-                <div class="w-full">
-                    <input wire:model="precio_mayor" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Precio de venta por mayoreo">
-                    <x-input-error for="precio_mayor" />
                 </div>
             </div>
 
@@ -45,7 +30,7 @@
                 <div class="w-full mr-2">
               
 
-                    <select wire:model.lazy="categoria_id" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                    <select wire:model.lazy="categoria_id" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                         <option value="" selected>Seleccione la categoría</option>
                         @foreach ($categorias as $categoria)
                             <option value="{{$categoria->id}}">{{$categoria->nombre}}</option>
@@ -54,7 +39,7 @@
                     <x-input-error for="categoria_id" />
                 </div>
                 <div class="w-full mr-2">
-                        <select wire:model.lazy="marca_id" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        <select wire:model.lazy="marca_id" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                             <option value="" selected>Seleccione la marca</option>
                             @foreach ($marcas as $marca)
                                 <option value="{{$marca->id}}">{{$marca->nombre}}</option>
@@ -63,7 +48,7 @@
                         <x-input-error for="marca_id" />
                 </div>
                 <div class="w-full">
-                        <select wire:model.lazy="modelo_id" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        <select wire:model.lazy="modelo_id" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                             <option value="" selected>Seleccione el modelo</option>
                             @foreach ($modelos as $modelo)
                                 <option value="{{$modelo->id}}">{{$modelo->nombre}}</option>
@@ -76,27 +61,120 @@
             <hr class="mb-2">
 
             <div class="flex">
+                <i class="fas fa-calculator mt-1 mr-2"></i>
+                <h2 class="text-lg">Calculo de Precio, margen y utilidad</h2>
+            </div>
+
+            <div class="grid lg:grid-cols-5 gap-4">
+
+                <div class="flex lg:col-span-1 justify-between w-full mr-2">
+                    <div class="w-full mr-2 mt-5">
+                        <input wire:model="precio_entrada" type="number" min="0" class="px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Precio de compra">
+                        <x-input-error for="precio_entrada" />
+                    </div>
+                </div>
+
+                <div class="lg:col-span-1 w-full mt-3">
+                    <!-- <div class="w-1/4"> -->
+                        <div class="flex">
+                            <input type="radio" class=" ml-1" wire:model="act_utilidades" value="1">
+                            <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">Calcular precio + Utilidad</p>
+                        </div>
+                        <div class="flex">
+                            <input type="radio" class=" ml-1" wire:model="act_utilidades" value="2">
+                            <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">Calcular precio + Margen</p>
+                        </div>
+                    <!-- </div> -->
+                </div>
+
+                <div class="lg:col-span-1 w-full">
+                    
+                        <h2 class="w-full text-center text-md font-semibold text-gray-600 ">Precio</h2>
+                   
+                    <div class="mt-2">
+                        <div class="w-full mr-2">
+                            <input wire:model="precio_letal" title="Precio Unitario" readonly type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                            <x-input-error for="precio_letal" />
+                        </div>
+                        <div class="w-full mr-2 mt-4">
+                            <input wire:model="precio_mayor" title="Precio al mayor" readonly type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
+                            <x-input-error for="precio_mayor" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-1 w-full">
+                <h2 class="w-full text-center text-md font-semibold text-gray-600 ">Utilidad</h2>
+                   
+                    <div class="mt-2">
+                        <div class="w-full mr-2">
+                            <div :class="{'hidden' : act_utilidades != '1'}">
+                                <input wire:model="utilidad_letal" readonly title="Utilidad letal" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                            </div>
+
+                            <div :class="{'hidden' : act_utilidades == '1'}">
+                                <input wire:model="utilidad_letal" title="Utilidad letal" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                            </div>
+                            <x-input-error for="utilidad_letal" />
+                        </div>
+                        <div class="w-full mr-2 mt-4">
+                            <div :class="{'hidden' : act_utilidades != '1'}">
+                                <input wire:model="utilidad_mayor" readonly title="Utilidad al mayor" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
+                            </div>
+                            <div :class="{'hidden' : act_utilidades == '1'}">
+                                <input wire:model="utilidad_mayor" title="Utilidad al mayor" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
+                            </div>
+                            <x-input-error for="utilidad_mayor" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lg:col-span-1 w-full">
+                <h2 class="w-full text-center text-md font-semibold text-gray-600 ">Margen de ganancia</h2>
+                   
+                    <div class="mt-2">
+                        <div class="w-full">
+                            <div :class="{'hidden' : act_utilidades != '2'}">
+                                <input wire:model="margen_letal" readonly title="Margen de ganancia letal" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                            </div>
+                            <div :class="{'hidden' : act_utilidades == '2'}">
+                                <input wire:model="margen_letal" title="Margen de ganancia letal" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                            </div>
+                            <x-input-error for="margen_letal" />
+                        </div>
+                        <div class="w-full mt-4">
+                            <div :class="{'hidden' : act_utilidades != '2'}">
+                                <input wire:model="margen_mayor" readonly title="Margen de ganancia al mayor" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
+                            </div>
+                            <div :class="{'hidden' : act_utilidades == '2'}">
+                                <input wire:model="margen_mayor" title="Margen de ganancia al mayor" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
+                            </div>
+                            <x-input-error for="margen_mayor" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="mb-2">
+
+            <div class="flex">
                 <i class="fas fa-luggage-cart mt-1 mr-2"></i>
-                <h2 class="text-lg">Cantidades, descuento y presentación</h2>
+                <h2 class="text-lg">Cantidades y presentación</h2>
             </div>
 
             <div class="flex w-full mt-3 mr-2">
                 <div class="w-1/4 mr-2">
-                    <input wire:model="cantidad" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Cantidad">
+                    <input wire:model="cantidad" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Cantidad">
                     <x-input-error for="cantidad" />
                 </div>
 
                 <div class="w-1/4 mr-2">
-                    <input wire:model="stock_minimo" type="number" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Stock minimo">
+                    <input wire:model="stock_minimo" type="number" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Stock minimo">
                     <x-input-error for="stock_minimo" />
-                </div>
-                <div class="w-1/4 mr-2">
-                    <input wire:model="descuento" type="text" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Descuento en venta">
-                    <x-input-error for="descuento" />
                 </div>
 
                 <div class="w-1/2">
-                <select wire:model.lazy="presentacion" id="presentacion" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="presentación">
+                <select wire:model.lazy="presentacion" id="presentacion" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="presentación">
                         <option value="" selected>Seleccione la presentación</option>
                         <option value="Unidad">Unidad</option>
                         <option value="Libra">Libra</option>
@@ -118,6 +196,26 @@
                     <input wire:model="puntos" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Puntos">
                 <x-input-error for="puntos" />
                 </div> -->
+            </div>
+
+            <hr class="mb-2">
+
+            <div class="flex">
+                <i class="fas fa-balance-scale-left mt-1 mr-2"></i>
+                <h2 class="text-lg">Información sobre descuento e impuesto</h2>
+            </div>
+
+            <div class="flex w-full mr-2">
+
+                <div class="w-1/4 mr-2 mt-3">
+                    <input wire:model="descuento" type="text" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Descuento (%) en venta">
+                    <x-input-error for="descuento" />
+                </div>
+
+                <div class="flex ml-4">
+                    <input type="checkbox" class="mt-2" wire:model="exento" value="1">
+                    <p class="text-sm font-semibold text-gray-500 ml-2 mt-4">Exento de IVA</p>
+                </div>
             </div>
 
             <hr class="mb-2">
@@ -156,7 +254,7 @@
 
             <div class="flex justify-start w-full mt-3">
                 <div class="W-1/4 mr-2">
-                    <select id="tipo_garantia" wire:model.lazy="tipo_garantia" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_garantia">
+                    <select id="tipo_garantia" wire:model.lazy="tipo_garantia" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_garantia">
                         <option value="" selected>Unidad de tiempo</option>
                         <option value="N/A">N/A</option>
                         <option value="Semanas">Semanas</option>
@@ -168,7 +266,7 @@
                     <x-input-error for="tipo_garantia" />
                 </div>
                 <div class="W-1/4 mr-2">
-                    <input wire:model="unidad_tiempo_garantia" type="number" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Tiempo de garantia">
+                    <input wire:model="unidad_tiempo_garantia" type="number" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Tiempo de garantia">
                     <x-input-error for="unidad_tiempo_garantia" />
                 </div>
             </div> 
@@ -182,7 +280,7 @@
 
             <div class="flex justify-start w-full mt-3">
                 <div class="w-full mr-2">
-                    <select wire:model.lazy="proveedor_id" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                    <select wire:model.lazy="proveedor_id" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                         <option value="" selected>Seleccione el proveedor</option>
                         @foreach ($proveedores as $proveedor)
                             <option value="{{$proveedor->id}}">{{$proveedor->nombre_proveedor}}</option>
@@ -191,7 +289,7 @@
                     <x-input-error for="proveedor_id" />
                 </div> 
                 {{-- <div class="w-1/4 mr-2">
-                    <select wire:model="categoria_id" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                    <select wire:model="categoria_id" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                         <option value="" selected>Seleccione la categoría</option>
                         @foreach ($categorias as $categoria)
                             <option value="{{$categoria->id}}">{{$categoria->nombre}}</option>
@@ -201,20 +299,20 @@
                 </div> --}}
                 <div class="w-full mr-2">
                     @if ($limitacion_sucursal)
-                        <select wire:model.lazy="sucursal_id" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        <select wire:model.lazy="sucursal_id" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                             <option value="" selected>Seleccione el almacen</option>
                             @foreach ($sucursales as $sucursal)
                                 <option value="{{$sucursal->id}}">{{$sucursal->nombre}}</option>
                             @endforeach
                         </select>
                     @else
-                        <input type="text" readonly value="Sucursal {{$sucursal_nombre}}" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" >
+                        <input type="text" readonly value="Sucursal {{$sucursal_nombre}}" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" >
                     @endif   
                     <x-input-error for="sucursal_id" />
                 </div>
                 <div class="w-full">
                   
-                    <select id="estado" wire:model.lazy="estado" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="estado">
+                    <select id="estado" wire:model.lazy="estado" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="estado">
                         <option value="" selected>Estado del producto</option>
                         <option value="Habilitado">Habilitado</option>
                         <option value="Deshabilitado">Deshabilitado</option>
@@ -224,7 +322,7 @@
             </div>
 
             <div>
-                <textarea wire:model="observaciones" class="mt-2 resize-none rounded-md outline-none w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="observaciones" cols="80" rows="2" required placeholder="Observaciones"></textarea>
+                <textarea wire:model="observaciones" class="mt-2 resize-none rounded-md outline-none w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="observaciones" cols="80" rows="2" required placeholder="Observaciones"></textarea>
                 <x-input-error for="observaciones" />
             </div>
 

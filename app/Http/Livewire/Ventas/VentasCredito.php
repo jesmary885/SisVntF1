@@ -31,7 +31,7 @@ class VentasCredito extends Component
     
 
         $ventas = Venta::where('fecha', 'LIKE', '%' . $this->search . '%')
-                        ->where('tipo_pago', 2)
+                        ->where('tipo_pago', 'Credito')
                         ->where('estado', 'activa')
                         ->where('sucursal_id',$this->sucursal)
                         ->latest('id')

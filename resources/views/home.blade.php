@@ -19,8 +19,8 @@
       <!-- small box -->
       <div class="small-box bg-info">
         <div class="inner">
-          <!-- <h3>{{$ventas_totales_dia}} - $/{{$total_ganancias_dia}}</h3> -->
-          <h3>20 - $/1500</h3>
+           <h3>{{$ventas_totales_dia}} - $/{{$total_ganancias_dia}}</h3>
+          <!-- <h3>20 - $/1500</h3> -->
 
           <p>Ventas del dia</p>
         </div>
@@ -37,8 +37,8 @@
       <!-- small box -->
       <div class="small-box bg-info">
         <div class="inner">
-          <!-- <h3>{{$productos_cant}}</h3> -->
-          <h3>150</h3>
+          <h3>{{$productos_cant}}</h3>
+          <!-- <h3>150</h3> -->
 
           <p>Productos Registrados</p>
         </div>

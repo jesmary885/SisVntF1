@@ -18,6 +18,7 @@ use App\Http\Controllers\Productos\ProductosMovController;
 use App\Http\Controllers\Productos\ProductosSerialController;
 use App\Http\Controllers\Proformas\ProformasController;
 use App\Http\Controllers\Reportes\ReportesController;
+use App\Http\Controllers\tasaController;
 use App\Http\Controllers\Ventas\FacturacionController;
 use App\Http\Controllers\Ventas\MostrarVentasController;
 use App\Http\Controllers\Ventas\VentasController;
@@ -65,6 +66,7 @@ Route::resource('sucursales', SucursalesController::class)->only('index')->names
 Route::resource('categorias', CategoriasController::class)->only('index','store')->names('admin.categorias');
 Route::resource('marcas', MarcasController::class)->only('index','store')->names('admin.marcas');
 Route::resource('modelos', ModelosController::class)->only('index','store')->names('admin.modelos');
+Route::resource('tasa', tasaController::class)->only('index','edit')->names('admin.tasa');
 
 Route::resource('productos', ProductosController::class)->only('index','create','edit','store')->names('productos.productos');
 Route::resource('Ventas', VentasController::class)->only('create','index','update','show','edit')->names('ventas.ventas');

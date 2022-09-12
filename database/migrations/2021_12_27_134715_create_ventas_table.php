@@ -17,7 +17,7 @@ class CreateVentasTable extends Migration
             $table->id();
             $table->timestamps();
             $table->date('fecha');
-            $table->enum('tipo_pago',['Debito','Credito'])->default('Debito');
+            /*$table->enum('tipo_pago',['Debito','Credito'])->default('Debito');
             $table->enum('metodo_pago',['Tarjeta de Debito',
                                         'Tarjeta de Credito',
                                         'Efectivo',
@@ -27,8 +27,10 @@ class CreateVentasTable extends Migration
                                         'Binance',
                                         'Zelle',
                                         'PayPal',
-                                        'Otro']);
+                                        'Otro']);*/
           //  $table->string('Observaciones');
+            $table->string('tipo_pago');
+            $table->string('metodo_pago');
             $table->string('estado_entrega');
             $table->float('descuento');
             $table->float('subtotal');
@@ -36,7 +38,8 @@ class CreateVentasTable extends Migration
             $table->float('impuesto');
             $table->float('total_pagado_cliente');
             $table->float('deuda_cliente')->nullable();
-            $table->enum('estado',['Activo','Inactivo'])->default('Activo');
+            $table->string('estado');
+            //$table->enum('estado',['Activo','Inactivo'])->default('Activo');
 
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('id')->on('clientes');

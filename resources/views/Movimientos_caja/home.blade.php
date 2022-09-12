@@ -202,7 +202,6 @@
                         $total_transferencia = $total_transferencia + $movimiento->cantidad;
                     }
 
-
                     ?>
 
                     <tr class="{{$tipoMovimiento_bg}}">

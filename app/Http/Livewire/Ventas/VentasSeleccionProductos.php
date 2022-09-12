@@ -34,24 +34,24 @@ class VentasSeleccionProductos extends Component
 
        if($this->buscador == '0'){
 
-
-        $productos = Producto::where('estado', 1)
-        ->whereHas('modelo',function(Builder $query){
-            $query->where('nombre', 'LIKE', '%' . $this->search . '%');
-         })->latest('id')
-         ->paginate(15);
-
-         $this->item_buscar = "el modelo del producto a buscar";
+        if($this->search != ''){
+            $productos = Producto::where('estado', 'Habilitado')
+                ->where('cod_barra', $this->search)
+                ->first();
+        }
+        else{
+            $productos = 0;
+        }
+             $this->item_buscar = "el código de barra del producto a buscar";
         }
 
         elseif($this->buscador == '1'){
 
-
-            $productos = Producto::where('estado', 1)
+            $productos = Producto::where('estado', 'Habilitado')
             ->whereHas('marca',function(Builder $query){
                 $query->where('nombre', 'LIKE', '%' . $this->search . '%');
              })->latest('id')
-             ->paginate(15);
+             ->paginate(19);
     
              $this->item_buscar = "la marca del producto a buscar";
         }
@@ -59,22 +59,23 @@ class VentasSeleccionProductos extends Component
         elseif($this->buscador == '2'){
 
 
-            $productos = Producto::where('estado', 1)
+            $productos = Producto::where('estado', 'Habilitado')
             ->whereHas('categoria',function(Builder $query){
                 $query->where('nombre', 'LIKE', '%' . $this->search . '%');
              })->latest('id')
-             ->paginate(15);
+             ->paginate(19);
     
              $this->item_buscar = "la categoria del producto a buscar";
         }
 
         elseif($this->buscador == '3'){
-            $productos = Producto::where('estado', 1)
-            ->where('cod_barra', 'LIKE', '%' . $this->search . '%')
-            ->latest('id')
-             ->paginate(15);
+            $productos = Producto::where('estado', 'Habilitado')
+            ->whereHas('modelo',function(Builder $query){
+                $query->where('nombre', 'LIKE', '%' . $this->search . '%');
+            })->latest('id')
+            ->paginate(19);
     
-             $this->item_buscar = "el código de barra del producto a buscar";
+            $this->item_buscar = "el modelo del producto a buscar";
         }
 
 

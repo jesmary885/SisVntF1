@@ -23,7 +23,7 @@ class EmpresaSeeder extends Seeder
             'nro_documento' => '20603739176',
             'nombre_impuesto' => 'IVA',
             'impuesto' => '18',
-            'porcentaje_puntos' => '5',
+            // 'porcentaje_puntos' => '5',
             'logo' => 'vendor/adminlte/dist/img/logo.png'
         ]);
     }

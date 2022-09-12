@@ -17,6 +17,8 @@
   'admin.proveedores.proveedor-index' => 'App\\Http\\Livewire\\Admin\\Proveedores\\ProveedorIndex',
   'admin.sucursales.sucursal-create' => 'App\\Http\\Livewire\\Admin\\Sucursales\\SucursalCreate',
   'admin.sucursales.sucursal-index' => 'App\\Http\\Livewire\\Admin\\Sucursales\\SucursalIndex',
+  'admin.tasa.tasa-edit' => 'App\\Http\\Livewire\\Admin\\Tasa\\TasaEdit',
+  'admin.tasa.tasa-index' => 'App\\Http\\Livewire\\Admin\\Tasa\\TasaIndex',
   'admin.usuarios-create' => 'App\\Http\\Livewire\\Admin\\UsuariosCreate',
   'admin.usuarios-edit' => 'App\\Http\\Livewire\\Admin\\UsuariosEdit',
   'admin.usuarios-index' => 'App\\Http\\Livewire\\Admin\\UsuariosIndex',

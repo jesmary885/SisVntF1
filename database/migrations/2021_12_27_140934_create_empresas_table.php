@@ -24,7 +24,7 @@ class CreateEmpresasTable extends Migration
             $table->string('nro_documento');
             $table->string('nombre_impuesto');
             $table->string('impuesto');
-            $table->string('porcentaje_puntos');
+            // $table->string('porcentaje_puntos');
             $table->string('logo');
         });
     }

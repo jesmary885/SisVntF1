@@ -1,4 +1,4 @@
-<div x-data="{ tipo_pago: @entangle('tipo_pago'),metodo_pago: @entangle('metodo_pago'),siguiente_venta: @entangle('siguiente_venta'), imprimir: @entangle('imprimir'),send_email: @entangle('send_email'),tipo_comprobante: @entangle('tipo_comprobante'),carrito: @entangle('carrito')}">
+<div x-data="{ tipo_pago: @entangle('tipo_pago'),metodo_pago: @entangle('metodo_pago'),siguiente_venta: @entangle('siguiente_venta'), imprimir: @entangle('imprimir'),tipo_comprobante: @entangle('tipo_comprobante'),carrito: @entangle('carrito')}">
     <section class="text-gray-700">
         <h2 class=" modal-title font-bold text-md text-gray-800 text-center bg-gray-300"> Productos incluidos en venta</h2>
         @if (Cart::count())
@@ -210,7 +210,7 @@
                         <hr class="mt-2 px-0">
                         <div class="text-gray-700 px-4">
                             <p class="flex justify-between items-center">
-                                Total parcial
+                                Subtotal
                                 <span class="font-semibold">S/ {{$subtotal}}</span>
                             </p>
                             <p class="flex justify-between items-center">
@@ -230,12 +230,12 @@
                             <span class="font-semibold">$/ {{$subtotal - $descuento_total}}</span>
                             {{-- @endif --}}
                             </p>
-                            {{-- <p class="flex justify-between items-center">
-                            IVA {{$iva*100}} %
+                             <p class="flex justify-between items-center">
+                            IVA {{$iva_empresa}} %
                             <span class="font-semibold">
-                            $/ {{Cart::subtotal() * $this->iva}}
+                            $/ {{$this->iva}}
                             </span>
-                            </p> --}}
+                            </p>
 
                             <div class="hidden" :class="{'hidden': tipo_pago != 2}">
                                 <hr class="mt-4 mb-3">
@@ -286,7 +286,7 @@
                         <div class="flex justify-start mt-2">
                             <div class="ml-2 mr-2" :class="{'hidden': (imprimir != 1)}">
                                 <select id="tipo_comprobante" wire:model="tipo_comprobante" title="Tipo de comprobante" class="block bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_comprobante">
-                                    <option value="" selected>*Comprobante</option>
+                                    <option value="" selected>Comprobante</option>
                                     <option value="1">Factura</option>
                                     <option value="2">Ticket</option>
                                 </select>

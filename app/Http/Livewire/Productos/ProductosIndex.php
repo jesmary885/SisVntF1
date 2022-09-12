@@ -34,7 +34,9 @@ class ProductosIndex extends Component
 
             $productos = Producto::whereHas('modelo',function(Builder $query){
                 $query->where('nombre','LIKE', '%' . $this->search . '%');
-            })->where('estado','Habilitado')->paginate(5);
+            })->where('estado','Habilitado')
+            ->latest('id')
+            ->paginate(5);
 
             $this->item_buscar = "el modelo del producto a buscar";
         }
@@ -43,7 +45,9 @@ class ProductosIndex extends Component
             $productos = Producto::whereHas('categoria',function(Builder $query){
                 $query->where('nombre','LIKE', '%' . $this->search . '%')
                 ->where('estado','Habilitado');
-            })->paginate(5);
+            })
+            ->latest('id')
+            ->paginate(5);
 
             $this->item_buscar = "la categoria del producto a buscar";
         }
@@ -52,7 +56,9 @@ class ProductosIndex extends Component
             $productos = Producto::whereHas('marca',function(Builder $query){
                 $query->where('nombre','LIKE', '%' . $this->search . '%')
                 ->where('estado','Habilitado');
-            })->paginate(5);
+            })
+            ->latest('id')
+            ->paginate(5);
 
             $this->item_buscar = "la marca del producto a buscar";
         }
@@ -61,6 +67,7 @@ class ProductosIndex extends Component
             $productos = Producto::where('cod_barra', 'LIKE', '%' . $this->search . '%')
             ->orwhere('nombre', 'LIKE', '%' . $this->search . '%')
             ->where('estado','Habilitado')
+            ->latest('id')
             ->paginate(5);
             
             $this->item_buscar = "el código de barra o nombre del producto a buscar";

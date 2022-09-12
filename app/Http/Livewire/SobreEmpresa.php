@@ -23,7 +23,7 @@ class SobreEmpresa extends Component
         'direccion' => 'required',
         'documento' => 'required|numeric|min:5',
         'tipo_documento' => 'required',
-        'porcentaje_puntos' => 'required',
+        //'porcentaje_puntos' => 'required',
         'telefono' => 'required|numeric|min:11',
         'email' => 'required|max:50',
     ];
@@ -39,7 +39,7 @@ class SobreEmpresa extends Component
         $this->nombre_impuesto = $this->empresa->nombre_impuesto;
         $this->impuesto = $this->empresa->impuesto;
         $this->direccion = $this->empresa->direccion;
-        $this->porcentaje_puntos = $this->empresa->porcentaje_puntos;
+        //$this->porcentaje_puntos = $this->empresa->porcentaje_puntos;
     }
 
 
@@ -59,6 +59,8 @@ class SobreEmpresa extends Component
 
         //dd($this->logo);
 
+        
+
         $this->logo->storeAs('public/logo',$nombre_imagen);
 
         $this->empresa->update([
@@ -70,7 +72,7 @@ class SobreEmpresa extends Component
                 'telefono' => $this->telefono,
                 'impuesto' => $this->impuesto,
                 'nombre_impuesto' => $this->nombre_impuesto,
-                'porcentaje_puntos' => $this->porcentaje_puntos,
+                //'porcentaje_puntos' => $this->porcentaje_puntos,
                 'logo' => $imagen
         ]);
    

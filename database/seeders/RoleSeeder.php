@@ -47,6 +47,12 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'admin.modelos.index',
                             'description' => 'Administrar modelos'])->syncRoles([$role1]);
 
+        //TASA DE CAMBIO
+        Permission::create(['name' => 'admin.tasa.index',
+                            'description' => 'Mostrar tasa de cambio'])->syncRoles([$role1]);
+        Permission::create(['name' => 'admin.tasa.edit',
+                            'description' => 'Editar tasa de cambio'])->syncRoles([$role1]);
+
         //MODULO VENTAS
 
         Permission::create(['name' => 'ventas.ventas.index',

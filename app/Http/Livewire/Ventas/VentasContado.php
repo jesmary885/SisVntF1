@@ -30,7 +30,7 @@ class VentasContado extends Component
     {
 
         $ventas = Venta::where('fecha', 'LIKE', '%' . $this->search . '%')
-                    ->where('tipo_pago', 1)
+                    ->where('tipo_pago', 'Contado')
                     ->where('sucursal_id',$this->sucursal)
                     ->where('estado', 'activa')
                     ->latest('id')

@@ -21,7 +21,17 @@ class CreateProductoLotesTable extends Migration
             $table->foreign('proveedor_id')->references('id')->on('proveedors');
             $table->unsignedBigInteger('producto_id');
             $table->foreign('producto_id')->references('id')->on('productos')->onDelete('cascade');
+            
             $table->date('fecha_vencimiento')->nullable();
+            $table->float('precio_entrada');
+            $table->float('precio_letal');
+            $table->float('precio_mayor');
+            $table->float('utilidad_letal');
+            $table->float('utilidad_mayor');
+            $table->float('margen_letal');
+            $table->float('margen_mayor');
+            $table->integer('stock');
+            $table->string('observaciones')->nullable();
         });
     }
 

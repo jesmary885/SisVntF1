@@ -23,11 +23,9 @@ class ProductoEdit extends Component
     public $isopen = false;
     public $pivot, $nombre, $p, $puntos, $fecha_actual, $sucursal_nombre, $cantidad, $observaciones, $cod_barra, $inventario_min, $presentacion, $precio_entrada, $precio_letal, $precio_mayor, $tipo_garantia, $garantia, $estado, $file, $marcas, $categorias, $modelos, $proveedores, $sucursales,$producto;
     public $marca_id = "", $sucursal_id = "" ,$modelo_id = "", $categoria_id = "", $proveedor_id ="";
-    public $limitacion_sucursal = true;
+    public $limitacion_sucursal = true, $exento;
 
     protected $rules = [
-        'precio_letal' => 'required',
-        'precio_mayor' => 'required',
         'categoria_id' => 'required',
         'marca_id' => 'required',
         'modelo_id' => 'required',
@@ -65,7 +63,7 @@ class ProductoEdit extends Component
          $this->cod_barra = $this->producto->cod_barra;
          $this->precio_letal = $this->producto->precio_letal;
          $this->precio_mayor = $this->producto->precio_mayor;
-         $this->cantidad = $this->producto->sucursals->find($this->sucursal_id)->pivot->cantidad;
+         //$this->cantidad = $this->producto->sucursals->find($this->sucursal_id)->pivot->cantidad;
          $this->stock_minimo = $this->producto->stock_minimo;
          $this->modelo_id = $this->producto->modelo_id;
          $this->categoria_id = $this->producto->categoria_id;
@@ -79,6 +77,7 @@ class ProductoEdit extends Component
          $this->tipo_garantia = $this->producto->tipo_garantia;
          $this->unidad_tiempo_garantia = $this->producto->unidad_tiempo_garantia;
          $this->estado = $this->producto->estado;
+         $this->exento = $this->producto->exento;
          $this->modelos=Modelo::all();
          $this->marcas=Marca::all();
          $this->categorias=Categoria::all();
@@ -121,8 +120,6 @@ class ProductoEdit extends Component
             $this->producto->update([
                 'nombre' => $this->nombre,
                 'cod_barra' => $this->cod_barra,
-                'precio_letal' => $this->precio_letal,
-                'precio_mayor' => $this->precio_mayor,
                 'modelo_id' => $this->modelo_id,
                 'categoria_id' => $this->categoria_id,
                 //'puntos' => $this->puntos,

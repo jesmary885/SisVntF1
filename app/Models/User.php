@@ -94,4 +94,8 @@ class User extends Authenticatable
     public function clientes(){
         return $this->hasMany(Cliente::class);
     }
+
+    public function tasa(){
+        return $this->hasMany(tasa_dia::class);
+    }
 }

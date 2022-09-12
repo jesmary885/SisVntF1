@@ -247,6 +247,11 @@ return [
                     'can' => 'admin.roles.index',
                 ],
                 [
+                    'text'    => 'Tasa de cambio',
+                    'route'     => 'admin.tasa.index',
+                    'can' => 'admin.tasa.index',
+                ],
+                [
                     'text' => 'compras',
                     'route'     => 'admin.compras.index',
                     'can' => 'admin.compras.index',
@@ -353,11 +358,16 @@ return [
                     'route'  => 'productos.productos.index',
                     'can' => 'productos.productos.index'
                 ],
-                [
+               /* [
+                    'text' => 'Lotes',
+                    'route'  => 'productos.productos.index',
+                    'can' => 'productos.productos.index'
+                ],*/
+              /*  [
                     'text'    => 'Devolucion',
                     'route'     => 'devolucion.index',
                     'can' => 'productos.devolucion'
-                ],
+                ],*/
             ],
             
         ],

@@ -187,18 +187,15 @@
                     @foreach ($ventas as $venta)
                     <?php
                     
-                    if($venta->tipo_pago == 1){
-                        $tipo_pago = 'Contado';
+                    if($venta->tipo_pago == 'Contado'){
                         $total_contado = $venta->total + $total_contado;
-
                     } 
                     else{
-                        $tipo_pago = 'Credito';
                         $total_credito = $venta->total_pagado_cliente + $total_credito;
                     } 
                     ?>
                         <tr>
-                            <td class="text-center">{{$tipo_pago}} </td>
+                            <td class="text-center">{{$venta->tipo_pago}} </td>
                             <td class="text-center">{{$venta->total_pagado_cliente}}</td>
                             <td class="text-center">{{$venta->total}}</td>
                             <td class="text-center">{{$venta->user->name}} {{$venta->user->apellido}}</td>

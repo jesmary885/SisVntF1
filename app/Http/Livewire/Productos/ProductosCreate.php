@@ -34,6 +34,7 @@ class ProductosCreate extends Component
     public $marca_id = "", $sucursal_id = "" ,$modelo_id = "", $categoria_id = "", $proveedor_id ="";
     public $limitacion_sucursal = true;
     public $ff, $fecha_vencimiento, $descuento, $stock_minimo, $vencimiento = "no", $unidad_tiempo_garantia;
+    public $utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $act_utilidades="1", $act_margenes, $exento;
 
     protected $listeners = ['refreshimg'];
 
@@ -56,6 +57,10 @@ class ProductosCreate extends Component
          'stock_minimo' => 'required|numeric',
          'vencimiento' => 'required',
          'tipo_garantia' => 'required',
+         'utilidad_letal' => 'required|numeric',
+         'margen_letal' => 'required|numeric',
+         'utilidad_mayor' => 'required|numeric',
+         'margen_mayor' => 'required|numeric',
          'file' => 'max:1024',
       ];
 
@@ -110,6 +115,7 @@ class ProductosCreate extends Component
             $this->emit('errorSize','Ha ingresado un valor negativo, intentelo de nuevo');
         }
         else{
+            
 
             //agregando producto en tabla productos
             $producto = new Producto();
@@ -117,21 +123,19 @@ class ProductosCreate extends Component
             if($this->cod_barra) $producto->cod_barra = $this->cod_barra;
             else $producto->cod_barra = Str::random(8);
             $producto->presentacion = $this->presentacion;
-            $producto->precio_entrada = $this->precio_entrada;
-            $producto->precio_letal = $this->precio_letal;
            // $producto->puntos = $this->puntos;
-            $producto->precio_mayor = $this->precio_mayor;
             $producto->modelo_id = $this->modelo_id;
             $producto->marca_id = $this->marca_id;
             $producto->cantidad= $this->cantidad;
             $producto->categoria_id = $this->categoria_id;
-            $producto->observaciones = $this->observaciones;
             $producto->estado = $this->estado;
             $producto->stock_minimo = $this->stock_minimo;
             $producto->descuento = $this->descuento;
             $producto->vencimiento = $this->vencimiento;
             $producto->unidad_tiempo_garantia = $this->unidad_tiempo_garantia;
             $producto->tipo_garantia = $this->tipo_garantia;
+            if($this->exento == '1')  $producto->exento = 'si';
+            else $producto->exento = 'no';
             $producto->save();
             //agregando imagen de producto en tabla imagenes
 
@@ -162,6 +166,15 @@ class ProductosCreate extends Component
             $lote->proveedor_id = $this->proveedor_id;
             $lote->producto_id = $producto->id;
             $lote->fecha_vencimiento = Carbon::parse($this->fecha_vencimiento);
+            $lote->precio_entrada = $this->precio_entrada;
+            $lote->precio_letal = $this->precio_letal;
+            $lote->precio_mayor = $this->precio_mayor;
+            $lote->utilidad_letal = $this->utilidad_letal;
+            $lote->utilidad_mayor = $this->utilidad_mayor;
+            $lote->margen_letal = $this->margen_letal;
+            $lote->margen_mayor = $this->margen_mayor;
+            $lote->observaciones = $this->observaciones;
+            $lote->stock= $this->cantidad;
             $lote->save();
            
             //registrando moviemientos en tabla movimientos
@@ -194,8 +207,8 @@ class ProductosCreate extends Component
                     ]);
                 }
             }
-
-            $this->reset(['nombre','stock_minimo','descuento','sucursal_id','fecha_vencimiento','generar_serial','puntos','cantidad','cod_barra','inventario_min','presentacion','precio_entrada','precio_letal','precio_mayor','modelo_id','categoria_id','observaciones','tipo_garantia','garantia','estado','proveedor_id','marca_id','file']);
+            
+            $this->reset(['nombre','stock_minimo','utilidad_letal','utilidad_mayor','margen_letal','margen_mayor','exento','descuento','sucursal_id','fecha_vencimiento','generar_serial','puntos','cantidad','cod_barra','inventario_min','presentacion','precio_entrada','precio_letal','precio_mayor','modelo_id','categoria_id','observaciones','tipo_garantia','garantia','estado','proveedor_id','marca_id','file']);
             $this->emit('alert','Producto creado correctamente');
             $this->emitTo('productos.productos-index','render');
         }
@@ -204,6 +217,33 @@ class ProductosCreate extends Component
 
     public function render()
     {
+        if($this->precio_entrada != ''){
+            if($this->act_utilidades == 1){
+                if($this->margen_letal != ''){
+                    $this->reset(['precio_letal','utilidad_letal']);
+                    $this->precio_letal = round(($this->precio_entrada / (1 - ($this->margen_letal / 100))),2);
+                    $this->utilidad_letal = round(($this->precio_letal - $this->precio_entrada),2);
+                }
+                if($this->margen_mayor != ''){
+                    $this->reset(['precio_mayor','utilidad_mayor']);
+                    $this->precio_mayor = round(($this->precio_entrada / (1- ($this->margen_mayor / 100))),2);
+                    $this->utilidad_mayor = round(($this->precio_mayor - $this->precio_entrada),2);
+                }
+            }
+
+            elseif($this->act_utilidades == 2){
+                if($this->utilidad_letal != ''){
+                    $this->reset(['precio_letal','margen_letal']);
+                    $this->precio_letal = round(($this->precio_entrada + $this->utilidad_letal),2);
+                    $this->margen_letal = round((($this->utilidad_letal / $this->precio_letal) * 100),2);
+                }
+                if($this->utilidad_mayor != ''){
+                    $this->reset(['precio_mayor','margen_mayor']);
+                    $this->precio_mayor = round(($this->precio_entrada + $this->utilidad_mayor),2);
+                    $this->margen_mayor = round((($this->utilidad_mayor / $this->precio_mayor) * 100),2);
+                }
+            }
+        }
         return view('livewire.productos.productos-create');
     }
 }
