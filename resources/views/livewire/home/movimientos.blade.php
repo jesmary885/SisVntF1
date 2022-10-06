@@ -44,7 +44,7 @@
   
                           <tr class="{{$tipoMovimiento_bg}}">
                               <td class="text-center">{{$tipoMovimiento}} </td>
-                              <td class="text-center">{{$movimiento->cantidad}}</td>
+                              <td class="text-center">{{ $moneda_simbolo }} {{round(($movimiento->cantidad/ $tasa_dia),2)}}</td>
                               <td class="text-center">{{$movimiento->observacion}}</td>
                               <td class="text-center">{{$movimiento->user->name}} {{$movimiento->user->apellido}}</td>
                           </tr>

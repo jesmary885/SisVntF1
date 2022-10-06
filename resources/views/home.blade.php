@@ -19,7 +19,7 @@
       <!-- small box -->
       <div class="small-box bg-info">
         <div class="inner">
-           <h3>{{$ventas_totales_dia}} - $/{{$total_ganancias_dia}}</h3>
+           <h3>{{$ventas_totales_dia}} - {{ $moneda_simbolo }} {{round(($total_ganancias_dia / $tasa_dia),2)}}</h3>
           <!-- <h3>20 - $/1500</h3> -->
 
           <p>Ventas del dia</p>
@@ -69,6 +69,33 @@
         <a href="{{route('movimientos.caja.index.pendiente')}}"  class="small-box-footer">Recibir movimiento en caja<i class="fas fa-arrow-circle-right"></i></a>
       </div>
     </div>
+
+    {{--<div class="col-lg-3 col-6">
+      <!-- small box -->
+      @if( $aperturo == 'si')
+      <div class="small-box bg-success">
+      <div class="inner">
+          <h3>Caja aperturada</h3>
+          <p>Cierre de caja pendiente</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-filing"></i>
+        </div>
+        <a href="{{route('apertura-caja.index')}}"  class="small-box-footer">Cierre de caja <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+      @else
+        <div class="small-box bg-danger">
+        <div class="inner">
+        <h3>-</h3>
+          <p>Apertura de caja pendiente</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-filing"></i>
+        </div>
+        <a href="{{route('apertura-caja.index')}}"  class="small-box-footer"> Aperturar caja <i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+      @endif
+    </div>--}}
 
     {{-- @can('admin.clientes.index')
     <div class="col-lg-3 col-6">

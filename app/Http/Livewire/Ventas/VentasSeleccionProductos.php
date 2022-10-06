@@ -4,6 +4,7 @@ namespace App\Http\Livewire\Ventas;
 
 use App\Models\Modelo;
 use App\Models\Producto;
+use App\Models\Producto_lote;
 use App\Models\Producto_sucursal;
 use App\Models\ProductoSerialSucursal;
 use App\Models\Sucursal;
@@ -16,13 +17,14 @@ class VentasSeleccionProductos extends Component
 {
 
     use WithPagination;
-    public $search, $sucursal,$pivot,$buscador=0,$modalidad_busqueda,$tipo,$proforma;
+    public $search, $sucursal,$pivot,$buscador=0,$modalidad_busqueda,$tipo,$proforma,$caja;
     protected $listeners = ['render']; 
     protected $paginationTheme = "bootstrap";
 
 
     public function mount(){
         //$this->buscador = "1";
+        $this->reset(['search']);
     }
 
     public function render()
@@ -38,9 +40,27 @@ class VentasSeleccionProductos extends Component
             $productos = Producto::where('estado', 'Habilitado')
                 ->where('cod_barra', $this->search)
                 ->first();
+            
+            if($productos){
+
+                $producto_lotes = Producto_lote::where('producto_id',$productos->id)
+                ->where('status','activo')
+                ->oldest()
+                ->get();
+
+                $productos=$productos;
+            }
+            else{
+                $productos = 0;
+                $producto_lotes = 0;
+            } 
+
+            if($producto_lotes)$producto_lotes=$producto_lotes;
+            else $producto_lotes = 0;
         }
         else{
             $productos = 0;
+            $producto_lotes = 0;
         }
              $this->item_buscar = "el código de barra del producto a buscar";
         }
@@ -79,7 +99,7 @@ class VentasSeleccionProductos extends Component
         }
 
 
-        return view('livewire.ventas.ventas-seleccion-productos',compact('productos','sucursal','sucursales','proforma','usuario'));
+        return view('livewire.ventas.ventas-seleccion-productos',compact('producto_lotes','productos','sucursal','sucursales','proforma','usuario'));
     }
 
     public function ayuda(){

@@ -13,7 +13,7 @@
                             </select>
                             <x-input-error for="buscador" />
                         </div>
-                        <input wire:model="search" placeholder="Ingrese {{$item_buscar}}" class="form-control ml-2">
+                        <input autofocus wire:model="search" placeholder="Ingrese {{$item_buscar}}" class="form-control ml-2">
                             
                     </div>
                     
@@ -30,66 +30,39 @@
             </div>
             @if ($productos != '0')
                 <div class="card-body">
-                    <table class="table table-bordered table-responsive-md table-responsive-sm">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th class="text-center">Producto/Categoria</th>
-                                <th class="text-center">Modelo/Marca</th>
-                                {{-- <th class="text-center">Stock</th> --}}
-                                <th class="text-center">Unitario</th>
-                                <th class="text-center">Mayor</th>
-                                <th colspan="1"></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        {{-- @foreach ($productos as $producto)--}}
-                                <tr>
-                                   
-                                     <td class="text-center">{{$productos->nombre}} / {{$productos->categoria->nombre}}   </td>
-                                    <td class="text-center">{{$productos->modelo->nombre}} / {{$productos->marca->nombre}}</td> -->
-                                    {{-- <td class="text-center">@livewire('productos.productos-stock-sucursal', ['producto' => $producto],key(0.,'$producto->id'))</td> --}}
-                                    <td class="text-center">{{ $productos->precio_letal}}</td>
-                                    <td class="text-center">{{ $productos->precio_mayor}}</td>
-                                    <td width="10px">
-                                     @livewire('ventas.ventas-seleccion-cantidades', ['producto' => $productos,'sucursal' => $sucursal, 'usuario' => $usuario],key($productos->id))
-                                        <a href="#" class="btn btn-info btn-sm"><i class="fas fa-check"></i></a>
-                                    </td>
-                                </tr>
-                                {{--@endforeach--}}
-                        </tbody>
-                    </table>
-                </div>
-                <div class="flex card-footer overflow-y-auto">
-    
-                    {{-- <div class="ml-2 flex justify-content-center">
+                    <div class="flex justify-between">
                         <div>
-                            <a href="{{route('ventas.ventas.index')}}" class="btn btn-primary">Regresar</a>
-                           
+                            <h4 class="text-gray-600 font-semibold">
+                            {{$productos->nombre}} {{$productos->categoria->nombre}} {{$productos->modelo->nombre}} / {{$productos->marca->nombre}}
+                            </h4>
                         </div>
-                        <div class="ml-2">
-                            <a href="{{route('facturacion',['sucursal'=>$sucursal ,'proforma'=>$proforma])}}" class="btn btn-primary">Continuar</a>
+
+                        <div>
+                            @if ($producto_lotes != '0')
+                                @foreach ($producto_lotes as $producto_lote)
+                                <div class="flex">
+                                    <p class=" mt-2 text-md text-gray-800 font-semibold">Lote Nro. {{$producto_lote->lote}}</p>
+                                    <div>
+                                        @livewire('ventas.ventas-seleccion-cantidades', ['producto' => $producto_lote,'sucursal' => $sucursal, 'usuario' => $usuario],key($producto_lote->id))
+                                    </div>    
+                                </div>
+                               
+                                @endforeach
+                            @endif
                         </div>
-                      
-                        
-                    </div> --}}
-    
+                    </div>
                 </div>
+
             @else
                 <div class="card-body">
-                    <!--<strong>No hay registros</strong>
-                    <div class="mt-4">
-                        <a href="{{route('ventas.ventas.index')}}" class="btn btn-primary"><< Regresar</a>
-    
-                    </div> -->
-                    
+                                   
                 </div>
             @endif
-    
         </div>
 
     </div>
 
     <div class="card">
-        @livewire('ventas.ventas-cart', ['sucursal' => $sucursal,'proforma' => $proforma])
+        @livewire('ventas.ventas-cart', ['sucursal' => $sucursal,'proforma' => $proforma, 'caja' => $caja])
     </div>
 </div>

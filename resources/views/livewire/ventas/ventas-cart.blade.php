@@ -1,4 +1,4 @@
-<div x-data="{ tipo_pago: @entangle('tipo_pago'),metodo_pago: @entangle('metodo_pago'),siguiente_venta: @entangle('siguiente_venta'), imprimir: @entangle('imprimir'),tipo_comprobante: @entangle('tipo_comprobante'),carrito: @entangle('carrito')}">
+<div x-data="{ publico_general: @entangle('publico_general'),tipo_pago: @entangle('tipo_pago'),metodo_pago: @entangle('metodo_pago'),siguiente_venta: @entangle('siguiente_venta'), imprimir: @entangle('imprimir'),tipo_comprobante: @entangle('tipo_comprobante'),carrito: @entangle('carrito'), cant_metodos: @entangle('cant_metodos)}">
     <section class="text-gray-700">
         <h2 class=" modal-title font-bold text-md text-gray-800 text-center bg-gray-300"> Productos incluidos en venta</h2>
         @if (Cart::count())
@@ -9,7 +9,6 @@
                         <th class="text-center ">Cant</th>
                         <th class="text-center">Prod</th>
                         <th class="text-center">Subt</th>
-                        <!-- <th class="text-center">Pts</th> -->
                         <th colspan="1"></th>
                     </tr>
                 </thead>
@@ -19,23 +18,19 @@
                             <td class="text-center text-sm bg-white">
                                 <span> {{ $item->qty }}</span>
                             </td>
+                            
                             <td class="flex text-center text-sm bg-white">
+                            @if($item->options['exento'] == "Si" )
+                            <h3 class="mr-4 text-md text-gray-600">{{$item->name}} {{$item->options['modelo']}} (E)</h3>
+                            @else
                             <h3 class="mr-4 text-md text-gray-600">{{$item->name}} {{$item->options['modelo']}}</h3>
-                                        <!-- @if ($puntos_canjeo >  $item->options['puntos'])
-                                                    <a class="font-bold text-xl" href="#"
-                                                    wire:loading.attr="disabled"
-                                                    wire:target="canjear"
-                                                    wire:click="canjear('{{$item->id}}}')">
-                                                    <i class="fas fa-award"></i>
-                                                    </a>
-                                            @endif -->
+                            @endif
                             </td>
+                       
                             <td class="text-center text-sm bg-white">
-                                <span>S/ {{ $item->price }}</span>
+                                <span> {{ $moneda_simbolo }} {{  round($item->price / $tasa_dia,2) }}</span>
                             </td>
-                            <!-- <td class="text-center text-sm bg-white">
-                            <span>{{ $item->options['puntos'] }}</span>
-                            </td> -->
+                        
                             <td class="text-center">
                                 <a class="text-center cursor-pointer hover:text-red-600"
                                     wire:click="delete('{{$item->rowId}}')"
@@ -58,109 +53,153 @@
                 </a>
             </div>
         </div>
-        <h2 class=" modal-title font-bold text-md text-gray-800 text-center bg-gray-300"> Ciente</h2>
-            <div class="bg-white rounded-lg shadow pb-1">
-                <div class="flex items-center justify-between m-0 bg-gray-300">
-                    <div class="flex-1">
-                        <input wire:model="search" placeholder="*Seleccione el cliente o escriba aquí su nombre, apellido o nro documento a buscar" class="form-control">
-                    </div>
-                    <div class="ml-1">
-                        @livewire('admin.clientes.clientes-create',['vista' => "ventas",'accion' => 'create'])
-                    </div>
-                </div>
-                @if ($clientes->count())
-                    <div class="bg-white">
-                        <table class="table table-striped table-responsive-sm">
-                            <thead class="thead-dark">
-                                <tr>
-                                    <th class="text-center">Nombre</th>
-                                    <th class="text-center">Documento</th>
-                                    <th class="text-center">Email</th>
-                                    <th class="text-center">Puntos</th>
-                                    <th class="text-center"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($clientes as $cliente)
-                                    <tr>
-                                        <td class="text-center">{{$cliente->nombre}} {{$cliente->apellido}}</td>
-                                        <td class="text-center">{{$cliente->nro_documento}}</td>
-                                        <td class="text-center">{{$cliente->email}}</td>
-                                        <td class="text-center">{{$cliente->puntos}}</td>
-                                        <td width="10px">
-                                        <button
-                                            class="ml-4 btn btn-primary btn-sm" title="Seleccionar cliente"
-                                            wire:click="select_u('{{$cliente->id}}}')">
-                                            <i class="fas fa-check"></i>
-                                        </button>
-
-                                        </td>
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="ml-1">
-                        {{$clientes->links()}}
-                    </div>
-                @else
-                    <div>
-                        <strong>No hay registros</strong>
-                    </div>
-                @endif
-            </div>
         <h2 class="modal-title font-bold text-md text-gray-800 text-center bg-gray-300"> Detalles del comprobante de venta</h2>
-      
-        <!-- <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-4"> -->
-            <!-- <aside class="md:col-span-1 "> -->
-        <div>
+
+        <div class="grid md:grid-cols-1 lg:grid-cols-2 gap-4">
+        
+        
+        <aside class="md:col-span-1 ">
+            
+            
+
+            <div>
             <div class="w-full">
                 <div class="flex justify-between w-full h-full mt-2">
                     <div class=" w-full ml-2">
                         <select id="tipo_pago" wire:model="tipo_pago" title="Tipo de pago" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_pago">
-                            <!-- <option value="" selected>*Tipo de pago</option> -->
                             <option value="Contado"selected>Contado</option>
                             <option value="Credito">Crédito</option>
                         </select>
                         <x-input-error for="tipo_pago" />
                     </div>
-                    <div class="ml-2 mr-2 w-full">
-                        <select id="metodo_pago" wire:model="metodo_pago" title="Método de pago" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_garantia">
-                            <option value="" selected>Método de pago</option>
-                            <option value="Efectivo">Efectivo</option>
-                            <option value="Tarjeta Debito">Tarjeta Debito</option>
-                            <option value="Pago movil">Pago móvil</option>
-                            <option value="Biopago">Biopago</option>
-                            <option value="Efectivo y otro metodo">Efectivo y otro método</option>
-                            <option value="Tarjeta Credito">Tarjeta Crédito</option>
-                            <option value="Transferencia">Transferencia</option>
-                            <option value="Binance">Binance</option>
-                            <option value="Zelle">Zelle</option>
-                            <option value="PayPal">PayPal</option>
-                            <option value="1Otros">Otros</option>
+                    <div class="ml-2 w-full">
+                        <select id="cant_metodos" wire:model="cant_metodos" title="Cantidad de métodos de pago" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="cant_metodos">
+                            <option value="" selected>Cantidad de métodos de pago</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
                         </select>
-                        <x-input-error for="metodo_pago" />
+                        <x-input-error for="cant_metodos" />
                     </div>
                 </div>
                 <div class="flex justify-between w-full h-full mt-2">
                     <div class="ml-2 mr-2 w-full">
                         <select id="estado_entrega" wire:model="estado_entrega" title="Estado de la entrega" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_garantia">
-                            <!-- <option value="" selected>*Estado de entrega</option> -->
                             <option value="Entregado" selected>Entregado</option>
                             <option value="Por entregar">Por entregar</option>
                         </select>
                         <x-input-error for="estado_entrega" />
                     </div>
-                    <div class="mr-2 w-full">
-                        <div class="w-full mr-2">
+                    <div class="w-full">
+                        <div class="w-full">
                             <input wire:model="descuento" type="number" min="0" title="Descuento en venta" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Descuento en venta %">
                             <x-input-error for="descuento" />
                         </div>
                     </div>
                 </div>
+                {{--metodos de pago--}}
+                {{--con 1 metodo--}}
+                <div class="flex justify-between w-full h-full mt-2">
+                    <div class="w-full mr-2">
+                            <select wire:model.lazy="metodo_id_1" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                <option value="" selected>Seleccione el método pago</option>
+                                @foreach ($metodos as $metodo)
+                                    <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error for="metodo_id_1" />
+                    </div>
+
+                    <div class="w-full">
+                        <input wire:model="monto1" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Monto recibido">
+                        <x-input-error for="monto1" />
+                    </div>
+                </div>
+
+                {{--con 2 metodos--}}
+                <div :class="{'hidden': (cant_metodos == 1)}" class="flex justify-between w-full h-full mt-2">
+                    <div class="w-full mr-2">
+                            <select wire:model.lazy="metodo_id_2" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                <option value="" selected>Seleccione el método pago</option>
+                                @foreach ($metodos as $metodo)
+                                    <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error for="metodo_id_2" />
+                    </div>
+
+                    <div class="w-full">
+                        <input wire:model="monto2" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Monto recibido">
+                        <x-input-error for="monto2" />
+                    </div>
+                </div>
+                {{--con 3 metodos--}}
+                <div :class="{'hidden': (cant_metodos == 1)}" class="flex justify-between w-full h-full mt-2">
+                    <div :class="{'hidden': (cant_metodos == 2)}">
+                        <div class="w-full mr-2">
+                                <select wire:model.lazy="metodo_id_3" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                    <option value="" selected>Seleccione el método pago</option>
+                                    @foreach ($metodos as $metodo)
+                                        <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error for="metodo_id_3" />
+                        </div>
+                        <div class="w-full">
+                            <input wire:model="monto3" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Monto recibido">
+                            <x-input-error for="monto3" />
+                        </div>
+                    </div>
+                </div>
+                {{--con 4 metodos--}}
+                <div :class="{'hidden': (cant_metodos == 1)}" class="flex justify-between w-full h-full mt-2">
+                    <div :class="{'hidden': (cant_metodos == 2)}">
+                        <div :class="{'hidden': (cant_metodos == 3)}">
+                            <div class="w-full mr-2">
+                                <select wire:model.lazy="metodo_id_4" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                    <option value="" selected>Seleccione el método pago</option>
+                                    @foreach ($metodos as $metodo)
+                                        <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error for="metodo_id_4" />
+                            </div>
+                            <div class="w-full">
+                                <input wire:model="monto4" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Monto recibido">
+                                <x-input-error for="monto4" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{--con 5 metodos--}}
+                <div :class="{'hidden': (cant_metodos == 1)}" class="flex justify-between w-full h-full mt-2">
+                    <div :class="{'hidden': (cant_metodos == 2)}">
+                        <div :class="{'hidden': (cant_metodos == 3)}">
+                            <div :class="{'hidden': (cant_metodos == 4)}">
+                                <div class="w-full mr-2">
+                                    <select wire:model.lazy="metodo_id_5" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                        <option value="" selected>Seleccione el método pago</option>
+                                        @foreach ($metodos as $metodo)
+                                            <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
+                                        @endforeach
+                                    </select>
+                                    <x-input-error for="metodo_id_5" />
+                                </div>
+                                <div class="w-full">
+                                    <input wire:model="monto5" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Monto recibido">
+                                    <x-input-error for="monto5" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {{-- fin de metodo de pagos --}}
 
                 <div :class="{'hidden': (tipo_pago != 'Credito')}">
-                    <div class=" mr-2 mt-2 ml-2">
+                    <div class="mt-2 ml-2">
                         <input wire:model="pago_cliente" type="number" title="Pago inicial" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Pago inicial">
                         <x-input-error for="pago_cliente" />
                     </div>
@@ -183,7 +222,7 @@
                             <input wire:model="cash_received" type="number" title="Efectivo recibido" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Efectivo">
                             <x-input-error for="cash_received" />
                         </div>
-                        <div  class="mr-1 ml-2 w-full">
+                        <div  class="ml-2 w-full">
                             <input wire:model="other_method" type="number" title="Recibido otro metodo" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Otro método">
                             <x-input-error for="other_method" />
                         </div>
@@ -193,13 +232,65 @@
                     </div>
                 </div>
             </div>
-            <!-- </aside> -->
 
+            <div class="flex justify-between ml-2">
+                <div class="flex w-full h-full ml-2">
+                <input type="checkbox" class=" ml-1" wire:model="publico_general" value="1">
+                <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">Público general</p>
+                </div>
+            </div>
 
-            <!-- <div class="md:col-span-1" :class="{'hidden': carrito == ''}"> -->
-                <div class="mt-2">
-                    <hr>
-                    <div class="mt-2">
+            <div :class="{'hidden': (publico_general == '1')}">
+                <div class="flex items-center justify-between m-0 bg-gray-300">
+                    <div class="flex-1">
+                        <input wire:model="search" placeholder="Seleccione el cliente o escriba aquí su nombre o nro documento" class="form-control">
+                    </div>
+                    <div class="ml-1">
+                        @livewire('admin.clientes.clientes-create',['vista' => "ventas",'accion' => 'create'])
+                    </div>
+                </div>
+                @if ($cliente != '0')
+                    <div class="bg-white">
+                        <table class="table table-striped table-responsive-sm">
+                            <thead class="thead-dark">
+                                <tr>
+                                    <th class="text-center">Nombre</th>
+                                    <th class="text-center">Documento</th>
+                                   
+                                    <th class="text-center"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                    
+                                    <tr>
+                                        <td class="text-center">{{$cliente->nombre}} {{$cliente->apellido}}</td>
+                                        <td class="text-center">{{$cliente->nro_documento}}</td>
+                                      
+                                        <td width="10px">
+                                        <button
+                                            class="ml-4 btn btn-primary btn-sm" title="Seleccionar cliente"
+                                            wire:click="select_u('{{$cliente->id}}}')">
+                                            <i class="fas fa-check"></i>
+                                        </button>
+
+                                        </td>
+                                    </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                   
+                @else
+                    <div class="card-body">
+                                   
+                    </div>
+                @endif
+            </div>
+
+        </aside>
+
+        <div class="md:col-span-1 ">
+        <div class="mt-2">
+                    <div>
                         <div class="text-gray-600 px-4">
                             <p class="flex font-bold justify-between items-center mt-2">
                                 Cliente:
@@ -207,33 +298,33 @@
                                 <x-input-error for="cliente_select" />
                             </p>
                         </div>
-                        <hr class="mt-2 px-0">
+                        <hr>
                         <div class="text-gray-700 px-4">
                             <p class="flex justify-between items-center">
                                 Subtotal
-                                <span class="font-semibold">S/ {{$subtotal}}</span>
+                                <span class="font-semibold">{{ $moneda_simbolo }} {{round($subtotal / $tasa_dia,2)}}</span>
                             </p>
                             <p class="flex justify-between items-center">
                             Descuento
                             {{-- @if ($canjeo == false)
-                                <span class="font-semibold">$/ {{Cart::subtotal() * ($this->descuento / 100)}}</span>
+                                <span class="font-semibold">{{ $moneda_simbolo }} {{(Cart::subtotal() * ($this->descuento / 100)) * $tasa_dia}}</span>
                             @else --}}
-                                <span class="font-semibold">$/ {{$descuento_total}}</span>
+                                <span class="font-semibold">{{ $moneda_simbolo }} {{ round($descuento_total / $tasa_dia,2)}}</span>
                             {{-- @endif --}}
-                            {{-- <span class="font-semibold">$/ {{$descuento_total = Cart::subtotal() * ($this->descuento / 100)}}</span> --}}
+                            {{-- <span class="font-semibold">{{ $moneda_simbolo }} {{$descuento_total = Cart::subtotal() * ($this->descuento / 100)}}</span> --}}
                             </p>
                             <p class="flex justify-between items-center">
                             Subtotal menos descuento
                             {{-- @if ($canjeo == false)
-                            <span class="font-semibold">$/ {{Cart::subtotal() - (Cart::subtotal() * ($this->descuento / 100))}}</span>
+                            <span class="font-semibold">{{ $moneda_simbolo }} {{(Cart::subtotal() - (Cart::subtotal() * ($this->descuento / 100))) * $tasa_dia}}</span>
                             @else --}}
-                            <span class="font-semibold">$/ {{$subtotal - $descuento_total}}</span>
+                            <span class="font-semibold">{{ $moneda_simbolo }} {{round(($subtotal - $descuento_total) / $tasa_dia,2)}}</span>
                             {{-- @endif --}}
                             </p>
                              <p class="flex justify-between items-center">
                             IVA {{$iva_empresa}} %
                             <span class="font-semibold">
-                            $/ {{$this->iva}}
+                            {{ $moneda_simbolo }} {{round(($this->iva / $tasa_dia),2)}}
                             </span>
                             </p>
 
@@ -242,16 +333,16 @@
                                 <p class="flex justify-between items-center">
                                     Total pagado por el cliente
                                     <span class="font-semibold">
-                                    $/ {{$pago_cliente}}
+                                    {{ $moneda_simbolo }} {{round(($pago_cliente / $tasa_dia),2)}}
                                     </span>
                                 </p>
                                 <p class="flex justify-between items-center">
                                     Pendiente por pagar
                                     <span class="font-semibold">
                                     {{-- @if ($canjeo == false)
-                                    S/ {{(Cart::subtotal() - (Cart::subtotal() * ($this->descuento / 100))) - ($pago_cliente)}}
+                                        {{ $moneda_simbolo }} {{(Cart::subtotal() - (Cart::subtotal() * ($this->descuento / 100))) - ($pago_cliente)}}
                                     @else --}}
-                                    S/ {{$total_venta - $pago_cliente}}
+                                    {{ $moneda_simbolo }} {{round(($total_venta - $pago_cliente) / $tasa_dia,2)}}
                                     {{-- @endif --}}
                                 </span>
                                 </p>
@@ -262,7 +353,7 @@
                             <span class="text-lg">Total a pagar</span>
                             {{-- @if ($canjeo == false) --}}
                             {{-- S/ {{Cart::subtotal() - (Cart::subtotal() * ($this->descuento / 100))}} --}}
-                            $/ {{$total_venta}}
+                            {{ $moneda_simbolo }} {{round(($total_venta / $tasa_dia),2)}}
                             {{-- @else --}}
                             {{-- S/ {{Cart::subtotal() - ($this->descuento_total)}} --}}
                             {{-- S/ {{Cart::subtotal() - ($this->descuento_total)}}
@@ -289,6 +380,7 @@
                                     <option value="" selected>Comprobante</option>
                                     <option value="1">Factura</option>
                                     <option value="2">Ticket</option>
+                                    <option value="3">Nota de entrega</option>
                                 </select>
                                 <x-input-error for="tipo_comprobante" />
                             </div>
@@ -315,6 +407,7 @@
                     </div>
                 </div>
             </div>
+        </div>
         </div>
         @else
         <hr class="m-0 p-0">

@@ -23,7 +23,4 @@ class Producto_lote extends Model
         return $this->belongsTo(Producto::class);
     }
 
-    
-
-
 }

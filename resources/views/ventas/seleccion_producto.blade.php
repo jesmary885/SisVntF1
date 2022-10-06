@@ -1,13 +1,11 @@
 @extends('adminlte::page')
 
-@section('title', 'TechPeru')
-
 @section('content_header')
     
 @stop
 
 @section('content')
- @livewire('ventas.ventas-seleccion-productos',['sucursal' => $sucursal, 'proforma' => $proforma]) 
+ @livewire('ventas.ventas-seleccion-productos',['sucursal' => $sucursal, 'proforma' => $proforma, 'caja' => $caja]) 
 
 
 @stop

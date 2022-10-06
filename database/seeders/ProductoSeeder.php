@@ -32,7 +32,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 2',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111121',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -45,7 +45,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 3',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111122',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -58,7 +58,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 4',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111123',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -71,7 +71,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 5',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111124',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -84,7 +84,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 6',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111125',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -97,7 +97,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 7',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111126',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -110,7 +110,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 8',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111127',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -123,7 +123,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 9',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111128',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -136,7 +136,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 10',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111129',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -149,7 +149,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 11',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111130',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -162,7 +162,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 12',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111131',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -175,7 +175,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 13',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111132',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -188,7 +188,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 14',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111133',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -201,7 +201,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 15',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111134',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -214,7 +214,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 16',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111135',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -227,7 +227,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 17',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111135',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -240,7 +240,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 18',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111136',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -253,7 +253,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 19',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111137',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',
@@ -266,7 +266,7 @@ class ProductoSeeder extends Seeder
         ],
         [
           'nombre' => 'producto 20',
-          'cod_barra' => '111111111120',
+          'cod_barra' => '111111111138',
           'estado' => 'Habilitado',
           'cantidad' => '50',
           'presentacion' => 'Unidad',

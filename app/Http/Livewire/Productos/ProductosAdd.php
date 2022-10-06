@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Productos;
 
 use App\Models\Compra;
+use App\Models\Moneda;
 use App\Models\Producto;
 use App\Models\Producto_lote;
 use App\Models\Proveedor;
@@ -11,6 +12,7 @@ use App\Models\User;
 
 use App\Models\Producto_sucursal as Pivot;
 use App\Models\ProductoSerialSucursal;
+use App\Models\tasa_dia;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
@@ -18,7 +20,7 @@ use Livewire\Component;
 class ProductosAdd extends Component
 {
 
-    public $isopen = false;
+    public $isopen = false,$tasa_dia,$moneda_nombre,$moneda_simbolo, $monedas, $moneda_id= "";
     public $producto, $lotes, $generar_serial, $pivot, $precio_compra, $proveedores, $cantidad, $sucursal_nombre, $sucursal_id = "", $lote_id = "",$sucursales, $proveedor_id = "";
     public $limitacion_sucursal = true;
     public $fecha_vencimiento,$vencimiento,$observaciones;
@@ -53,10 +55,13 @@ class ProductosAdd extends Component
              $sucursal_usuario = Sucursal::where('id',$this->sucursal_id)->first();
              $this->sucursal_nombre = $sucursal_usuario->nombre;
          }
+
+         $this->monedas = Moneda::all();
      }
  
     public function render()
     {
+
         if($this->lote_id != ""){
             if($this->lote_id == "nuevo_lote"){
                 if($this->precio_entrada != ''){
@@ -105,10 +110,11 @@ class ProductosAdd extends Component
                 $this->margen_mayor = $producto_lote_select->utilidad_mayor;
                 $this->margen_letal = $producto_lote_select->margen_letal;
                 $this->utilidad_mayor = $producto_lote_select->utilidad_mayor;
-                if($this->vencimiento == 'Si') $this->fecha_vencimiento = date("d-m-Y",strtotime($producto_lote_select->fecha_vencimiento));;
+                if($this->vencimiento == 'Si') $this->fecha_vencimiento = date("d-m-Y",strtotime($producto_lote_select->fecha_vencimiento));
             }
         }
-        
+
+        if($this->lote_id != 'nuevo_lote') $this->moneda_lote = 'Bs';      
 
         return view('livewire.productos.productos-add');
     }
@@ -130,12 +136,17 @@ class ProductosAdd extends Component
             $this->emit('errorSize','Ha ingresado un valor negativo, intentelo de nuevo');
            // $this->reset(['precio_compra','cantidad']);
         }else{
+
+            if($this->moneda_id == '1') $tasa_dia = 1;
+            else $tasa_dia = tasa_dia::where('moneda_id',$this->moneda_id)->first()->tasa;            
+
             $sucursales = Sucursal::all();
             $producto_select = Producto::where('id',$this->producto->id)->first();
             $cantidad_nueva_general = $producto_select->cantidad + $this->cantidad;
             $this->fecha_actual = date('Y-m-d');
             $usuario_auth = Auth::id();
-            $total_compra = ($this->precio_compra * $this->cantidad);
+
+            $total_compra = (($this->precio_compra*$tasa_dia) * $this->cantidad);
 
             $rules = $this->rules;
             $this->validate($rules);
@@ -159,7 +170,7 @@ class ProductosAdd extends Component
                 'cantidad_salida' => 0,
                 'stock_antiguo' => $stock_antiguo,
                 'stock_nuevo' => $stock_nuevo,
-                'precio_entrada' => $this->precio_compra * $this->cantidad,
+                'precio_entrada' =>$total_compra,
                 'precio_salida' => 0,
                 'detalle' => 'Compra y registro de nuevas unidades',
                 'user_id' => $usuario_auth
@@ -180,7 +191,7 @@ class ProductosAdd extends Component
             $compra->fecha = $this->fecha_actual;
             $compra->total = $total_compra;
             $compra->cantidad = $this->cantidad;
-            $compra->precio_compra = $this->precio_entrada;
+            $compra->precio_compra = $this->precio_entrada*$tasa_dia;
             $compra->proveedor_id = $this->proveedor_id;
             $compra->user_id = $usuario_auth;
             $compra->sucursal_id = $this->sucursal_id;
@@ -200,12 +211,12 @@ class ProductosAdd extends Component
                 $nuevo_lote_producto->proveedor_id = $this->proveedor_id;
                 $nuevo_lote_producto->producto_id = $producto_select->id;
                 $nuevo_lote_producto->fecha_vencimiento = Carbon::parse($this->fecha_vencimiento); 
-                $nuevo_lote_producto->precio_entrada = $this->precio_entrada;
-                $nuevo_lote_producto->precio_letal = $this->precio_letal;
-                $nuevo_lote_producto->precio_mayor = $this->precio_mayor;
-                $nuevo_lote_producto->utilidad_letal = $this->utilidad_letal;
+                $nuevo_lote_producto->precio_entrada = $this->precio_entrada*$tasa_dia;
+                $nuevo_lote_producto->precio_letal = $this->precio_letal*$tasa_dia;
+                $nuevo_lote_producto->precio_mayor = $this->precio_mayor*$tasa_dia;
+                $nuevo_lote_producto->utilidad_letal = $this->utilidad_letal*$tasa_dia;
                 $nuevo_lote_producto->margen_letal = $this->margen_letal;
-                $nuevo_lote_producto->utilidad_mayor = $this->utilidad_mayor;
+                $nuevo_lote_producto->utilidad_mayor = $this->utilidad_mayor*$tasa_dia;
                 $nuevo_lote_producto->margen_mayor = $this->margen_mayor;
                 $nuevo_lote_producto->stock = $this->cantidad;
                 $nuevo_lote_producto->observaciones = $this->observaciones;

@@ -15,6 +15,20 @@ class ClienteSeeder extends Seeder
     public function run()
     {
         Cliente::create([
+            'nombre' => 'Publico general',
+            'apellido' => 'N/A',
+            'email' => 'na@na.com',
+            'nro_documento' => 'N/A',
+            'tipo_documento' => 'N/A',
+            'telefono' => 'N/A',
+            'direccion' => 'N/A',
+            'ciudad_id' => '1',
+            'user_id' => '1',
+            'estado_id' => '1',
+            //'puntos' => '8',
+        ]);
+
+        Cliente::create([
             'nombre' => 'Pablo',
             'apellido' => 'Perez',
             'email' => 'pablo@gmail.com',
@@ -25,7 +39,7 @@ class ClienteSeeder extends Seeder
             'ciudad_id' => '1',
             'estado_id' => '1',
             'user_id' => '1',
-            'puntos' => '11',
+            //'puntos' => '11',
         ]);
 
         Cliente::create([
@@ -39,7 +53,7 @@ class ClienteSeeder extends Seeder
             'ciudad_id' => '1',
             'estado_id' => '1',
             'user_id' => '1',
-            'puntos' => '5',
+            //'puntos' => '5',
         ]);
 
         Cliente::create([
@@ -53,7 +67,7 @@ class ClienteSeeder extends Seeder
             'ciudad_id' => '1',
             'user_id' => '1',
             'estado_id' => '1',
-            'puntos' => '8',
+            //'puntos' => '8',
         ]);
         
     }

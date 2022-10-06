@@ -28,8 +28,8 @@
                       @foreach ($ventas as $venta)
                           <tr>
                               <td class="text-center">{{$venta->tipo_pago}} </td>
-                              <td class="text-center">{{$venta->total_pagado_cliente}}</td>
-                              <td class="text-center">{{$venta->total}}</td>
+                              <td class="text-center">{{ $moneda_simbolo }} {{round(($venta->total_pagado_cliente/ $tasa_dia),2)}}</td>
+                              <td class="text-center">{{ $moneda_simbolo }} {{round(($venta->total/ $tasa_dia),2)}}</td>
                               <td class="text-center">{{$venta->user->name}} {{$venta->user->apellido}}</td>
                           </tr>
                       @endforeach

@@ -114,7 +114,11 @@ $medidaTicket = 180;
                 @foreach ($collection as $item)
                         <tr>
                             <td class="cant">{{$item->qty}}</td>
+                            @if($item->options['exento'] == "Si" )
+                            <td>{{$item->name}} - {{$item->options['modelo']}} (E)</td>
+                            @else
                             <td>{{$item->name}} - {{$item->options['modelo']}}</td>
+                            @endif
                             <td>S/ {{$item->price}}</td>
                         </tr>
                     @endforeach

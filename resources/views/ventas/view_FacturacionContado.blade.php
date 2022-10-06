@@ -200,6 +200,7 @@
                     @foreach ($productos as $producto)
                         <tr>
                             <td>{{$producto->cantidad}}</td>
+                            
                             <td>{{$producto->producto->nombre}} - {{$producto->producto->modelo->nombre}}</td>
                             <td>S/ {{$producto->precio}}</td>
                             <td>S/ {{$producto->precio * $producto->cantidad}} </td>

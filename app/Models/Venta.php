@@ -25,6 +25,10 @@ class Venta extends Model
         return $this->belongsTo(Sucursal::class);
     }
 
+    public function caja(){
+        return $this->belongsTo(Caja::class);
+    }
+
     //Relacion uno a muchos
    
     public function producto_ventas(){
@@ -33,6 +37,10 @@ class Venta extends Model
 
     public function devolucions(){
         return $this->hasMany(Devolucion::class);
+    }
+
+    public function pagoVentas(){
+        return $this->hasMany(Pago_venta::class);
     }
 
     

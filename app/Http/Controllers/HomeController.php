@@ -4,14 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Cliente;
 use App\Models\Empresa;
+use App\Models\Moneda;
 use App\Models\MovimientoCaja;
 use App\Models\Producto;
 use App\Models\Sucursal;
+use App\Models\tasa_dia;
 use App\Models\Venta;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Pagination\Paginator; 
+use Session;
 
 
 class HomeController extends Controller
@@ -33,10 +36,33 @@ class HomeController extends Controller
      */
     public function index()
     {
-      
         $usuario_auth = auth()->user();
         $logo = Empresa::first()->logo;
-        //dd($logo);
+
+        $user_auth =  auth()->user();
+
+        if($user_auth->apertura == 'si'){
+            $aperturo = 'si';
+        } 
+        else{
+            $aperturo = 'no';
+        } 
+
+        if(session()->has('moneda')){
+            $moneda = Moneda::where('nombre',session('moneda'))->first();
+            $moneda_nombre = session('moneda');
+            $moneda_simbolo = session('simbolo_moneda');
+            if(session('moneda') == "Bolivar") $tasa_dia = 1;
+            else $tasa_dia = tasa_dia::where('moneda_id',$moneda->id)->first()->tasa;
+        } 
+        else{
+            $moneda = Moneda::where('nombre','Bolivar')->first();
+            $moneda_nombre = 'Bolivar';
+            $moneda_simbolo = 'Bs';
+            $tasa_dia = 1;
+        } 
+
+
         $usuario_ac = $usuario_auth->sucursal->nombre;
         $sucursal_act = $usuario_auth->sucursal->id;
 
@@ -88,7 +114,7 @@ class HomeController extends Controller
             $total_ganancias_dia=$total_venta[0]->quantity;
             $total_traslados_pendientes =$traslado_pendient[0]->cantidad;
 
-            return view('home',compact('ventas','movimientos','total_movimientos_pendientes','usuario_ac','productos_cant','clientes_cant','ventas_totales_dia','total_ganancias_dia','total_traslados_pendientes','logo'));
+            return view('home',compact('aperturo','ventas','movimientos','tasa_dia','moneda_simbolo','total_movimientos_pendientes','usuario_ac','productos_cant','clientes_cant','ventas_totales_dia','total_ganancias_dia','total_traslados_pendientes','logo'));
 
     }
 }

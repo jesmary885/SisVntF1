@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Home;
 
 use App\Models\Compra;
 use App\Models\Empresa;
+use App\Models\Moneda;
+use App\Models\tasa_dia;
 use App\Models\Venta;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -12,6 +14,9 @@ use PDF;
 class Ventas extends Component
 {
     use WithPagination;
+
+    public $tasa_dia,$moneda_nombre,$moneda_simbolo;
+
     protected $paginationTheme = "bootstrap";
 
     protected $listeners = ['render' => 'render'];
@@ -22,6 +27,20 @@ class Ventas extends Component
 
     public function render()
     {
+        if(session()->has('moneda')){
+            $this->moneda = Moneda::where('nombre',session('moneda'))->first();
+            $this->moneda_nombre = session('moneda');
+            $this->moneda_simbolo = session('simbolo_moneda');
+            if(session('moneda') == "Bolivar") $this->tasa_dia = 1;
+            else $this->tasa_dia = tasa_dia::where('moneda_id',$this->moneda->id)->first()->tasa;
+        } 
+        else{
+            $this->moneda = Moneda::where('nombre','Bolivar')->first();
+            $this->moneda_nombre = 'Bolivar';
+            $this->moneda_simbolo = 'Bs';
+            $this->tasa_dia = 1;
+        } 
+
         $usuario_auth = auth()->user();
         $fecha_actual = date('Y-m-d');
 

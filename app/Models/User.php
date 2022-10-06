@@ -33,7 +33,8 @@ class User extends Authenticatable
         'estado_id',
         'estado',
         'sucursal_id',
-        'limitacion'
+        'limitacion',
+        'apertura'
     ];
 
     /**

@@ -30,7 +30,6 @@ class CreateVentasTable extends Migration
                                         'Otro']);*/
           //  $table->string('Observaciones');
             $table->string('tipo_pago');
-            $table->string('metodo_pago');
             $table->string('estado_entrega');
             $table->float('descuento');
             $table->float('subtotal');
@@ -47,6 +46,8 @@ class CreateVentasTable extends Migration
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('sucursal_id');
             $table->foreign('sucursal_id')->references('id')->on('sucursals');
+            $table->unsignedBigInteger('caja_id');
+            $table->foreign('caja_id')->references('id')->on('cajas');
         });
     }
 

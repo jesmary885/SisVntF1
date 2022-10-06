@@ -17,9 +17,13 @@ class CreateTasaDiasTable extends Migration
             $table->id();
             $table->timestamps();
             $table->float('tasa');
-            $table->string('moneda');
+
+
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+
+            $table->unsignedBigInteger('moneda_id');
+            $table->foreign('moneda_id')->references('id')->on('monedas')->onDelete('cascade');
         });
     }
 

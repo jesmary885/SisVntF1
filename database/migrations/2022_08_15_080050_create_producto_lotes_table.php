@@ -31,6 +31,7 @@ class CreateProductoLotesTable extends Migration
             $table->float('margen_letal');
             $table->float('margen_mayor');
             $table->integer('stock');
+            $table->string('status');
             $table->string('observaciones')->nullable();
         });
     }

@@ -113,7 +113,9 @@ class MovimientosController extends Controller
         return view('ventas.index',compact('sucursal','tipo'));
     }
 
+    //Productos por lotes
 
-
-    
+    public function productos_lotes(){
+        return view('productos.lotes.index');
+    }
 }

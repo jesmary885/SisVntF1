@@ -9,8 +9,8 @@ class TasaIndex extends Component
 {
     public function render()
     {
-        $tasa = tasa_dia::first();
-        return view('livewire.admin.tasa.tasa-index',compact('tasa'));
+        $tasas = tasa_dia::get();
+        return view('livewire.admin.tasa.tasa-index',compact('tasas'));
     }
 
     protected $listeners = ['render' => 'render'];

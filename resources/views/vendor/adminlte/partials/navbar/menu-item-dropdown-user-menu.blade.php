@@ -13,6 +13,53 @@
     @php( $logout_url = $logout_url ? url($logout_url) : '' )
 @endif
 
+<li class="nav-item dropdown">
+
+    {{-- User menu toggler --}}
+    <a href="#" class="nav-link dropdown-toggle text-gray-800 font-semibold" data-toggle="dropdown">
+        @if(Auth::user()->apertura == "no" )
+        <span class="text-red-600 font-semibold">
+            Caja: Cerrada  
+        </span>
+        @else
+        <span class="text-green-700 font-semibold">
+            Caja: Aperturada
+        </span>
+        @endif
+    </a>
+
+    <ul class="dropdown-menu">
+        @if(Auth::user()->apertura == "no" )
+        <a class="block dropdown-item stretched-link text-success fw-bolder" href="{{route('apertura-caja.index')}}"> Aperturar</a>
+        @else
+        <a class="block dropdown-item stretched-link text-danger fw-bolder" href="{{route('apertura-caja.index')}}"> Cerrar</a>
+        @endif
+
+    </ul>
+</li>
+
+
+<li class="nav-item dropdown">
+
+    {{-- User menu toggler --}}
+    <a href="#" class="nav-link dropdown-toggle text-gray-800 font-semibold" data-toggle="dropdown">
+        @if(session('moneda') && session('simbolo_moneda'))
+        <span>
+            Moneda: {{ session('moneda') }} ({{ session('simbolo_moneda') }})  
+        </span>
+        @else
+        <span>
+            Moneda: Bolivar (Bs)
+        </span>
+        @endif
+    </a>
+
+    <ul class="dropdown-menu">
+        @livewire('moneda.cambiar-moneda')
+
+    </ul>
+</li>
+
 <li class="nav-item dropdown user-menu">
 
     {{-- User menu toggler --}}
@@ -81,6 +128,9 @@
             </form>
         </li>
 
+
     </ul>
 
 </li>
+
+

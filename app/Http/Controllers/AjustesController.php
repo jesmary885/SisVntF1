@@ -14,4 +14,12 @@ class AjustesController extends Controller
     {
         return view('SobreEmpresa');
     }
+    public function moneda()
+    {
+        return view('CambiarMoneda');
+    }
+    public function aperturaCaja()
+    {
+        return view('AperturaCaja');
+    }
 }

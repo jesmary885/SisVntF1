@@ -46,6 +46,12 @@ class RoleSeeder extends Seeder
 
         Permission::create(['name' => 'admin.modelos.index',
                             'description' => 'Administrar modelos'])->syncRoles([$role1]);
+    
+        Permission::create(['name' => 'admin.index.cajas',
+                            'description' => 'Administrar cajas'])->syncRoles([$role1]);
+
+        Permission::create(['name' => 'admin.index.metodos',
+                            'description' => 'Administrar metodos de pago'])->syncRoles([$role1]);
 
         //TASA DE CAMBIO
         Permission::create(['name' => 'admin.tasa.index',
@@ -90,19 +96,25 @@ class RoleSeeder extends Seeder
                             
 
         Permission::create(['name' => 'productos.productos.index',
-                            'description' => 'Administrar productos por código de barra'])->syncRoles([$role1,$role2]);
+            'description' => 'Administrar productos por código de barra'])->syncRoles([$role1,$role2]);
 
         Permission::create(['name' => 'productos.index_serial',
-                            'description' => 'Administrar productos por serial'])->syncRoles([$role1]);
+            'description' => 'Administrar productos por serial'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'productos.productos.delete',
-                            'description' => 'Eliminar productos'])->syncRoles([$role1,$role2]);
+            'description' => 'Eliminar productos'])->syncRoles([$role1,$role2]);
 
         Permission::create(['name' => 'productos.devolucion',
-                            'description' => 'Administrar devolución de equipos'])->syncRoles([$role1]);
+            'description' => 'Administrar devolución de equipos'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'productos.traslado',
-                            'description' => 'Administrar traslado de equipos'])->syncRoles([$role1]);
+            'description' => 'Administrar traslado de equipos'])->syncRoles([$role1]);
+
+        Permission::create(['name' => 'productos.lotes.index',
+            'description' => 'Administrar productos por lote'])->syncRoles([$role1]);
+        
+        Permission::create(['name' => 'productos.lotes.delete',
+            'description' => 'Eliminar lotes'])->syncRoles([$role1]);
 
         //MODULO REPORTES
                             
@@ -134,6 +146,9 @@ class RoleSeeder extends Seeder
  
          Permission::create(['name' => 'ajustes.empresa',
          'description' => 'Administrar datos de empresa'])->syncRoles([$role1]);
+
+         Permission::create(['name' => 'apertura-caja.index',
+         'description' => 'Aperturar y cerrar cajas'])->syncRoles([$role1,$role2]);
  
 
 

@@ -33,8 +33,10 @@ class DatabaseSeeder extends Seeder
         $this->call(ProductoSucursalSeeder::class);
         $this->call(ClienteSeeder::class);
         $this->call(EmpresaSeeder::class);
+        $this->call(MonedaSeeder::class);
         $this->call(TasaDiaSeeder::class);
-
+        $this->call(CajaSeeder::class);
+        $this->call(MetodoPagoSeeder::class);
        
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Ventas;
 
 use App\Http\Controllers\Controller;
+use App\Models\MovimientoCaja;
 use App\Models\Sucursal;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -20,10 +21,25 @@ class VentasController extends Controller
         $vista = 'ventas';
         $proforma = 'venta';
         $usuario_auth = User::where('id',Auth::id())->first();
-        $sucursal = $usuario_auth->sucursal_id;
 
-        if($usuario_auth->limitacion == '1') return view('ventas.seleccion_sucursal',compact('vista','proforma'));
-        else return view('ventas.seleccion_producto',compact('sucursal','proforma'));
+        if($usuario_auth->apertura == 'no'){
+            return view('ventas.sin_apertura');
+        }
+        else{
+            $movimiento = MovimientoCaja::where('tipo_movimiento','4')
+            ->where('user_id',$usuario_auth->id)
+            ->firstOrFail();
+
+            $sucursal = $movimiento->sucursal_id;
+            $caja = $movimiento->caja_id;
+
+            return view('ventas.seleccion_producto',compact('sucursal','proforma','caja'));
+        }
+
+        /*if($usuario_auth->limitacion == '1') return view('ventas.seleccion_sucursal',compact('vista','proforma'));
+        else return view('ventas.seleccion_producto',compact('sucursal','proforma'));*/
+
+        
     }
 
     /**

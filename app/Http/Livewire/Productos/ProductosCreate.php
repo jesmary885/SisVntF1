@@ -6,6 +6,7 @@ use App\Models\Categoria;
 use App\Models\Compra;
 use App\Models\Marca;
 use App\Models\Modelo;
+use App\Models\Moneda;
 use App\Models\Movimiento;
 use App\Models\Producto;
 use App\Models\Producto_cod_barra_serial;
@@ -14,6 +15,7 @@ use App\Models\Producto_sucursal;
 use App\Models\ProductoSerialSucursal;
 use App\Models\Proveedor;
 use App\Models\Sucursal;
+use App\Models\tasa_dia;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -29,8 +31,8 @@ class ProductosCreate extends Component
 
     use WithFileUploads;
 
-    public $nombre, $puntos, $generar_serial, $fecha_actual, $sucursal_nombre, $cantidad, $observaciones, $inv_min, $cod_barra, $inventario_min, $presentacion, $precio_entrada, $precio_letal, $precio_mayor, $tipo_garantia, $garantia, $estado, $file, $marcas, $categorias, $proveedores, $sucursales;
-    public $modelos = [];
+    public $nombre, $monedas, $moneda_id= "", $puntos, $generar_serial, $fecha_actual, $sucursal_nombre, $cantidad, $observaciones, $inv_min, $cod_barra, $inventario_min, $presentacion, $precio_entrada, $precio_letal, $precio_mayor, $tipo_garantia, $garantia, $estado, $file, $marcas, $categorias, $proveedores, $sucursales;
+    public $modelos = [],$tasa_dia,$moneda_nombre,$moneda_simbolo;
     public $marca_id = "", $sucursal_id = "" ,$modelo_id = "", $categoria_id = "", $proveedor_id ="";
     public $limitacion_sucursal = true;
     public $ff, $fecha_vencimiento, $descuento, $stock_minimo, $vencimiento = "no", $unidad_tiempo_garantia;
@@ -70,7 +72,7 @@ class ProductosCreate extends Component
 
  
     public function mount(){
- 
+
         $usuario_au = User::where('id',Auth::id())->first();
         if($usuario_au->limitacion == '1'){
             $this->sucursales=Sucursal::where('status',1)->get();
@@ -80,9 +82,11 @@ class ProductosCreate extends Component
             $sucursal_usuario = Sucursal::where('id',$this->sucursal_id)->first();
             $this->sucursal_nombre = $sucursal_usuario->nombre;
         }
+
         $this->marcas=Marca::all();
         $this->categorias=Categoria::all();
         $this->proveedores=Proveedor::all();
+        $this->monedas = Moneda::all();
     }
 
     public function updatedMarcaId($value)
@@ -108,14 +112,16 @@ class ProductosCreate extends Component
 
         $this->fecha_actual = date('Y-m-d');
         $usuario_auth = Auth::id();
-        $total_compra = (round($this->precio_entrada,2)) * $this->cantidad;
+        
         if($this->observaciones == '') $this->observaciones = 'Sin observaciones';
 
         if($this->precio_entrada < 0 || $this->precio_letal < 0 || $this->precio_mayor < 0 || $this->cantidad < 0 || $this->puntos < 0){
             $this->emit('errorSize','Ha ingresado un valor negativo, intentelo de nuevo');
         }
         else{
-            
+
+            if($this->moneda_id == '1') $tasa_dia = 1;
+            else $tasa_dia = tasa_dia::where('moneda_id',$this->moneda_id)->first()->tasa;            
 
             //agregando producto en tabla productos
             $producto = new Producto();
@@ -147,13 +153,15 @@ class ProductosCreate extends Component
                         'url' => $url
                     ]);
                 }
+            
+            $total_compra = (round(($this->precio_entrada*$tasa_dia),2)) * $this->cantidad;
 
             //registrando compra en tabla compras
             $compra = new Compra();
             $compra->fecha = $this->fecha_actual;
             $compra->total = $total_compra;
             $compra->cantidad = $this->cantidad;
-            $compra->precio_compra = $this->precio_entrada;
+            $compra->precio_compra = $this->precio_entrada*$tasa_dia;
             $compra->proveedor_id = $this->proveedor_id;
             $compra->user_id = $usuario_auth;
             $compra->sucursal_id = $this->sucursal_id;
@@ -166,11 +174,11 @@ class ProductosCreate extends Component
             $lote->proveedor_id = $this->proveedor_id;
             $lote->producto_id = $producto->id;
             $lote->fecha_vencimiento = Carbon::parse($this->fecha_vencimiento);
-            $lote->precio_entrada = $this->precio_entrada;
-            $lote->precio_letal = $this->precio_letal;
-            $lote->precio_mayor = $this->precio_mayor;
-            $lote->utilidad_letal = $this->utilidad_letal;
-            $lote->utilidad_mayor = $this->utilidad_mayor;
+            $lote->precio_entrada = $this->precio_entrada*$tasa_dia;
+            $lote->precio_letal = $this->precio_letal*$tasa_dia;
+            $lote->precio_mayor = $this->precio_mayor*$tasa_dia;
+            $lote->utilidad_letal = $this->utilidad_letal*$tasa_dia;
+            $lote->utilidad_mayor = $this->utilidad_mayor*$tasa_dia;
             $lote->margen_letal = $this->margen_letal;
             $lote->margen_mayor = $this->margen_mayor;
             $lote->observaciones = $this->observaciones;
@@ -184,7 +192,7 @@ class ProductosCreate extends Component
                 'stock_antiguo' => 0,
                 'stock_nuevo' => $this->cantidad,
                 'cantidad_salida' => 0,
-                'precio_entrada' => $this->precio_entrada * $this->cantidad,
+                'precio_entrada' => $total_compra,
                 'precio_salida' => 0,
                 'detalle' => 'Registro de producto',
                 'user_id' => $usuario_auth
@@ -217,7 +225,10 @@ class ProductosCreate extends Component
 
     public function render()
     {
+       
+
         if($this->precio_entrada != ''){
+            $this->precio_entrada = $this->precio_entrada / $this->tasa_dia;
             if($this->act_utilidades == 1){
                 if($this->margen_letal != ''){
                     $this->reset(['precio_letal','utilidad_letal']);
@@ -244,6 +255,8 @@ class ProductosCreate extends Component
                 }
             }
         }
+
+        
         return view('livewire.productos.productos-create');
     }
 }

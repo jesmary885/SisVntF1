@@ -1,9 +1,11 @@
 <?php
 
+use App\Http\Controllers\Admin\CajasController;
 use App\Http\Controllers\Admin\CategoriasController;
 use App\Http\Controllers\Admin\ClientesController;
 use App\Http\Controllers\Admin\ComprasController;
 use App\Http\Controllers\Admin\MarcasController;
+use App\Http\Controllers\Admin\MetodosPagoController;
 use App\Http\Controllers\Admin\ModelosController;
 use App\Http\Controllers\Admin\ProveedoresController;
 use App\Http\Controllers\Admin\RoleController;
@@ -67,8 +69,11 @@ Route::resource('categorias', CategoriasController::class)->only('index','store'
 Route::resource('marcas', MarcasController::class)->only('index','store')->names('admin.marcas');
 Route::resource('modelos', ModelosController::class)->only('index','store')->names('admin.modelos');
 Route::resource('tasa', tasaController::class)->only('index','edit')->names('admin.tasa');
+Route::get('cajas', [CajasController::class, 'index'])->name('admin.index.cajas');
+Route::get('metodos_pago', [MetodosPagoController::class, 'index'])->name('admin.index.metodos');
 
 Route::resource('productos', ProductosController::class)->only('index','create','edit','store')->names('productos.productos');
+Route::get('productos_lotes',[MovimientosController::class,'productos_lotes'])->name('productos.lotes.index');
 Route::resource('Ventas', VentasController::class)->only('create','index','update','show','edit')->names('ventas.ventas');
 Route::resource('Mostrar_ventas', MostrarVentasController::class)->only('create','index','edit','update','show')->names('ventas.mostrar_ventas');
 Route::get('compras',[ComprasController::class,'index'])->name('admin.compras.index');
@@ -158,6 +163,8 @@ Route::post('productos/{product}/files', [FilesController::class, 'files'])->nam
 
 Route::get('cambiar_contrasena',[AjustesController::class,'ccontrasena'])->name('ajustes.ccontrasena');
 Route::get('sobre_empresa',[AjustesController::class,'empresa'])->name('ajustes.empresa');
+Route::get('cambiar_moneda',[AjustesController::class,'moneda'])->name('cambiar-moneda');
+Route::get('aperturar_caja',[AjustesController::class,'aperturaCaja'])->name('apertura-caja.index');
 
 });
 

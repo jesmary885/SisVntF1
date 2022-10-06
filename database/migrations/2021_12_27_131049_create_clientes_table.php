@@ -23,7 +23,7 @@ class CreateClientesTable extends Migration
             $table->string('nro_documento')->unique();
             $table->string('telefono')->nullable();
             $table->string('direccion')->nullable();
-            $table->integer('puntos');
+           // $table->integer('puntos');
             $table->unsignedBigInteger('ciudad_id')->nullable();
             $table->foreign('ciudad_id')->references('id')->on('ciudads');
             $table->unsignedBigInteger('estado_id')->nullable();

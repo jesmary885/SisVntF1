@@ -41,4 +41,8 @@ class Sucursal extends Model
     public function movimientoCajas(){
         return $this->hasMany(MovimientoCaja::class);
     }
+
+    public function cajas(){
+        return $this->hasMany(Caja::class);
+    }
 }

@@ -31,6 +31,7 @@ class UserSeeder extends Seeder
             'estado' => '1',
             'limitacion' => '1',
             'sucursal_id' => '1',
+            'apertura' => 'no'
         ])->assignRole('Administrador');
         
         User::create([
@@ -49,6 +50,7 @@ class UserSeeder extends Seeder
             'estado' => '1',
             'limitacion' => '2',
             'sucursal_id' => '2',
+            'apertura' => 'no'
         ])->assignRole('Administrador');
         
     }

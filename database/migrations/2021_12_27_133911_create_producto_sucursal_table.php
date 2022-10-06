@@ -21,6 +21,7 @@ class CreateProductoSucursalTable extends Migration
             $table->unsignedBigInteger('sucursal_id');
             $table->foreign('sucursal_id')->references('id')->on('sucursals')->onDelete('cascade');
             $table->integer('cantidad');
+            $table->integer('lote');
         });
     }
 

@@ -21,10 +21,16 @@ class CreateMovimientoCajasTable extends Migration
             $table->float('cantidad');
             $table->string('estado');
             $table->string('observacion');
+
+            $table->integer('apertura')->nullable();
+            $table->integer('cierre')->nullable();
+
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->unsignedBigInteger('sucursal_id');
             $table->foreign('sucursal_id')->references('id')->on('sucursals');
+            $table->unsignedBigInteger('caja_id')->nullable();
+            $table->foreign('caja_id')->references('id')->on('cajas');
         });
     }
 

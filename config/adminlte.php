@@ -70,7 +70,7 @@ return [
     'usermenu_header' => false,
     'usermenu_header_class' => 'bg-primary',
     'usermenu_image' => false,
-    'usermenu_desc' => false,
+    'usermenu_desc' => true,
     'usermenu_profile_url' => false,
 
     /*
@@ -89,7 +89,7 @@ return [
     'layout_boxed' => null,
     'layout_fixed_sidebar' => null,
     'layout_fixed_navbar' => null,
-    'layout_fixed_footer' => null,
+    'layout_fixed_footer' => true,
     'layout_dark_mode' => null,
 
     /*
@@ -267,6 +267,16 @@ return [
                     'can' => 'admin.sucursales.index',
                 ],
                 [
+                    'text' => 'Cajas',
+                    'route'     => 'admin.index.cajas',
+                    'can' => 'admin.index.cajas',
+                ],
+                [
+                    'text' => 'Métodos de pago',
+                    'route'     => 'admin.index.metodos',
+                    'can' => 'admin.index.metodos',
+                ],
+                [
                     'text' => 'Categorias',
                     'route'     => 'admin.categorias.index',
                     'can' => 'admin.categorias.index',
@@ -358,11 +368,11 @@ return [
                     'route'  => 'productos.productos.index',
                     'can' => 'productos.productos.index'
                 ],
-               /* [
+                [
                     'text' => 'Lotes',
-                    'route'  => 'productos.productos.index',
-                    'can' => 'productos.productos.index'
-                ],*/
+                    'route'  => 'productos.lotes.index',
+                    'can' => 'productos.lotes.index'
+                ],
               /*  [
                     'text'    => 'Devolucion',
                     'route'     => 'devolucion.index',
@@ -434,6 +444,11 @@ return [
                     'text'    => 'Sobre la empresa',
                     'route'     => 'ajustes.empresa',
                     'can' => 'ajustes.empresa'
+                ],
+                [
+                    'text'    => 'Apertura y cierre de caja',
+                    'route'     => 'apertura-caja.index',
+                    'can' => 'apertura-caja.index'
                 ],
                 // [
                 //     'text'    => 'Reinicio de sistema',

@@ -17,13 +17,19 @@ class TasaDiaSeeder extends Seeder
         tasa_dia::create([
             'tasa' => '6.20',
             'user_id' => 1,
-            'moneda' => 'Dolar'
+            'moneda_id' => 2
         ]);
 
         tasa_dia::create([
-            'tasa' => '6.36',
+            'tasa' => '7',
             'user_id' => 1,
-            'moneda' => 'Euro'
+            'moneda_id' => 3
+        ]);
+
+        tasa_dia::create([
+            'tasa' => '4.5',
+            'user_id' => 1,
+            'moneda_id' => 4
         ]);
     }
 }
