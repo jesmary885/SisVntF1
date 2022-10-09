@@ -20,14 +20,21 @@ class CreateComprasTable extends Migration
             $table->float('total');
             $table->integer('cantidad');
             $table->float('precio_compra');
+
             $table->unsignedBigInteger('proveedor_id');
             $table->foreign('proveedor_id')->references('id')->on('proveedors');
+
             $table->unsignedBigInteger('producto_id');
             $table->foreign('producto_id')->references('id')->on('productos')->onDelete('cascade');
+
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+
             $table->unsignedBigInteger('sucursal_id');
             $table->foreign('sucursal_id')->references('id')->on('sucursals');
+
+            $table->unsignedBigInteger('caja_id')->nullable();
+            $table->foreign('caja_id')->references('id')->on('cajas');
         });
     }
 

@@ -32,11 +32,13 @@ class CierreCaja extends Component
     public function cerrar(){
 
         $this->user_auth =  Auth::user();
+        $fecha = Carbon::now();
 
         $user = User::where('id',$this->user_auth->id)->first();
 
         $user->update([
             'apertura' => 'no',
+            'ultima_fecha_cierre' => $fecha,
         ]);
 
         $caja = Caja::where('id',$this->movimiento->caja_id)->first();

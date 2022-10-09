@@ -1,5 +1,6 @@
 <div x-data="{ aperturo: @entangle('aperturo'), limitacion: @entangle('limitacion')}">
     <div class="card">
+     
         <h1 class="py-0 text-lg text-gray-700 ml-4 mt-1 font-semibold"> Apertura y cierre de caja</h1>
     </div>
     <div class="card w-full pt-0 m-0">
@@ -106,6 +107,7 @@
                                 <h2 class="font-bold text-gray-700 text-center text-lg">Datos de cierre</h2>
                             </div>
                             <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
+                            @if ($array)
                                 <table class="w-full text-sm text-left text-gray-400">
                                     <thead class="text-xs uppercase bg-gray-700 text-gray-400">
                                         <tr>
@@ -116,33 +118,31 @@
                                             Método de pago
                                             </th>
                                             <th scope="col" class="py-3 px-6 text-gray-300 text-sm text-center">
-                                            Monto en Bs
-                                            </th>
-                                            <th scope="col" class="py-3 px-6 text-gray-300 text-sm text-center">
-                                            Monto en Dólares
+                                            Monto
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                       
+                                        @foreach ($array as $value)
                                             <tr class="bg-gray-800 border-gray-700 hover:bg-gray-600">
-                                                <th scope="row" class="py-4 px-6 font-medium whitespace-nowrap text-white">
-                                                
+                                                <th scope="row" class="py-2 px-2 font-medium whitespace-nowrap text-white text-center">
+                                                    Ingreso
                                                 </th>
-                                                <td class="py-4 px-6">
-                                                
+                                                <td class="py-2 px-2 text-center">
+                                                    {{$value['metodo_nombre']}}
                                                 </td>
-                                                <td class="py-4 px-6">
-                                              
-                                                </td>
-                                            
-                                                <td class="py-4 px-6 text-right">
-                                                    
+                                                <td class="py-2 px-2 text-center">
+                                                    {{$value['quantity']}}
                                                 </td>
                                             </tr>
-                                    
+                                        @endforeach   
                                     </tbody>
                                 </table>
+                                @else
+                                    <div class="card-body">
+                                        <strong>No hay registros</strong>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     @endif

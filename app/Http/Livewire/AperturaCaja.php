@@ -8,6 +8,7 @@ use App\Models\Sucursal;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class AperturaCaja extends Component
@@ -39,22 +40,35 @@ class AperturaCaja extends Component
             $movimiento = MovimientoCaja::where('tipo_movimiento','4')
             ->where('user_id',$user->id)
             ->firstOrFail();
+            $fecha_cierre = $user_auth->ultima_fecha_cierre;
+            $fecha_apertura = date("Y-m-d H:i:00",strtotime($user_auth->ultima_fecha_apertura));
+            $user_idd = $user->id;
+            $sucursal_id = $user_auth->ultima_sucursal_id_apertura;
+            $caja_id = $user_auth->ultima_caja_id_apertura;
 
-        //$movimiento= $movimient->toArray();
+            //dd( $fecha_apertura);
 
+          /* $movimientos_pagos = DB::select('SELECT sum(pv.monto) as quantity, mp.nombre as metodo_nombre from pago_ventas pv
+                right join metodo_pagos mp on pv.metodo_pago_id = mp.id
+                inner join ventas v on pv.venta_id=v.id  where v.created_at > :fecha_cierre AND v.created_at <= :fecha_apertura AND v.user_id = :user_idd AND v.caja_id = :caja_id AND v.sucursal_id = :sucursal_id
+                group by mp.nombre order by sum(pv.monto) desc',array('fecha_cierre' => $fecha_cierre,'fecha_apertura' => $fecha_apertura,'user_idd' => $user_idd,'caja_id' => $caja_id,'sucursal_id' => $sucursal_id));*/
 
-          //  dd($movimiento->observacion);
+                $movimientos_pagos = DB::select('SELECT sum(pv.monto) as quantity, mp.nombre as metodo_nombre from pago_ventas pv
+                right join metodo_pagos mp on pv.metodo_pago_id = mp.id
+                inner join ventas v on pv.venta_id=v.id  where v.user_id = :user_idd AND v.caja_id = :caja_id AND v.sucursal_id = :sucursal_id AND v.created_at >= :fecha_apertura
+                group by mp.nombre order by sum(pv.monto) desc',array('user_idd' => $user_idd,'caja_id' => $caja_id,'sucursal_id' => $sucursal_id,'fecha_apertura' => $fecha_apertura));
+
+                $data=json_encode($movimientos_pagos);
+                $array = json_decode($data, true);
+
         } 
         else{
             $this->aperturo = 'no';
             $movimiento = [];
+            $array = [];
         } 
 
-        
-
-       // dd($movimiento);
-
-        return view('livewire.apertura-caja',compact('movimiento'));
+        return view('livewire.apertura-caja',compact('movimiento','array'));
     }
 
     public function updatedSucursalId($value)
@@ -67,18 +81,21 @@ class AperturaCaja extends Component
     public function aperturar(){
         //validaciones
         $user =  Auth::user();
+        $fecha = Carbon::now();
         $user_auth = User::where('id',$user->id)->first(); 
        
         $user_auth->update([
             'apertura' => "si",
+            'ultima_fecha_apertura' => $fecha,
+            'ultima_caja_id_apertura' => $this->caja_id,
+            'ultima_sucursal_id_apertura' => $this->sucursal_id,
         ]);
-
 
        $caja = Caja::where('id',$this->caja_id)->first();
 
         $caja->update([
-            'saldo_dolares' => $this->monto_dolares,
-            'saldo_bolivares' => $this->monto_bolivares,
+            'saldo_dolares' => $this->monto_bolivares,
+            'saldo_bolivares' => $this->monto_dolares,
         ]);
 
         $movimiento = new MovimientoCaja();

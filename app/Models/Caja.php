@@ -25,4 +25,8 @@ class Caja extends Model
         return $this->hasMany(Venta::class);
     }
 
+    public function compras(){
+        return $this->hasMany(Compra::class);
+    }
+
 }

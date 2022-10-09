@@ -34,7 +34,11 @@ class User extends Authenticatable
         'estado',
         'sucursal_id',
         'limitacion',
-        'apertura'
+        'apertura',
+        'ultima_fecha_apertura',
+        'ultima_fecha_cierre',
+        'ultima_caja_id_apertura',
+        'ultima_sucursal_id_apertura'
     ];
 
     /**
@@ -67,7 +71,12 @@ class User extends Authenticatable
     public function sucursal(){
         return $this->belongsTo(Sucursal::class);
     }
-
+    public function sucursalApertura(){
+        return $this->belongsTo(Sucursal::class);
+    }
+    public function cajaApertura(){
+        return $this->belongsTo(Caja::class);
+    }
 
     //Relacion uno a muchos
     public function ventas(){

@@ -1,4 +1,4 @@
-<div x-data="{ publico_general: @entangle('publico_general'),tipo_pago: @entangle('tipo_pago'),metodo_pago: @entangle('metodo_pago'),siguiente_venta: @entangle('siguiente_venta'), imprimir: @entangle('imprimir'),tipo_comprobante: @entangle('tipo_comprobante'),carrito: @entangle('carrito'), cant_metodos: @entangle('cant_metodos)}">
+<div x-data="{ publico_general: @entangle('publico_general'),tipo_pago: @entangle('tipo_pago'),metodo_pago: @entangle('metodo_pago'),siguiente_venta: @entangle('siguiente_venta'), imprimir: @entangle('imprimir'),tipo_comprobante: @entangle('tipo_comprobante'),carrito: @entangle('carrito'), cant_metodos: @entangle('cant_metodos')}">
     <section class="text-gray-700">
         <h2 class=" modal-title font-bold text-md text-gray-800 text-center bg-gray-300"> Productos incluidos en venta</h2>
         @if (Cart::count())
@@ -101,8 +101,11 @@
                 </div>
                 {{--metodos de pago--}}
                 {{--con 1 metodo--}}
+
+                <hr>
+
                 <div class="flex justify-between w-full h-full mt-2">
-                    <div class="w-full mr-2">
+                    <div class="w-full mr-2 ml-2">
                             <select wire:model.lazy="metodo_id_1" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                                 <option value="" selected>Seleccione el método pago</option>
                                 @foreach ($metodos as $metodo)
@@ -120,32 +123,32 @@
 
                 {{--con 2 metodos--}}
                 <div :class="{'hidden': (cant_metodos == 1)}" class="flex justify-between w-full h-full mt-2">
-                    <div class="w-full mr-2">
-                            <select wire:model.lazy="metodo_id_2" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                                <option value="" selected>Seleccione el método pago</option>
-                                @foreach ($metodos as $metodo)
-                                    <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
-                                @endforeach
-                            </select>
-                            <x-input-error for="metodo_id_2" />
+                    <div class="w-full mr-2 ml-2">
+                        <select wire:model.lazy="metodo_id_2" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                            <option value="" selected>Seleccione el método pago Nro 2</option>
+                            @foreach ($metodos as $metodo)
+                                <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
+                            @endforeach
+                        </select>
+                        <x-input-error for="metodo_id_2" />
                     </div>
-
                     <div class="w-full">
                         <input wire:model="monto2" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Monto recibido">
                         <x-input-error for="monto2" />
                     </div>
                 </div>
+
                 {{--con 3 metodos--}}
-                <div :class="{'hidden': (cant_metodos == 1)}" class="flex justify-between w-full h-full mt-2">
-                    <div :class="{'hidden': (cant_metodos == 2)}">
-                        <div class="w-full mr-2">
-                                <select wire:model.lazy="metodo_id_3" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                                    <option value="" selected>Seleccione el método pago</option>
-                                    @foreach ($metodos as $metodo)
-                                        <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
-                                    @endforeach
-                                </select>
-                                <x-input-error for="metodo_id_3" />
+                <div :class="{'hidden': (cant_metodos == 1)}" >
+                    <div class="flex justify-between w-full h-full mt-2" :class="{'hidden': (cant_metodos == 2)}">
+                        <div class="w-full mr-2 ml-2">
+                            <select wire:model.lazy="metodo_id_3" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                <option value="" selected>Seleccione el método pago Nro 3</option>
+                                @foreach ($metodos as $metodo)
+                                    <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error for="metodo_id_3" />
                         </div>
                         <div class="w-full">
                             <input wire:model="monto3" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Monto recibido">
@@ -153,13 +156,14 @@
                         </div>
                     </div>
                 </div>
+
                 {{--con 4 metodos--}}
-                <div :class="{'hidden': (cant_metodos == 1)}" class="flex justify-between w-full h-full mt-2">
+                <div :class="{'hidden': (cant_metodos == 1)}">
                     <div :class="{'hidden': (cant_metodos == 2)}">
-                        <div :class="{'hidden': (cant_metodos == 3)}">
-                            <div class="w-full mr-2">
+                        <div :class="{'hidden': (cant_metodos == 3)}" class="flex justify-between w-full h-full mt-2">
+                            <div class="w-full mr-2 ml-2" >
                                 <select wire:model.lazy="metodo_id_4" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                                    <option value="" selected>Seleccione el método pago</option>
+                                    <option value="" selected>Seleccione el método pago Nro 4</option>
                                     @foreach ($metodos as $metodo)
                                         <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
                                     @endforeach
@@ -173,14 +177,15 @@
                         </div>
                     </div>
                 </div>
+
                 {{--con 5 metodos--}}
-                <div :class="{'hidden': (cant_metodos == 1)}" class="flex justify-between w-full h-full mt-2">
+                <div :class="{'hidden': (cant_metodos == 1)}" >
                     <div :class="{'hidden': (cant_metodos == 2)}">
                         <div :class="{'hidden': (cant_metodos == 3)}">
-                            <div :class="{'hidden': (cant_metodos == 4)}">
-                                <div class="w-full mr-2">
+                            <div :class="{'hidden': (cant_metodos == 4)}" class="flex justify-between w-full h-full mt-2">
+                                <div class="w-full mr-2 ml-2">
                                     <select wire:model.lazy="metodo_id_5" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                                        <option value="" selected>Seleccione el método pago</option>
+                                        <option value="" selected>Seleccione el método pago Nro 5</option>
                                         @foreach ($metodos as $metodo)
                                             <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
                                         @endforeach
@@ -196,6 +201,7 @@
                     </div>
                 </div>
 
+                <hr>
                 {{-- fin de metodo de pagos --}}
 
                 <div :class="{'hidden': (tipo_pago != 'Credito')}">

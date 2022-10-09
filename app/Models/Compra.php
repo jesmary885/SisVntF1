@@ -29,4 +29,8 @@ class Compra extends Model
         return $this->belongsTo(Sucursal::class);
     }
 
+    public function caja(){
+        return $this->belongsTo(Caja::class);
+    }
+
 }

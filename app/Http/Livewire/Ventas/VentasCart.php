@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Ventas;
 
+use App\Models\Caja;
 use Livewire\Component;
 use Gloudemans\Shoppingcart\Facades\Cart;
 use PDF;
@@ -24,7 +25,7 @@ class VentasCart extends Component
 {
     use WithPagination;
 
-    public $publico_general = 1, $sucursal,$caja,$producto,$cambio,$moneda_actual,$tasa_dia,$moneda_nombre,$moneda_simbolo;
+    public $publico_general = 1, $sucursal,$caja, $caja_detalle, $sucursal_detalle,$producto,$cambio,$moneda_actual,$tasa_dia,$moneda_nombre,$moneda_simbolo;
     public $cash_received,$tipo_pago = "Contado",$tipo_comprobante,$send_mail,$imprimir,$ticket = 0, $impresoras, $impresora_id ="";
     public $metodo_pago, $total, $client, $search;
     public $cliente_select, $total_venta, $pago_cliente, $deuda_cliente, $descuento, $estado_entrega = "Entregado",$subtotal,$proforma;
@@ -84,6 +85,8 @@ class VentasCart extends Component
         //$this->puntos_canjeados = 0;
         $this->empresa = Empresa::first();
         $this->iva_empresa = $this->empresa->impuesto;
+        $this->caja_detalle = Caja::where('id',$this->caja)->first();
+        $this->sucursal_detalle = Sucursal::where('id',$this->sucursal)->first();
     }
 
     public function select_u($cliente_id){
@@ -285,6 +288,18 @@ class VentasCart extends Component
                 $pago_venta->metodo_pago_id = $this->metodo_id_1;
                 $pago_venta->venta_id = $venta->id;
                 $pago_venta->save();
+
+                if($this->metodo_id_1 == 3){
+                    $this->caja_detalle->update([
+                        'saldo_bolivares' => $this->caja_detalle->saldo_bolivares + $this->monto1,
+                    ]);
+                }
+
+                if($this->metodo_id_1 == 4){
+                    $this->caja_detalle->update([
+                        'saldo_dolares' => $this->caja_detalle->saldo_dolares + $this->monto1,
+                    ]);
+                }
             }
             elseif($this->cant_metodos == 2) {
                 $pago_venta = new Pago_venta();
@@ -298,6 +313,18 @@ class VentasCart extends Component
                 $pago_venta->metodo_pago_id = $this->metodo_id_2;
                 $pago_venta->venta_id = $venta->id;
                 $pago_venta->save();
+
+                if($this->metodo_id_2 == 3){
+                    $this->caja_detalle->update([
+                        'saldo_bolivares' => $this->caja_detalle->saldo_bolivares + $this->monto2,
+                    ]);
+                }
+
+                if($this->metodo_id_2 == 4){
+                    $this->caja_detalle->update([
+                        'saldo_dolares' => $this->caja_detalle->saldo_dolares + $this->monto2,
+                    ]);
+                }
             }
             elseif($this->cant_metodos == 3) {
                 $pago_venta = new Pago_venta();
@@ -317,6 +344,18 @@ class VentasCart extends Component
                 $pago_venta->metodo_pago_id = $this->metodo_id_3;
                 $pago_venta->venta_id = $venta->id;
                 $pago_venta->save();
+
+                if($this->metodo_id_3 == 3){
+                    $this->caja_detalle->update([
+                        'saldo_bolivares' => $this->caja_detalle->saldo_bolivares + $this->monto3,
+                    ]);
+                }
+
+                if($this->metodo_id_3 == 4){
+                    $this->caja_detalle->update([
+                        'saldo_dolares' => $this->caja_detalle->saldo_dolares + $this->monto3,
+                    ]);
+                }
             }
             elseif($this->cant_metodos == 4) {
                 $pago_venta = new Pago_venta();
@@ -342,6 +381,18 @@ class VentasCart extends Component
                 $pago_venta->metodo_pago_id = $this->metodo_id_4;
                 $pago_venta->venta_id = $venta->id;
                 $pago_venta->save();
+
+                if($this->metodo_id_4 == 3){
+                    $this->caja_detalle->update([
+                        'saldo_bolivares' => $this->caja_detalle->saldo_bolivares + $this->monto4,
+                    ]);
+                }
+
+                if($this->metodo_id_4 == 4){
+                    $this->caja_detalle->update([
+                        'saldo_dolares' => $this->caja_detalle->saldo_dolares + $this->monto4,
+                    ]);
+                }
             }
             else{
                 $pago_venta = new Pago_venta();
@@ -373,6 +424,18 @@ class VentasCart extends Component
                 $pago_venta->metodo_pago_id = $this->metodo_id_5;
                 $pago_venta->venta_id = $venta->id;
                 $pago_venta->save();
+
+                if($this->metodo_id_5 == 3){
+                    $this->caja_detalle->update([
+                        'saldo_bolivares' => $this->caja_detalle->saldo_bolivares + $this->monto5,
+                    ]);
+                }
+
+                if($this->metodo_id_5 == 4){
+                    $this->caja_detalle->update([
+                        'saldo_dolares' => $this->caja_detalle->saldo_dolares + $this->monto5,
+                    ]);
+                }
             }
 
             //REGISTRO DE VENTA EN CAJA
@@ -385,6 +448,7 @@ class VentasCart extends Component
             else  $movimiento->observacion = 'Venta a contado';
             $movimiento->user_id = $user_auth;
             $movimiento->sucursal_id = $this->sucursal;
+            $movimiento->caja_id = $this->caja;
             $movimiento->estado = 'entregado';
             $movimiento->save();
 
@@ -446,8 +510,8 @@ class VentasCart extends Component
                     'usuario' => auth()->user()->name." ".auth()->user()->apellido,
                     'fecha_actual' => date('Y-m-d'),
                     'venta_nro' => $venta_nro_p,
-                    'sucursal' => $this->sucursal->nombre,
-                    'caja' => $this->caja->nombre,
+                    'sucursal' => $this->sucursal_detalle->nombre,
+                    'caja' => $this->caja_detalle->nombre,
                     'empresa' => $this->empresa,
                     'collection' => Cart::content(),
                     'estado_entrega' => $entrega,
@@ -518,8 +582,8 @@ class VentasCart extends Component
                     'venta_nro' => $venta_nro_p,
                     'collection' => Cart::content(),
                     'empresa' => $this->empresa,
-                    'sucursal' => $this->sucursal->nombre,
-                    'caja' => $this->caja->nombre,
+                    'sucursal' => $this->sucursal_detalle->nombre,
+                    'caja' => $this->caja_detalle->nombre,
                     'estado_entrega' => $entrega,
                     'descuento' => $this->descuento_total,
                     'proforma' => $this->proforma,
@@ -580,7 +644,7 @@ class VentasCart extends Component
 
         cart::destroy();
         $this->siguiente_venta = '1';
-        $this->reset(['cliente_select','send_mail','cash_received','total_venta','pago_cliente','descuento','descuento_total','tipo_comprobante','metodo_pago','tipo_pago','estado_entrega','subtotal']);
+        $this->reset(['monto1','monto2','monto3','monto4','monto5','metodo_id_1','metodo_id_2','metodo_id_3','metodo_id_4','metodo_id_5','cliente_select','send_mail','cash_received','total_venta','pago_cliente','descuento','descuento_total','tipo_comprobante','metodo_pago','tipo_pago','estado_entrega','subtotal']);
        
          
          if($this->imprimir == 1){
