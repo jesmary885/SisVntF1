@@ -7,16 +7,16 @@
                         <div class="w-1/4">
                    
                             <select wire:model="buscador" id="buscador" class="form-control text-m" name="buscador">
-                                <option value="0">Modelo</option>
+                                <option value="0">Código de barra</option>
                                 <option value="1">Categoria</option>
                                 <option value="2">Marca</option>
-                                <option value="3">Código de barra</option>
+                                <option value="3">Modelo</option>
                             </select>
         
                             <x-input-error for="buscador" />
     
                         </div>
-                        <input wire:model="search" placeholder="Ingrese {{$item_buscar}}" class="form-control ml-2">
+                        <input wire:model="search" placeholder="Ingrese el producto a buscar" class="form-control ml-2">
                             
                     </div>
                     
@@ -30,7 +30,7 @@
                     </button>
                 </div>
             </div>
-            @if ($productos->count())
+            @if ($productos != '0')
                 <div class="card-body">
                     <table class="table table-bordered table-responsive-lg table-responsive-md table-responsive-sm">
                         <thead class="thead-dark">

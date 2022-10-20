@@ -17,18 +17,7 @@ class CreateVentasTable extends Migration
             $table->id();
             $table->timestamps();
             $table->date('fecha');
-            /*$table->enum('tipo_pago',['Debito','Credito'])->default('Debito');
-            $table->enum('metodo_pago',['Tarjeta de Debito',
-                                        'Tarjeta de Credito',
-                                        'Efectivo',
-                                        'Transferencia',
-                                        'Pago movil',
-                                        'Biopago',
-                                        'Binance',
-                                        'Zelle',
-                                        'PayPal',
-                                        'Otro']);*/
-          //  $table->string('Observaciones');
+          
             $table->string('tipo_pago');
             $table->string('estado_entrega');
             $table->float('descuento');
@@ -38,16 +27,22 @@ class CreateVentasTable extends Migration
             $table->float('total_pagado_cliente');
             $table->float('deuda_cliente')->nullable();
             $table->string('estado');
-            //$table->enum('estado',['Activo','Inactivo'])->default('Activo');
+            $table->float('vuelto')->nullable();      
 
             $table->unsignedBigInteger('cliente_id');
             $table->foreign('cliente_id')->references('id')->on('clientes');
+
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
+
             $table->unsignedBigInteger('sucursal_id');
             $table->foreign('sucursal_id')->references('id')->on('sucursals');
+
             $table->unsignedBigInteger('caja_id');
             $table->foreign('caja_id')->references('id')->on('cajas');
+
+            $table->unsignedBigInteger('metodo_pago_vuelto_id')->nullable();
+            $table->foreign('metodo_pago_vuelto_id')->references('id')->on('metodo_pagos');
         });
     }
 

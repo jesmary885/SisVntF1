@@ -5,6 +5,7 @@ namespace App\Http\Livewire\Productos;
 use App\Models\Moneda;
 use App\Models\Producto;
 use App\Models\Producto_lote;
+use App\Models\Producto_sucursal;
 use App\Models\tasa_dia;
 use Illuminate\Database\Eloquent\Builder;
 use Livewire\Component;
@@ -18,7 +19,7 @@ class ProductosLote extends Component
     protected $listeners = ['render' => 'render','confirmacion' => 'confirmacion'];
 
 
-    public $search, $producto,$item_buscar,$tasa_dia,$moneda_nombre,$moneda_simbolo;
+    public $search, $producto,$item_buscar,$tasa_dia,$moneda_nombre,$moneda_simbolo,$producto_lote;
 
     public function updatingSearch(){
         $this->resetPage();
@@ -58,9 +59,33 @@ class ProductosLote extends Component
         
         return view('livewire.productos.productos-lote',compact('lotes'));
     }
+
     public function delete($loteId){
-       
+
+        $this->producto_lote = $loteId;
+
+        $this->emit('confirm', '¿Esta seguro de eliminar este lote?','productos.productos-lote','confirmacion','El lote se ha eliminado.');
     }
+
+    public function confirmacion(){
+
+        $lote_destroy = Producto_lote::where('id',$this->producto_lote)->first();
+        $lote_destroy->update([
+            'status' => 'inactivo',
+        ]);
+
+        Producto_sucursal::where('producto_id',$lote_destroy->producto_id)
+            ->where('lote',$lote_destroy->lote)->update([
+            'status' => 'inactivo'
+        ]);
+
+        $producto = Producto::where('id',$lote_destroy->producto_id)->first();
+        $cantidad_nueva = $producto->cantidad - $lote_destroy->stock;
+        $producto->update([
+            'cantidad' => $cantidad_nueva
+        ]);
+    }
+
 
     public function ayuda(){
         $this->emit('ayuda','<p class="text-sm text-gray-500 m-0 p-0 text-justify">1-. Registro de equipos: Haga click en el botón "<i class="fas fa-plus-square"></i> Nuevo equipo", ubicado en la zona superior derecha y complete el formulario.</p> 

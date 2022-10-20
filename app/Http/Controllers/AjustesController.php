@@ -22,4 +22,12 @@ class AjustesController extends Controller
     {
         return view('AperturaCaja');
     }
+    public function cuentasPagar()
+    {
+        return view('CuentasPagar');
+    }
+    public function cuentasCobrar()
+    {
+        return view('CuentasCobrar');
+    }
 }

@@ -381,7 +381,7 @@ return [
             ],
             
         ],
-       /* [
+        [
             'text'    => 'TRASLADOS',
             'icon'    => 'fas fa-truck-loading',
             'submenu' => [
@@ -397,8 +397,8 @@ return [
                 ],
             ],
             
-        ],*/
-      /* [
+        ],
+       [
             'text'    => 'REPORTES',
             'icon'    => 'fas fa-chart-bar fa-fw',
             'submenu' => [
@@ -422,14 +422,34 @@ return [
                     'route'     => 'reportes.index.ventas',
                     'can' => 'reportes.ventas'
                 ],
+                // [
+                //     'text'    => 'Movimientos en caja',
+                //     'route'     => 'reportes.index.caja',
+                //     'can' => 'reportes.movimientos_caja'
+                // ],
                 [
-                    'text'    => 'Movimientos en caja',
-                    'route'     => 'reportes.index.caja',
-                    'can' => 'reportes.movimientos_caja'
+                    'text'    => 'Cuentas por pagar',
+                    'route'     => 'cuentas-pagar.index',
+                    'can' => 'reportes.cuentas-pagar'
+                ],
+                [
+                    'text'    => 'Cuentas por cobrar',
+                    'route'     => 'cuentas-cobrar.index',
+                    'can' => 'reportes.cuentas-cobrar'
+                ],
+                [
+                    'text'    => 'Productos por vencer',
+                    'route'     => 'reportes.producto_vencer',
+                    'can' => 'reportes.producto_vencer'
+                ],
+                [
+                    'text'    => 'Productos por agotar',
+                    'route'     => 'reportes.producto_agotar',
+                    'can' => 'reportes.producto_agotar'
                 ],
             ],
             
-        ],*/
+        ],
 
         [
             'text'    => 'AJUSTES',

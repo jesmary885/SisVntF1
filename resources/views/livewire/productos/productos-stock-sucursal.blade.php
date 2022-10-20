@@ -10,28 +10,28 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title py-0 text-lg text-gray-800"> <i class="fas fa-warehouse"></i>  Stock del producto por sucursal</h5>
-
-                       
-      
                     </div>
                     <div class="modal-body">
+                    @if ($productos_sucursal)
                         <table class="table table-bordered">
                             <thead class="thead-dark">
                                 <tr>
                                     <th class="text-center">Sucursal</th>
+                                    <th class="text-center">Lote</th>
                                     <th class="text-center">Stock</th>
-                            
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($sucursales as $sucursal)
+                                @foreach ($productos_sucursal as $value)
                                     <tr>
-                                        <td class="text-center">{{$sucursal->nombre}}</td>
-                                        <td class="text-center">@if($producto->sucursals->find($sucursal)->pivot->cantidad) {{$producto->sucursals->find($sucursal)->pivot->cantidad}}@endif</td>
+                                        <td class="text-center">{{$value->nombre}}</td>
+                                        <td class="text-center">{{$value->lote}}</td>
+                                        <td class="text-center">{{$value->cantidad}}</td>
                                     </tr>
                                 @endforeach
                             </tbody>
                         </table>
+                    @endif
                   
                     </div>
                     <div class="modal-footer">

@@ -47,11 +47,11 @@
 
                 <div class="flex w-1/2 mt-3 mr-2">
                     <div class="mr-2">
-                        <input wire:model="monto_bolivares" type="number" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Cantidad en dólares">
+                        <input wire:model="monto_bolivares" type="number" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Cantidad en bolivares">
                         <x-input-error for="monto_bolivares" />
                     </div>
                     <div class="mr-2">
-                        <input wire:model="monto_dolares" type="number" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Cantidad en bolivares">
+                        <input wire:model="monto_dolares" type="number" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Cantidad en dólares">
                         <x-input-error for="monto_dolares" />
                     </div>
                 </div>
@@ -74,30 +74,47 @@
                         <div class=" justify-center ">
                             <h2 class="font-bold text-gray-700 text-center text-lg">Datos de apertura</h2>
                         </div>
+                        <div class="m-2">
+                            <div class="flex">
+                                <strong class="text-gray-700 text-md mr-2 mb-0">Sucursal: </strong> <p class="text-gray-700 text-md">{{$movimiento[0]['caja']['sucursal']['nombre']}}</p>
+                            </div>
+
+                            <div class="flex">
+                                <strong class="text-gray-700 text-md mr-2 mb-0">Caja: </strong> <p class="text-gray-700 text-md">{{$movimiento[0]['caja']['nombre']}}</p>
+                            </div>
+
+                            <div class="flex">
+                                <strong class="text-gray-700 text-md mr-2">Fecha y hora de apertura: </strong> <p class="text-gray-700 text-md"> {{  \Carbon\Carbon::parse($movimiento[0]['created_at'])->format('d-m-Y h:i:s') }}</p>
+                            </div>
+                            
+                            
+                        </div>
 
                             <div class="overflow-x-auto relative shadow-md sm:rounded-lg ">
-                                <table class="w-full text-sm text-left text-gray-400">
+                                <table class="w-full text-left text-gray-400">
                                     <thead class="text-xs uppercase bg-gray-700 text-gray-400">
                                     <tr>
-                                        <th scope="col" class="py-3 px-6 text-gray-300 text-sm text-center">Caja</th>
-                                        <th scope="col" class="py-3 px-6 text-gray-300 text-sm text-center">Sucursal</th>
-                                        <th scope="col" class="py-3 px-6 text-gray-300 text-sm text-center">Cantidad en bolivares</th>
-                                        <th scope="col" class="py-3 px-6 text-gray-300 text-sm text-center">Cantidad en dólares</th>
-                                        <th scope="col" class="py-3 px-6 text-gray-300 text-sm text-center">Observación de apertura</th>    
-                                        <th></th>
+                                        <th scope="col" class="py-3 px-6 text-gray-300 text-md text-center">Tipo de dato</th>
+                                        <th scope="col" class="py-3 px-6 text-gray-300 text-md text-center">Cantidad en bolivares</th>
+                                        <th scope="col" class="py-3 px-6 text-gray-300 text-md text-center">Cantidad en dólares</th>
+                                        <th scope="col" class="py-3 px-6 text-gray-300 text-md text-center">Observación de apertura</th>    
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="bg-gray-800 border-gray-700 hover:bg-gray-600">
-                                        <th scope="row" class="py-4 px-6 font-medium whitespace-nowrap">{{$movimiento->caja->nombre}}</td>
-                                        <td class="py-4 px-6 text-center">{{$movimiento->caja->sucursal->nombre}}</td>
-                                        <td class="py-4 px-6 text-center">{{$movimiento->caja->saldo_bolivares}}</td>
-                                        <td class="py-4 px-6 text-center">{{$movimiento->caja->saldo_dolares}}</td>
-                                        <td class="py-4 px-6 text-center">{{$movimiento->observacion}}</td>
-                                        <td class="py-4 px-6 text-center" width="10px">
-                                            @livewire('cierre-caja', ['movimiento' => $movimiento],key($movimiento->id))
-                                        </td>
+                                 <tr class="bg-gray-800 border-gray-700 hover:bg-gray-600">
+                                        <td class="py-4 px-6 text-md text-center">Inicial</td>
+                                        <td class="py-4 px-6 text-md text-center">{{$inicial_bolivares->cantidad}}</td>
+                                        <td class="py-4 px-6 text-md text-center">{{$inicial_dolares->cantidad}}</td>
+                                        <td class="py-4 px-6 text-md text-center">{{$movimiento[0]['observacion']}}</td>
                                     </tr>
+                                    <tr class="bg-gray-800 border-gray-700 hover:bg-gray-600">
+                                        <td class="py-4 px-6 text-md text-center">Acumulado</td>
+                                        <td class="py-4 px-6 text-md text-center">{{$movimiento[0]['caja']['saldo_bolivares']}}</td>
+                                        <td class="py-4 px-6 text-md text-center">{{$movimiento[0]['caja']['saldo_dolares']}}</td>
+                                        <td class="py-4 px-6 text-md text-center">-</td>
+                                    </tr> 
+
+                      
                                 </tbody>
                             </table>
                         </div>
@@ -107,43 +124,86 @@
                                 <h2 class="font-bold text-gray-700 text-center text-lg">Datos de cierre</h2>
                             </div>
                             <div class="overflow-x-auto relative shadow-md sm:rounded-lg">
-                            @if ($array)
+                            @if ($array || $array_cambios || $array_compras)
+                   
                                 <table class="w-full text-sm text-left text-gray-400">
                                     <thead class="text-xs uppercase bg-gray-700 text-gray-400">
                                         <tr>
-                                            <th scope="col" class="py-3 px-6 text-gray-300 text-sm text-center">
+                                            <th scope="col" class="py-3 px-6 text-gray-300 text-md text-center">
                                             Tipo de movimiento
                                             </th>
-                                            <th scope="col" class="py-3 px-6 text-gray-300 text-sm text-center">
+                                            <th scope="col" class="py-3 px-6 text-gray-300 text-md text-center">
                                             Método de pago
                                             </th>
-                                            <th scope="col" class="py-3 px-6 text-gray-300 text-sm text-center">
+                                            <th scope="col" class="py-3 px-6 text-gray-300 text-md text-center">
                                             Monto
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @foreach ($array as $value)
-                                            <tr class="bg-gray-800 border-gray-700 hover:bg-gray-600">
-                                                <th scope="row" class="py-2 px-2 font-medium whitespace-nowrap text-white text-center">
-                                                    Ingreso
-                                                </th>
-                                                <td class="py-2 px-2 text-center">
-                                                    {{$value['metodo_nombre']}}
-                                                </td>
-                                                <td class="py-2 px-2 text-center">
-                                                    {{$value['quantity']}}
-                                                </td>
-                                            </tr>
-                                        @endforeach   
+                                        @if ($array)
+                                            @foreach ($array as $value)
+                                                    <tr class="bg-gray-800 border-gray-700 hover:bg-gray-600">
+                                                        <th scope="row" class="py-2 px-2 text-md font-medium whitespace-nowrap text-white text-center">
+                                                            Ingreso
+                                                        </th>
+                                                        <td class="py-2 px-2 text-md text-center">
+                                                            {{$value['metodo_nombre']}}
+                                                        </td>
+                                                        <td class="py-2 px-2 text-md text-center">
+                                                            {{$value['quantity']}}
+                                                        </td>
+                                                    </tr>
+                                            @endforeach 
+                                        @endif  
+                                        @if ($array_cambios)
+                                            @foreach ($array_cambios as $value_cambios)
+                                                    <tr class="bg-gray-800 border-gray-700 hover:bg-gray-600">
+                                                        <th scope="row" class="py-2 px-2 text-md font-medium whitespace-nowrap text-white text-center">
+                                                            Cambio a cliente
+                                                        </th>
+                                                        <td class="py-2 px-2 text-md text-center">
+                                                            {{$value_cambios['metodo_nombre']}}
+                                                        </td>
+                                                        <td class="py-2 px-2 text-md text-center">
+                                                            {{$value_cambios['quantity_vueltos']}}
+                                                        </td>
+                                                    </tr>
+                                            @endforeach   
+                                        @endif
+                                        @if ($array_compras)
+                                            @foreach ($array_compras as $value_compras)
+                                                    <tr class="bg-gray-800 border-gray-700 hover:bg-gray-600">
+                                                        <th scope="row" class="py-2 px-2 text-md font-medium whitespace-nowrap text-white text-center">
+                                                            Egreso por compra
+                                                        </th>
+                                                        <td class="py-2 px-2 text-md text-center">
+                                                            {{$value_compras['metodo_nombre']}}
+                                                        </td>
+                                                        <td class="py-2 px-2 text-md text-center">
+                                                            {{$value_compras['quantity']}}
+                                                        </td>
+                                                    </tr>
+                                            @endforeach   
+                                        @endif
                                     </tbody>
                                 </table>
                                 @else
-                                    <div class="card-body">
-                                        <strong>No hay registros</strong>
+                                    <div class="text-center m-2">
+                                        <p class="text-md text-gray-700">No se ha registrado ningún movimiento</p>
                                     </div>
                                 @endif
                             </div>
+                        </div>
+                        <div class="text-center mt-4 flex">
+                            <button type="submit" class="btn btn-primary" wire:click="export()">
+                                <i class="fas fa-file-download"></i> Exportar
+                            </button>
+                          
+                            <div class="ml-2">
+                                @livewire('cierre-caja', ['movimiento' => $movimiento[0]],key($movimiento[0]['id']))
+                            </div>
+                            
                         </div>
                     @endif
                 </div>

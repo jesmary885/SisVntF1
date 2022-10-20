@@ -15,7 +15,7 @@
         </div>
  
  
-        @if ($ventas->count())
+        @if ($ventas)
             <div class="card-body">
                 <table class="table table-striped table-responsive-lg table-responsive-md table-responsive-sm">
                     <thead class="thead-dark">
@@ -50,7 +50,7 @@
                                 <td class="text-center">{{$venta->estado}}</td>
                                 @if($venta->tipo_pago == 2)
                                     <td width="10px">
-                                        @livewire('ventas.ventas-credito-abono', ['venta' => $venta, 'vista' => '1'],key($venta->id)) 
+                                        @livewire('ventas.ventas-credito-abono', ['venta' => $venta, 'vista' => '1','sucursal'=> $sucursal],key($venta->id)) 
                                     {{-- <a href="#" class="btn btn-info btn-sm"><i class="fas fa-plus-square"></i></a> --}}
                                     </td>
                                 @endif

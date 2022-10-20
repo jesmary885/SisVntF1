@@ -18,7 +18,7 @@ class ProductosTrasladoSeleccion extends Component
     protected $paginationTheme = "bootstrap";
 
     public $isopen = false;
-    public $sucursal,$producto,$sucursal_id,$quantity,$qty=1;
+    public $producto,$sucursal_id,$quantity,$qty=1,$sucursal,$pivot;
 
     protected $listeners = ['render' => 'render', 'actualizar' => 'actualizar'];
 
@@ -31,15 +31,12 @@ class ProductosTrasladoSeleccion extends Component
 
     public function mount()
     {
-    
-        $this->sucursales = Sucursal::where('id', '!=', $this->sucursal)->get();
 
-        $pivot = Pivot::where('sucursal_id',$this->sucursal)
-                        ->where('producto_id',$this->producto->id)
-                        ->first();
-       // dd($this->sucursal);
+        $this->pivot = Pivot::where('id',$this->producto)->first();
+        $this->sucursal = $this->pivot->sucursal_id;
 
-        $this->quantity = $pivot->cantidad;
+        $this->sucursales = Sucursal::where('id', '!=', $this->sucursal )->get();
+        $this->quantity = $this->pivot->cantidad;
        
     }
 
@@ -69,14 +66,9 @@ class ProductosTrasladoSeleccion extends Component
 
     public function render()
     {
-        $this->sucursales = Sucursal::where('id', '!=', $this->sucursal)->get();
-
-        $pivot = Pivot::where('sucursal_id',$this->sucursal)
-                        ->where('producto_id',$this->producto->id)
-                        ->first();
-       // dd($this->sucursal);
-
-        $this->quantity = $pivot->cantidad;
+       /* $pivot = Pivot::where('id',$this->producto)->first();
+        $this->sucursales = Sucursal::where('id', '!=', $pivot->sucursal_id)->get();
+        $this->quantity = $pivot->cantidad;*/
         
         return view('livewire.productos.productos-traslado-seleccion');
     }
@@ -94,12 +86,15 @@ class ProductosTrasladoSeleccion extends Component
         $sucursal_inicial = Sucursal::where('id', $this->sucursal)->first()->nombre;
         $sucursal_final = Sucursal::where('id', $this->sucursal_id)->first()->nombre;
 
-        $producto_add = ProductosTraslado::where('producto_id',$this->producto->id)
-                                            ->where('sucursal_origen',$this->sucursal)
-                                            ->where('sucursal_id',$this->sucursal_id)
-                                            ->first();
+        $producto_add = ProductosTraslado::where('producto_id',$this->pivot->producto_id)
+            ->where('sucursal_origen',$this->sucursal)
+            ->where('sucursal_id',$this->sucursal_id)
+            ->where('lote',$this->pivot->lote)
+            ->first();
 
-        $product = Producto::where('id',$this->producto->id)->first();
+        
+
+        $product = Producto::where('id',$this->pivot->producto_id)->first();
         $product->update([
             'cantidad' => $product->cantidad - $this->qty,
         ]);
@@ -112,14 +107,15 @@ class ProductosTrasladoSeleccion extends Component
 
             $traslado_pendiente = Traslado::where('sucursal_origen',$this->sucursal)
                                             ->where('sucursal_id',$this->sucursal_id)
-                                            ->where('producto_id',$this->producto->id)
+                                            ->where('producto_id',$this->pivot->producto_id)
+                                            ->where('lote',$this->pivot->lote)
                                             ->first(); 
 
             $traslado_pendiente->update([
                         'cantidad_enviada' => $traslado_pendiente->cantidad_enviada + $this->qty,
             ]);
 
-            $pivot_decrement = Pivot::where('sucursal_id', $this->sucursal)->where('producto_id', $this->producto->id)->first();
+            $pivot_decrement = Pivot::where('sucursal_id', $this->sucursal)->where('producto_id', $this->pivot->producto_id)->first();
             $pivot_decrement->cantidad = $pivot_decrement->cantidad - $this->qty;
             $pivot_decrement->save();
 
@@ -128,8 +124,9 @@ class ProductosTrasladoSeleccion extends Component
             $producto_traslado = new ProductosTraslado();
             $producto_traslado->sucursal_origen = $this->sucursal;
             $producto_traslado->sucursal_id = $this->sucursal_id;
-            $producto_traslado->producto_id = $this->producto->id;
+            $producto_traslado->producto_id = $this->pivot->producto_id;
             $producto_traslado->cantidad = $this->qty;
+            $producto_traslado->lote = $this->pivot->lote;
             $producto_traslado->save();
 
             $traslado_pendiente = new Traslado();
@@ -139,16 +136,19 @@ class ProductosTrasladoSeleccion extends Component
             $traslado_pendiente->estado = 'PENDIENTE';
             $traslado_pendiente->cantidad_enviada = $this->qty;
             $traslado_pendiente->cantidad_recibida = 0;
-            $traslado_pendiente->producto_id = $this->producto->id;
+            $traslado_pendiente->producto_id = $this->pivot->producto_id;
+            $traslado_pendiente->lote = $this->pivot->lote;
             $traslado_pendiente->sucursal_origen = $this->sucursal;
             $traslado_pendiente->sucursal_id = $this->sucursal_id;
             $traslado_pendiente->save();
 
-            $pivot_decrement = Pivot::where('sucursal_id', $this->sucursal)->where('producto_id', $this->producto->id)->first();
+            $pivot_decrement = Pivot::where('sucursal_id', $this->sucursal)
+                ->where('producto_id', $this->pivot->producto_id)
+                ->where('lote',$this->pivot->lote)
+                ->first();
+                
             $pivot_decrement->cantidad = $pivot_decrement->cantidad - $this->qty;
             $pivot_decrement->save();
-
-
         }
         
     $this->reset('sucursal_id','qty','quantity');

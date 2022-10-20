@@ -23,6 +23,9 @@ class CreateProductosTrasladosTable extends Migration
             
             $table->unsignedBigInteger('producto_id');
             $table->foreign('producto_id')->references('id')->on('productos')->onDelete('cascade');
+
+            $table->integer('lote');
+
             $table->integer('cantidad');
         });
     }

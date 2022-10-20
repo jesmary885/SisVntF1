@@ -1,4 +1,4 @@
-<div x-data="{ publico_general: @entangle('publico_general'),tipo_pago: @entangle('tipo_pago'),metodo_pago: @entangle('metodo_pago'),siguiente_venta: @entangle('siguiente_venta'), imprimir: @entangle('imprimir'),tipo_comprobante: @entangle('tipo_comprobante'),carrito: @entangle('carrito'), cant_metodos: @entangle('cant_metodos')}">
+<div x-data="{ publico_general: @entangle('publico_general'),tipo_pago: @entangle('tipo_pago'),metodo_pago: @entangle('metodo_pago'),siguiente_venta: @entangle('siguiente_venta'), imprimir: @entangle('imprimir'),tipo_comprobante: @entangle('tipo_comprobante'),carrito: @entangle('carrito'), cant_metodos: @entangle('cant_metodos'), vuelto: @entangle('vuelto')}">
     <section class="text-gray-700">
         <h2 class=" modal-title font-bold text-md text-gray-800 text-center bg-gray-300"> Productos incluidos en venta</h2>
         @if (Cart::count())
@@ -59,9 +59,6 @@
         
         
         <aside class="md:col-span-1 ">
-            
-            
-
             <div>
             <div class="w-full">
                 <div class="flex justify-between w-full h-full mt-2">
@@ -101,9 +98,7 @@
                 </div>
                 {{--metodos de pago--}}
                 {{--con 1 metodo--}}
-
                 <hr>
-
                 <div class="flex justify-between w-full h-full mt-2">
                     <div class="w-full mr-2 ml-2">
                             <select wire:model.lazy="metodo_id_1" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
@@ -241,13 +236,35 @@
 
             <div class="flex justify-between ml-2">
                 <div class="flex w-full h-full ml-2">
-                <input type="checkbox" class=" ml-1" wire:model="publico_general" value="1">
-                <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">Público general</p>
+                    <input type="checkbox" class=" ml-1" wire:model="publico_general" value="1">
+                    <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">Público general</p>
+                </div>
+                <div class="flex w-full h-full ml-2">
+                    <input type="checkbox" class=" ml-1" wire:model="vuelto" value="1">
+                    <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">Cambio</p>
                 </div>
             </div>
 
+            <div class="flex justify-between ml-2" :class="{'hidden': (vuelto == 0)}">
+                <div class="w-full mr-2 ml-2">
+                    <select wire:model.lazy="metodo_cambio_id" class="block w-full bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        <option value="" selected>Método de pago de cambio</option>
+                            @foreach ($metodos as $metodo)
+                                <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
+                            @endforeach
+                    </select>
+                    <x-input-error for="metodo_cambio_id" />
+                </div>
+
+                    <div class="w-full">
+                        <input wire:model="monto_vuelto" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Monto del cambio">
+                        <x-input-error for="monto_vuelto" />
+                    </div>
+
+            </div>
+
             <div :class="{'hidden': (publico_general == '1')}">
-                <div class="flex items-center justify-between m-0 bg-gray-300">
+                <div class="flex items-center justify-between m-0 bg-gray-300 mt-2">
                     <div class="flex-1">
                         <input wire:model="search" placeholder="Seleccione el cliente o escriba aquí su nombre o nro documento" class="form-control">
                     </div>

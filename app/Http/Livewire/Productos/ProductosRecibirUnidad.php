@@ -31,7 +31,6 @@ class ProductosRecibirUnidad extends Component
         $this->qty = $this->qty + 1;
     }
 
-    
     public function open()
     {
         $this->isopen = true;  
@@ -51,27 +50,33 @@ class ProductosRecibirUnidad extends Component
         $fecha_actual = date('Y-m-d');
         $user_auth_nombre =  auth()->user()->name;
         $user_auth_apellido =  auth()->user()->apellido;
-        $producto_delete = ProductosTraslado::where('id',$this->producto->id)
-        ->first();
+
+        $producto_delete = ProductosTraslado::where('id',$this->producto->id)->first();
 
         $product = Producto::where('id',$producto_delete->producto_id)->first();
 
         $product->update([
-                'cantidad' => $product->cantidad + $this->qty,
+            'cantidad' => $product->cantidad + $this->qty,
         ]);
 
         $sucursal = Sucursal::where('id',$producto_delete->sucursal_id)->first();
 
-        $pivot_increment = Pivot::where('sucursal_id', $producto_delete->sucursal_id)->where('producto_id', $producto_delete->producto_id)->first();
+        $pivot_increment = Pivot::where('sucursal_id', $producto_delete->sucursal_id)
+            ->where('producto_id', $producto_delete->producto_id)
+            ->where('lote', $producto_delete->lote)
+            ->first();
+            
         $pivot_increment->cantidad = $pivot_increment->cantidad + $this->qty;
         $pivot_increment->save();
 
         $traslado_pendiente_delete = Traslado::where('sucursal_origen',$producto_delete->sucursal_origen)
-                                            ->where('sucursal_id',$producto_delete->sucursal_id)
-                                            ->where('producto_id',$producto_delete->producto_id)
-                                            ->first(); 
+            ->where('sucursal_id',$producto_delete->sucursal_id)
+            ->where('producto_id',$producto_delete->producto_id)
+            ->where('lote',$producto_delete->lote)
+            ->first(); 
 
         if($producto_delete->cantidad == $this->qty){
+
             $producto_delete->delete();
 
             $traslado_pendiente_delete->update([
@@ -79,7 +84,6 @@ class ProductosRecibirUnidad extends Component
                 'estado' => 'RECIBIDO',
                 'observacion_final' => 'Recibido en almacen '. $sucursal->nombre .', por usuario '. $user_auth_nombre .' '. $user_auth_apellido. ' Fecha del registro: '. $fecha_actual
             ]);
-
         }
         else{
             $producto_delete->update([
@@ -93,17 +97,10 @@ class ProductosRecibirUnidad extends Component
                 'estado' => 'PENDIENTE',
                 'observacion_final' => 'Se han recibido'.$this->qty.' unidades en almacen '. $sucursal->nombre .', por usuario '. $user_auth_nombre .' '. $user_auth_apellido. ' Fecha del registro: '. $fecha_actual.'pendientes'.$productos_pendientes.'unidades',
             ]);
-
         }
 
         $this->reset('qty','isopen');
         
         $this->emitTo('productos.productos-detalle-traslado-recibir','render');
-
-        
-
-
-
-
     }
 }

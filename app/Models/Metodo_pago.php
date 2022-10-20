@@ -14,4 +14,12 @@ class Metodo_pago extends Model
     public function pagoVentas(){
         return $this->hasMany(Pago_venta::class);
     }
+
+    public function ventas(){
+        return $this->hasMany(Venta::class);
+    }
+
+    public function compras(){
+        return $this->hasMany(Compra::class);
+    }
 }

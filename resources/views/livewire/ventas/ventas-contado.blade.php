@@ -2,7 +2,7 @@
     <div class="card">
         <div class="card-header flex items-center justify-between">
             <div class="flex-1">
-                <input wire:model="search" placeholder="Ingrese la fecha de la venta a buscar" class="form-control">
+                <input wire:model="search" placeholder="Ingrese la fecha de la venta a buscar. Ejemplo 20-1-2022" class="form-control">
             </div>
             <div class="ml-2">
                 <button
@@ -29,7 +29,8 @@
                     <tbody>
                         @foreach ($ventas as $venta)
                             <tr>
-                                <td class="text-center">{{$venta->fecha}}</td>
+                          
+                                <td class="text-center">{{  \Carbon\Carbon::parse($venta->fecha)->format('d-m-Y') }}</td>
                                 <td class="text-center">{{$venta->cliente->nombre}} {{$venta->cliente->apellido}}</td>
                                 <td class="text-center">{{$venta->cliente->nro_documento}}</td>
                                 <td class="text-center">{{$venta->estado_entrega}}</td>
@@ -50,9 +51,11 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer">
-                {{$ventas->links()}}
-            </div>
+            @if($search)
+                <div class="card-footer">
+                    {{$ventas->links()}}
+                </div>
+            @endif
         @else
              <div class="card-body">
                 <strong>No hay registros</strong>

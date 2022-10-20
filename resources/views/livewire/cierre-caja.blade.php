@@ -1,6 +1,6 @@
 <div>
-    <button type="submit" class="font-medium text-blue-500 hover:underline" wire:click="open">
-        Cerrar
+    <button type="submit" class="btn btn-primary" wire:click="open">
+        Cerrar caja
     </button>
 
     @if ($isopen)

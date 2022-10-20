@@ -34,7 +34,7 @@ class ProductosHistorial extends Component
                 $array = Movimiento::whereHas('producto',function(Builder $query){
                     $query->where('nombre','LIKE', '%' . $this->search . '%')
                 ->whereBetween('fecha',[$this->fecha_inicio,$this->fecha_fin]);
-            })->paginate(10);
+            })->paginate(15);
     
                 $this->item_buscar = "el nombre del producto a buscar";
             }

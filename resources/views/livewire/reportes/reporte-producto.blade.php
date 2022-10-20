@@ -1,5 +1,4 @@
 <div>
-
     <div class="card">
         @if ($array)
             <div class="card-body">
@@ -13,7 +12,6 @@
                         </tr>
                     </thead>
                     <tbody>
-                                
                         @foreach ($array as $value)
                         <tr>
                             <td class="text-center">{{$value['nombre']}}</td>

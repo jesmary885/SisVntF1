@@ -20,6 +20,7 @@ class CreateComprasTable extends Migration
             $table->float('total');
             $table->integer('cantidad');
             $table->float('precio_compra');
+            $table->float('deuda_a_proveedor')->default(0);
 
             $table->unsignedBigInteger('proveedor_id');
             $table->foreign('proveedor_id')->references('id')->on('proveedors');
@@ -35,6 +36,9 @@ class CreateComprasTable extends Migration
 
             $table->unsignedBigInteger('caja_id')->nullable();
             $table->foreign('caja_id')->references('id')->on('cajas');
+
+            $table->unsignedBigInteger('metodo_pago_id')->nullable();
+            $table->foreign('metodo_pago_id')->references('id')->on('metodo_pagos');
         });
     }
 

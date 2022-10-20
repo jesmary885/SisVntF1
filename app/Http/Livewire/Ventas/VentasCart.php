@@ -20,6 +20,8 @@ use App\Models\Moneda;
 use App\Models\Pago_venta;
 use App\Models\tasa_dia;
 use Illuminate\Support\Facades\Mail;
+use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
+use Mike42\Escpos\Printer;
 
 class VentasCart extends Component
 {
@@ -29,7 +31,7 @@ class VentasCart extends Component
     public $cash_received,$tipo_pago = "Contado",$tipo_comprobante,$send_mail,$imprimir,$ticket = 0, $impresoras, $impresora_id ="";
     public $metodo_pago, $total, $client, $search;
     public $cliente_select, $total_venta, $pago_cliente, $deuda_cliente, $descuento, $estado_entrega = "Entregado",$subtotal,$proforma;
-    public $siguiente_venta = 0, $monto1, $monto2, $monto3, $monto4, $monto5,$metodo_id_1,$metodo_id_2,$metodo_id_3,$metodo_id_4,$metodo_id_5;
+    public $siguiente_venta = 0, $monto1, $monto2, $monto3, $monto4, $monto5,$metodo_id_1,$metodo_id_2,$metodo_id_3,$metodo_id_4,$metodo_id_5,$vuelto=0, $monto_vuelto, $metodo_cambio_id;
     public $iva, $carrito,$valor, $iva_empresa,$cant_metodos = 1,$metodos;
     public $puntos_canjeo, $canjeo, $puntos_canjeados, $descuento_total,$porcentaje_descuento_puntos = 0,$empresa, $other_method;
 
@@ -234,8 +236,11 @@ class VentasCart extends Component
         //VENTA
         else
         {
-            $caja_final= Sucursal::where('id',$this->sucursal)->first();
-            $saldo_caja_final = $caja_final->saldo;
+            /*$caja_final= Sucursal::where('id',$this->sucursal)->first();
+            $saldo_caja_final = $caja_final->saldo;*/
+            $caja = Caja::where('id',$this->caja)->first();
+            $efectivo_dls_decrec = 0;
+            $efectivo_bs_decrec = 0;
 
              //PROCESO DE SUMAR O RESTAR PUNTOS EN TABLA DE CLIENTES
            /* if($this->canjeo==false){
@@ -270,6 +275,12 @@ class VentasCart extends Component
                 $venta->total_pagado_cliente = $this->total_venta;
                 $venta->deuda_cliente = "0";
             }
+            if($this->vuelto == 1){
+                $venta->vuelto =  $this->monto_vuelto;
+                $venta->metodo_pago_vuelto_id =  $this->metodo_cambio_id;
+                if($this->metodo_cambio_id == 3) $efectivo_bs_decrec = $this->monto_vuelto;
+                if($this->metodo_cambio_id == 4) $efectivo_dls_decrec = $this->monto_vuelto;
+            }
             $venta->subtotal =  $this->subtotal;
             $venta->total = $this->total_venta;
             $venta->sucursal_id = $this->sucursal;
@@ -291,13 +302,13 @@ class VentasCart extends Component
 
                 if($this->metodo_id_1 == 3){
                     $this->caja_detalle->update([
-                        'saldo_bolivares' => $this->caja_detalle->saldo_bolivares + $this->monto1,
+                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto1) - $efectivo_bs_decrec,
                     ]);
                 }
 
                 if($this->metodo_id_1 == 4){
                     $this->caja_detalle->update([
-                        'saldo_dolares' => $this->caja_detalle->saldo_dolares + $this->monto1,
+                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto1) - $efectivo_dls_decrec,
                     ]);
                 }
             }
@@ -316,13 +327,13 @@ class VentasCart extends Component
 
                 if($this->metodo_id_2 == 3){
                     $this->caja_detalle->update([
-                        'saldo_bolivares' => $this->caja_detalle->saldo_bolivares + $this->monto2,
+                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto2) - $efectivo_bs_decrec,
                     ]);
                 }
 
                 if($this->metodo_id_2 == 4){
                     $this->caja_detalle->update([
-                        'saldo_dolares' => $this->caja_detalle->saldo_dolares + $this->monto2,
+                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto2) - $efectivo_dls_decrec,
                     ]);
                 }
             }
@@ -347,13 +358,13 @@ class VentasCart extends Component
 
                 if($this->metodo_id_3 == 3){
                     $this->caja_detalle->update([
-                        'saldo_bolivares' => $this->caja_detalle->saldo_bolivares + $this->monto3,
+                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto3) - $efectivo_bs_decrec,
                     ]);
                 }
 
                 if($this->metodo_id_3 == 4){
                     $this->caja_detalle->update([
-                        'saldo_dolares' => $this->caja_detalle->saldo_dolares + $this->monto3,
+                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto3) - $efectivo_dls_decrec,
                     ]);
                 }
             }
@@ -384,13 +395,13 @@ class VentasCart extends Component
 
                 if($this->metodo_id_4 == 3){
                     $this->caja_detalle->update([
-                        'saldo_bolivares' => $this->caja_detalle->saldo_bolivares + $this->monto4,
+                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto4) - $efectivo_bs_decrec,
                     ]);
                 }
 
                 if($this->metodo_id_4 == 4){
                     $this->caja_detalle->update([
-                        'saldo_dolares' => $this->caja_detalle->saldo_dolares + $this->monto4,
+                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto4) - $efectivo_dls_decrec,
                     ]);
                 }
             }
@@ -427,13 +438,13 @@ class VentasCart extends Component
 
                 if($this->metodo_id_5 == 3){
                     $this->caja_detalle->update([
-                        'saldo_bolivares' => $this->caja_detalle->saldo_bolivares + $this->monto5,
+                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto5) - $efectivo_bs_decrec,
                     ]);
                 }
 
                 if($this->metodo_id_5 == 4){
                     $this->caja_detalle->update([
-                        'saldo_dolares' => $this->caja_detalle->saldo_dolares + $this->monto5,
+                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto5) - $efectivo_dls_decrec,
                     ]);
                 }
             }
@@ -454,12 +465,7 @@ class VentasCart extends Component
 
             if ($this->tipo_pago == "2") $total_recibido = $this->pago_cliente;
             else $total_recibido = $this->total_venta;
-
-           
-            //REGISTRANDO VENTA EN TABLAS DE SUCURSAL AÑADIENDO SALDO
-            $caja_final->update([
-                'saldo' => $saldo_caja_final + $total_recibido,
-            ]);  
+             
             $sucursales1 = Sucursal::all();
 
             foreach (Cart::content() as $item) {
@@ -497,166 +503,131 @@ class VentasCart extends Component
 
         }
 
-        //GENERANDO FACTURAS
-
+        //GENERANDO COMPROBANTE
         if($this->proforma == 'proforma') $venta_nro_p = '1';
         else $venta_nro_p = $venta->id;
     
-            if ($this->tipo_pago == "Contado"){
-                $data = [
-                    'cliente_nombre' => $this->client->nombre." ".$this->client->apellido,
-                    'cliente_documento' =>$this->client->nro_documento,
-                    'cliente_telefono' =>$this->client->telefono,
-                    'usuario' => auth()->user()->name." ".auth()->user()->apellido,
-                    'fecha_actual' => date('Y-m-d'),
-                    'venta_nro' => $venta_nro_p,
-                    'sucursal' => $this->sucursal_detalle->nombre,
-                    'caja' => $this->caja_detalle->nombre,
-                    'empresa' => $this->empresa,
-                    'collection' => Cart::content(),
-                    'estado_entrega' => $entrega,
-                    'descuento' => $this->descuento_total,
-                    'subtotal' =>  $this->subtotal,
-                    'subtotal_menos_descuento' =>  $this->subtotal - ($this->descuento_total),
-                    'total' => $this->total_venta,
-                    'proforma' =>$this->proforma,
-                    'iva_empresa' => $this->iva_empresa,
-                    'iva' => $this->iva,];
+        $data = [
+            'cliente_nombre' => $this->client->nombre." ".$this->client->apellido,
+            'cliente_documento' =>$this->client->nro_documento,
+            'cliente_telefono' =>$this->client->telefono,
+            'usuario' => auth()->user()->name." ".auth()->user()->apellido,
+            'fecha_actual' => date('Y-m-d'),
+            'venta_nro' => $venta_nro_p,
+            'sucursal' => $this->sucursal_detalle->nombre,
+            'caja' => $this->caja_detalle->nombre,
+            'empresa' => $this->empresa,
+            'collection' => Cart::content(),
+            'estado_entrega' => $entrega,
+            'descuento' => $this->descuento_total,
+            'subtotal' =>  $this->subtotal,
+            'subtotal_menos_descuento' =>  $this->subtotal - ($this->descuento_total),
+            'total' => $this->total_venta,
+            'proforma' =>$this->proforma,
+            'iva_empresa' => $this->iva_empresa,
+            'pagado' => $this->pago_cliente,
+            'deuda' => $this->total_venta - $this->pago_cliente,
+            'iva' => $this->iva,];
+        //factura
+        if($this->tipo_comprobante == "1"){ 
+            if ($this->tipo_pago == "Contado") $pdf = PDF::loadView('ventas.FacturaContado',$data)->output();
+            else $pdf = PDF::loadView('ventas.FacturaCredito',$data)->output();
 
-                if($this->tipo_comprobante == "1"){ 
-                    $pdf = PDF::loadView('ventas.FacturaContado',$data)->output();
-
-                    if($this->send_mail=="1"){
-                        if( $this->client->email != null){
-                            $data_m["email"] = $this->client->email;
-                            $data_m["title"] = "Comprobante de pago";
-                            $data_m["body"] = "Anexo se encuentra el comprobante de pago de su compra realizada hoy.";
-                            Mail::send('ventas.FacturaContado', $data, function ($message) use ($data_m, $pdf) {
-                            $message->to($data_m["email"], $data_m["email"])
-                                ->subject($data_m["title"])
-                                ->attachData($pdf, "Comprobante.pdf");
-                            });
-                        }
-                    }
-                }
-                elseif($this->tipo_comprobante == "2"){ 
-                    $pdf = PDF::loadView('ventas.TicketContado',$data)->output();
-
-                    if($this->send_mail=="1"){
-                        if( $this->client->email != null){
-                            $data_m["email"] = $this->client->email;
-                            $data_m["title"] = "Comprobante de pago";
-                            $data_m["body"] = "Anexo se encuentra el comprobante de pago de su compra realizada hoy.";
-                            Mail::send('ventas.TicketContado', $data, function ($message) use ($data_m, $pdf) {
-                                $message->to($data_m["email"], $data_m["email"])
-                                    ->subject($data_m["title"])
-                                    ->attachData($pdf, "Comprobante.pdf");
-                            });
-                        }
-                    }
-                }
-                else{ 
-                    $pdf = PDF::loadView('ventas.NotaEntregaContado',$data)->output();
-
-                    if($this->send_mail=="1"){
-                        if( $this->client->email != null){
-                            $data_m["email"] = $this->client->email;
-                            $data_m["title"] = "Comprobante de pago";
-                            $data_m["body"] = "Anexo se encuentra el comprobante de pago de su compra realizada hoy.";
-                            Mail::send('ventas.NotaEntregaContado', $data, function ($message) use ($data_m, $pdf) {
-                                $message->to($data_m["email"], $data_m["email"])
-                                    ->subject($data_m["title"])
-                                    ->attachData($pdf, "Comprobante.pdf");
-                            });
-                        }
-                    }
+            if($this->send_mail=="1"){
+                if( $this->client->email != null){
+                    $data_m["email"] = $this->client->email;
+                    $data_m["title"] = "Comprobante de pago";
+                    $data_m["body"] = "Anexo se encuentra el comprobante de pago de su compra realizada hoy.";
+                    Mail::send('ventas.FacturaContado', $data, function ($message) use ($data_m, $pdf) {
+                    $message->to($data_m["email"], $data_m["email"])
+                        ->subject($data_m["title"])
+                        ->attachData($pdf, "Comprobante.pdf");
+                    });
                 }
             }
-            else{
-                $data = [
-                    'cliente_nombre' => $this->client->nombre." ".$this->client->apellido,
-                    'cliente_documento' =>$this->client->nro_documento,
-                    'cliente_telefono' =>$this->client->telefono,
-                    'usuario' => auth()->user()->name." ".auth()->user()->apellido,
-                    'fecha_actual' => date('Y-m-d'),
-                    'venta_nro' => $venta_nro_p,
-                    'collection' => Cart::content(),
-                    'empresa' => $this->empresa,
-                    'sucursal' => $this->sucursal_detalle->nombre,
-                    'caja' => $this->caja_detalle->nombre,
-                    'estado_entrega' => $entrega,
-                    'descuento' => $this->descuento_total,
-                    'proforma' => $this->proforma,
-                    'pagado' => $this->pago_cliente,
-                    'deuda' => $this->total_venta - $this->pago_cliente,
-                    'subtotal' =>  $this->subtotal,
-                    'total' => $this->total_venta,
-                    'iva' => $this->iva,
-                    'iva_empresa' => $this->iva_empresa,
-                ];
-                if($this->tipo_comprobante == "1"){
-                    $pdf = PDF::loadView('ventas.FacturaCredito',$data)->output();
-
-                    if($this->send_mail=="1"){
-                        if( $this->client->email != null){
-                            $data_m["email"] = $this->client->email;
-                            $data_m["title"] = "Comprobante de pago - Tech";
-                            $data_m["body"] = "Anexo se encuentra el comprobante de pago de su compra realizada hoy.";
-                            Mail::send('ventas.FacturaCredito', $data, function ($message) use ($data_m, $pdf) {
-                                $message->to($data_m["email"], $data_m["email"])
-                                    ->subject($data_m["title"])
-                                    ->attachData($pdf, "Comprobante.pdf");
-                            });
-                        }
-                    }
-                }
-                elseif($this->tipo_comprobante == "2"){
-                    $pdf = PDF::loadView('ventas.TicketCredito',$data)->output();
-                    if($this->send_mail=="1"){
-                        if( $this->client->email != null){
-                            $data_m["email"] = $this->client->email;
-                            $data_m["title"] = "Comprobante de pago - Tech";
-                            $data_m["body"] = "Anexo se encuentra el comprobante de pago de su compra realizada hoy.";         
-                            Mail::send('ventas.TicketCredito', $data, function ($message) use ($data_m, $pdf) {
-                                $message->to($data_m["email"], $data_m["email"])
-                                    ->subject($data_m["title"])
-                                    ->attachData($pdf, "Comprobante.pdf");
-                            });
-                        }
-                    }
-                }
-                else{ 
-                    $pdf = PDF::loadView('ventas.NotaEntregaCredito',$data)->output();
-                    if($this->send_mail=="1"){
-                        if( $this->client->email != null){
-                            $data_m["email"] = $this->client->email;
-                            $data_m["title"] = "Comprobante de pago";
-                            $data_m["body"] = "Anexo se encuentra el comprobante de pago de su compra realizada hoy.";         
-                            Mail::send('ventas.NotaEntregaCredito', $data, function ($message) use ($data_m, $pdf) {
-                                $message->to($data_m["email"], $data_m["email"])
-                                    ->subject($data_m["title"])
-                                    ->attachData($pdf, "Comprobante.pdf");
-                            });
-                        }
-                    }
+        }
+        //ticket 
+        elseif($this->tipo_comprobante == "2"){ 
+            //$pdf = PDF::loadView('ventas.TicketContado',$data)->output();
+            $nombreImpresora = "POS-58";
+            $connector = new WindowsPrintConnector($nombreImpresora);
+            $impresora = new Printer($connector);
+            $impresora->setJustification(Printer::JUSTIFY_CENTER);
+            $impresora->setTextSize(2, 2);
+            $impresora->text($this->empresa->nombre ."\n");
+            $impresora->text("\n");
+            $impresora->setTextSize(1, 1);
+            $impresora->text($this->empresa->nro_documento ."\n");
+            $impresora->text($this->empresa->direccion ."\n");
+            $impresora->text("Tlf.".$this->empresa->telefono ."\n");
+            $impresora->text("Email: ".$this->empresa->email ."\n");
+            $impresora->text("--------------------------------\n");
+            $impresora->text("Factura Nro. ".$venta_nro_p ."\n");
+            $impresora->text("Fecha: ".date('d-m-Y') ."\n");
+            $impresora->text("Cajero: ".auth()->user()->name." ".auth()->user()->apellido ."\n");
+            $impresora->text("Caja: ".$this->caja_detalle->nombre ."\n");
+            $impresora->text("--------------------------------\n");
+            $impresora->text("Cliente: ".$this->client->nombre." ".$this->client->apellido ."\n");
+            $impresora->text("Documento Nro.: ".$this->client->nro_documento ."\n");
+            $impresora->setJustification(Printer::JUSTIFY_LEFT);
+            $impresora->text("________________________________\n");
+            $impresora->text(" Cant.   Descripción   Subtotal\n");
+            $impresora->text("--------------------------------\n");
+            $impresora->setJustification(Printer::JUSTIFY_LEFT);
+            foreach (Cart::content() as $item) {
+                if($item->options['exento'] == "Si") $impresora->text(str_pad($item->qty,7).str_pad(substr($item->name,0,12), 10)."(E) ".str_pad($item->price,10)."\n"); 
+                else $impresora->text(str_pad($item->qty,7).str_pad(substr($item->name,0,12), 14)." ".str_pad($item->price,10)."\n");
+            } 
+            $impresora->text("\n");
+            $impresora->setJustification(Printer::JUSTIFY_RIGHT);
+            $impresora->text('SUBTOTAL: Bs ' . $this->subtotal - ($this->descuento_total) . "\n");
+            $impresora->text('DESCUENTO: Bs ' . $this->descuento_total . "\n");
+            $impresora->text('IVA('. $this->iva_empresa. '%): Bs '. $this->iva . "\n");
+            $impresora->text('TOTAL: Bs ' .$this->total_venta. "\n");
+            if ($this->tipo_pago == "Credito"){
+                $impresora->text('PAGADO: Bs ' .$this->pago_cliente. "\n");
+                $impresora->text('PENDIENTE: Bs ' .$this->total_venta - $this->pago_cliente. "\n");  
+            }
+            $impresora->text("\n");
+            $impresora->setJustification(Printer::JUSTIFY_CENTER);
+            $impresora->text("¡GRACIAS POR SU COMPRA!\n");
+            $impresora->feed(3);
+            $impresora->close();
+        }
+        //nota de entrega
+        else{ 
+            if ($this->tipo_pago == "Contado") $pdf = PDF::loadView('ventas.NotaEntregaContado',$data)->output();
+            else  $pdf = PDF::loadView('ventas.NotaEntregaCredito',$data)->output();
+                    
+            if($this->send_mail=="1"){
+                if( $this->client->email != null){
+                    $data_m["email"] = $this->client->email;
+                    $data_m["title"] = "Comprobante de pago";
+                    $data_m["body"] = "Anexo se encuentra el comprobante de pago de su compra realizada hoy.";
+                    Mail::send('ventas.NotaEntregaContado', $data, function ($message) use ($data_m, $pdf) {
+                        $message->to($data_m["email"], $data_m["email"])
+                            ->subject($data_m["title"])
+                            ->attachData($pdf, "Comprobante.pdf");
+                    });
                 }
             }
-
+        }
         cart::destroy();
         $this->siguiente_venta = '1';
         $this->reset(['monto1','monto2','monto3','monto4','monto5','metodo_id_1','metodo_id_2','metodo_id_3','metodo_id_4','metodo_id_5','cliente_select','send_mail','cash_received','total_venta','pago_cliente','descuento','descuento_total','tipo_comprobante','metodo_pago','tipo_pago','estado_entrega','subtotal']);
        
-         
-         if($this->imprimir == 1){
+        if($this->imprimir == 1){
             $this->reset(['imprimir']);
             $this->emitTo('ventas.ventas-seleccion-productos','render');
             $this->emitTo('ventas.ventas-cart','render');
     
-        //GENERANDO PDF
-           return response()->streamDownload(
-                fn () => print($pdf),
-               "Comprobante.pdf"
+            //GENERANDO PDF
+           /* if($this->tipo_comprobante != "2"){
+                return response()->streamDownload(
+                    fn () => print($pdf),
+                "Comprobante.pdf"
                 );
+            }*/
          }
          else {
             $this->emitTo('ventas.ventas-seleccion-productos','render');

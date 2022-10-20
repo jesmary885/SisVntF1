@@ -51,7 +51,7 @@
     @endcan
     <!-- ./col -->
 
-    <div class="col-lg-3 col-6">
+   {{-- <div class="col-lg-3 col-6">
       <!-- small box -->
       @if( $total_movimientos_pendientes == 0)
       <div class="small-box bg-info">
@@ -67,6 +67,25 @@
           <i class="ion ion-filing"></i>
         </div>
         <a href="{{route('movimientos.caja.index.pendiente')}}"  class="small-box-footer">Recibir movimiento en caja<i class="fas fa-arrow-circle-right"></i></a>
+      </div>
+    </div>--}}
+
+    <div class="col-lg-3 col-6">
+      <!-- small box -->
+      @if( $productos_agotar == 0)
+      <div class="small-box bg-info">
+      @else
+        <div class="small-box bg-danger">
+      @endif
+      
+        <div class="inner">
+          <h3>{{$productos_agotar}}</h3>
+          <p>Productos por agotarse</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-filing"></i>
+        </div>
+        <a href="{{route('reportes.producto_agotar')}}"  class="small-box-footer">Más detalle <i class="fas fa-arrow-circle-right"></i></a>
       </div>
     </div>
 
@@ -97,42 +116,9 @@
       @endif
     </div>--}}
 
-    {{-- @can('admin.clientes.index')
-    <div class="col-lg-3 col-6">
-      <!-- small box -->
-      <div class="small-box bg-info">
-        <div class="inner">
-          <h3>{{$clientes_cant}}</h3>
-
-          <p>Clientes registrados</p>
-        </div>
-        <div class="icon">
-          <i class="ion ion-person-add"></i>
-        </div>
-        <a href="{{route('admin.clientes.index')}}" class="small-box-footer">Nuevo cliente <i class="fas fa-arrow-circle-right"></i></a>
-      </div>
-    </div>
-  
-    @endcan --}}
-    {{-- @can('reportes.productos')
-    <div class="col-lg-3 col-6">
-      <!-- small box -->
-      <div class="small-box bg-info">
-        <div class="inner">
-          <h3>Reportes</h3>
-
-          <p>de ventas y productos</p>
-        </div>
-        <div class="icon">
-          <i class="ion ion-pie-graph"></i>
-        </div>
-        <a href="{{route('reportes.index.productos')}}" class="small-box-footer">Ver reportes<i class="fas fa-arrow-circle-right"></i></a>
-      </div>
-    </div>
-    @endcan --}}
     <!-- ./col -->
     {{-- @can('admin.clientes.index') --}}
-    <div class="col-lg-3 col-6">
+    {{--<div class="col-lg-3 col-6">
       <!-- small box -->
       @if( $total_traslados_pendientes == 0)
       <div class="small-box bg-info">
@@ -148,6 +134,24 @@
           <i class="ion ion-filing"></i>
         </div>
         <a href="{{route('traslado_recibir.index')}}"  class="small-box-footer">Recibir traslado<i class="fas fa-arrow-circle-right"></i></a>
+      </div>--}}
+
+      <div class="col-lg-3 col-6">
+      <!-- small box -->
+      @if( $productos_vencer == 0)
+      <div class="small-box bg-info">
+      @else
+        <div class="small-box bg-danger">
+      @endif
+      
+        <div class="inner">
+          <h3>{{$productos_vencer}}</h3>
+          <p>Productos por vencer</p>
+        </div>
+        <div class="icon">
+          <i class="ion ion-filing"></i>
+        </div>
+        <a href="{{route('reportes.producto_vencer')}}"  class="small-box-footer">Más detalle <i class="fas fa-arrow-circle-right"></i></a>
       </div>
     </div>
     {{-- @endcan --}}

@@ -48,9 +48,9 @@ class Ventas extends Component
         $sucursal_act = $usuario_auth->sucursal->id;
 
         $ventas = Venta::where('fecha', $fecha_actual)
-        ->where('sucursal_id',$sucursal_act)
-        ->where('estado', 'activa')
-        ->paginate(5);
+            ->where('sucursal_id',$sucursal_act)
+            ->where('estado', 'activa')
+            ->paginate(10);
 
         return view('livewire.home.ventas',compact('ventas','usuario_ac'));
     }
@@ -75,9 +75,9 @@ class Ventas extends Component
         }
 
         $ventas = Venta::where('fecha', $fecha_actual)
-        ->where('sucursal_id',$sucursal_act)
-        ->where('estado', 'activa')
-        ->get();
+            ->where('sucursal_id',$sucursal_act)
+            ->where('estado', 'activa')
+            ->get();
 
         $data = [
             'ventas' => $ventas,

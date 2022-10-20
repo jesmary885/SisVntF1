@@ -11,17 +11,17 @@
                             <div class="w-1/4">
 
                                 <select wire:model="buscador" id="buscador" class="form-control text-m" name="buscador">
-                                    <option value="0">Modelo</option>
+                                    <option value="0">Código de barra</option>
                                     <option value="1">Marca</option>
                                     <option value="2">Categoria</option>
-                                    <option value="3">Código de barra</option>
+                                    <option value="3">Modelo</option>
                               
                                 </select>
 
                                 <x-input-error for="buscador" />
 
                             </div>
-                            <input wire:model="search" placeholder="Ingrese {{ $item_buscar }}"
+                            <input wire:model="search" placeholder="Ingrese el dato del producto a buscar"
                                 class="form-control mb-2">
 
                         </div>
@@ -35,12 +35,13 @@
 
                 </div>
 
-                @if ($productos->count())
+                @if ($productos)
 
                     <table class="table table-bordered table-responsive-lg table-responsive-md table-responsive-sm">
                         <thead class="thead-dark">
                             <tr>
                                 <th>Cantidad</th>
+                                <th>Lote</th>
                                 <th>Prod/Cat</th>
                                 <th>Marc/Mod</th>
                              
@@ -50,14 +51,15 @@
                         <tbody>
                             @foreach ($productos as $producto)
                                 <tr>
-                                    <td>{{$producto->sucursals->find($sucursal)->pivot->cantidad}}</td>
-                                    <td>{{ $producto->nombre }}/{{ $producto->categoria->nombre }}
+                                    <td>{{$producto['cantidad']}}</td>
+                                    <td>{{$producto['lote']}}</td>
+                                    <td>{{$producto['producto']['nombre']}}/{{ $producto['producto']['categoria']['nombre'] }}
                                     </td>
-                                    <td>{{ $producto->marca->nombre }}/{{ $producto->modelo->nombre }}
+                                    <td>{{ $producto['producto']['marca']['nombre'] }}/{{ $producto['producto']['modelo']['nombre'] }}
                                     </td>
                                     <td width="10px">
                                  
-                                             @livewire('productos.productos-traslado-seleccion', ['producto' => $producto,'sucursal' => $sucursal],key($producto->id))
+                                             @livewire('productos.productos-traslado-seleccion', ['producto' => $producto['id']],key($producto['id']))
                                     
                                     </td>
                                 </tr>

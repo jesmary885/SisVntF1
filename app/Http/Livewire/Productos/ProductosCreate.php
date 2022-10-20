@@ -5,9 +5,11 @@ namespace App\Http\Livewire\Productos;
 use App\Models\Categoria;
 use App\Models\Compra;
 use App\Models\Marca;
+use App\Models\Metodo_pago;
 use App\Models\Modelo;
 use App\Models\Moneda;
 use App\Models\Movimiento;
+use App\Models\MovimientoCaja;
 use App\Models\Producto;
 use App\Models\Producto_cod_barra_serial;
 use App\Models\Producto_lote;
@@ -31,9 +33,9 @@ class ProductosCreate extends Component
 
     use WithFileUploads;
 
-    public $nombre, $monedas, $moneda_id= "", $puntos, $generar_serial, $fecha_actual, $sucursal_nombre, $cantidad, $observaciones, $inv_min, $cod_barra, $inventario_min, $presentacion, $precio_entrada, $precio_letal, $precio_mayor, $tipo_garantia, $garantia, $estado, $file, $marcas, $categorias, $proveedores, $sucursales;
-    public $modelos = [],$tasa_dia,$moneda_nombre,$moneda_simbolo;
-    public $marca_id = "", $sucursal_id = "" ,$modelo_id = "", $categoria_id = "", $proveedor_id ="";
+    public $nombre, $monedas, $moneda_id= 1, $puntos, $generar_serial, $fecha_actual, $sucursal_nombre, $cantidad, $observaciones, $inv_min, $cod_barra, $inventario_min, $presentacion, $precio_entrada, $precio_letal, $precio_mayor, $tipo_garantia, $garantia, $estado, $file, $marcas, $categorias, $proveedores, $sucursales;
+    public $modelos = [],$tasa_dia,$moneda_nombre,$moneda_simbolo, $metodos, $metodo_id, $saldado_proveedor = 1, $pago;
+    public $marca_id = "", $sucursal_id = "" ,$modelo_id = "", $categoria_id = "", $proveedor_id ="",$cajas = [], $caja_id="";
     public $limitacion_sucursal = true;
     public $ff, $fecha_vencimiento, $descuento, $stock_minimo, $vencimiento = "no", $unidad_tiempo_garantia;
     public $utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $act_utilidades="1", $act_margenes, $exento;
@@ -87,6 +89,13 @@ class ProductosCreate extends Component
         $this->categorias=Categoria::all();
         $this->proveedores=Proveedor::all();
         $this->monedas = Moneda::all();
+        $this->metodos = Metodo_pago::all();
+    }
+
+    public function updatedSucursalId($value)
+    {
+        $sucursal_select = Sucursal::find($value);
+        $this->cajas = $sucursal_select->cajas;
     }
 
     public function updatedMarcaId($value)
@@ -104,7 +113,6 @@ class ProductosCreate extends Component
 
     public function save()
     {
-
         $rules = $this->rules;
         $this->validate($rules);
 
@@ -143,8 +151,8 @@ class ProductosCreate extends Component
             if($this->exento == '1')  $producto->exento = 'si';
             else $producto->exento = 'no';
             $producto->save();
-            //agregando imagen de producto en tabla imagenes
 
+            //agregando imagen de producto en tabla imagenes
             if ($this->file){
                     $rule_file = $this->rule_file;
                     $this->validate($rule_file);
@@ -181,6 +189,7 @@ class ProductosCreate extends Component
             $lote->utilidad_mayor = $this->utilidad_mayor*$tasa_dia;
             $lote->margen_letal = $this->margen_letal;
             $lote->margen_mayor = $this->margen_mayor;
+            $lote->status = 'activo';
             $lote->observaciones = $this->observaciones;
             $lote->stock= $this->cantidad;
             $lote->save();
@@ -198,23 +207,38 @@ class ProductosCreate extends Component
                 'user_id' => $usuario_auth
             ]);
 
-         
             //guardando cantidades en tabla pivote entre sucursal y productos
             foreach($sucursales as $sucursal){
                 if($sucursal->id == $this->sucursal_id){
                     $producto->sucursals()->attach([
                         $this->sucursal_id => [
-                            'cantidad' => $this->cantidad
+                            'cantidad' => $this->cantidad,
+                            'lote' => 1,
+                            'status' => 'activo'
                         ]
                     ]);
                 }else{
                     $producto->sucursals()->attach([
                         $sucursal->id => [
-                            'cantidad' => 0
+                            'cantidad' => 0,
+                            'lote' => 1,
+                            'status' => 'activo'
                         ]
                     ]);
                 }
             }
+            //registrar movimiento de egreso en tabla de movimiento_caja
+
+            $movimiento_caja = new MovimientoCaja();
+            $movimiento_caja->fecha = $this->fecha_actual;
+            $movimiento_caja->tipo_movimiento = 2;
+            $movimiento_caja->cantidad = $this->total_pagado;
+            $movimiento_caja->estado = 'etregado';
+            $movimiento_caja->observacion = 'Compra de producto';
+            $movimiento_caja->user_id = $usuario_auth;
+            $movimiento_caja->sucursal_id = $this->sucursal_id;
+            $movimiento_caja->caja_id = $this->caja_id;
+            $movimiento_caja->save();
             
             $this->reset(['nombre','stock_minimo','utilidad_letal','utilidad_mayor','margen_letal','margen_mayor','exento','descuento','sucursal_id','fecha_vencimiento','generar_serial','puntos','cantidad','cod_barra','inventario_min','presentacion','precio_entrada','precio_letal','precio_mayor','modelo_id','categoria_id','observaciones','tipo_garantia','garantia','estado','proveedor_id','marca_id','file']);
             $this->emit('alert','Producto creado correctamente');
@@ -222,12 +246,12 @@ class ProductosCreate extends Component
         }
     }
 
-
     public function render()
     {
-       
-
         if($this->precio_entrada != ''){
+            if($this->moneda_id == '1') $this->tasa_dia = 1;
+            else $this->tasa_dia = tasa_dia::where('moneda_id',$this->moneda_id)->first()->tasa;     
+
             $this->precio_entrada = $this->precio_entrada / $this->tasa_dia;
             if($this->act_utilidades == 1){
                 if($this->margen_letal != ''){
@@ -256,7 +280,19 @@ class ProductosCreate extends Component
             }
         }
 
-        
+        if(session()->has('moneda')){
+            $this->moneda = Moneda::where('nombre',session('moneda'))->first();
+            $this->moneda_nombre = session('moneda');
+            $this->moneda_simbolo = session('simbolo_moneda');
+            if(session('moneda') == "Bolivar") $this->tasa_dia = 1;
+            else $this->tasa_dia = tasa_dia::where('moneda_id',$this->moneda->id)->first()->tasa;
+        } 
+        else{
+            $this->moneda = Moneda::where('nombre','Bolivar')->first();
+            $this->moneda_nombre = 'Bolivar';
+            $this->moneda_simbolo = 'Bs';
+            $this->tasa_dia = 1;
+        } 
         return view('livewire.productos.productos-create');
     }
 }

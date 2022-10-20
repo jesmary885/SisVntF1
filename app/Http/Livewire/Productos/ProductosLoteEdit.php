@@ -116,7 +116,7 @@ class ProductosLoteEdit extends Component
         if($this->fecha_vencimiento != "null") $fecha_vencimiento = Carbon::parse($this->fecha_vencimiento);
         else $fecha_vencimiento = null;
 
-        if($this->moneda_id == '1') $tasa_dia = 1;
+        if($this->tasa_dia == '1') $tasa_dia = 1;
         else $tasa_dia = tasa_dia::where('moneda_id',$this->moneda_id)->first()->tasa;         
 
         $this->lote->update([

@@ -186,6 +186,7 @@
                 <thead>
                     <tr id="fa">
                         <th>CANTIDAD</th>
+                        <th>LOTE</th>
                         <th>PRODUCTO</th>
                         <th>SUCURSAL DESTINO</th>
 
@@ -196,6 +197,7 @@
                     @foreach ($productos as $producto)
                         <tr>
                             <td>{{$producto->cantidad}}</td>
+                            <td>{{$producto->lote}}</td>
                             <td>{{$producto->producto->nombre}} - {{$producto->producto->modelo->nombre}}</td>
                             <td>{{$producto->sucursal->nombre}}</td>
                        
@@ -207,6 +209,9 @@
                          <th colspan="1">
                             <p align="center">{{$total_registros}}</p>
                         </th>
+                        <td>
+                            <p align="center"></p>
+                        </td>
                         <td>
                             <p align="center"></p>
                         </td>

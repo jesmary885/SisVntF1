@@ -1,5 +1,5 @@
 <?php
-$medidaTicket = 180;
+$medidaTicket = 160;
 
 ?>
 <!DOCTYPE html>
@@ -9,12 +9,12 @@ $medidaTicket = 180;
 
     <style>
         * {
-            font-size: 12px;
+            font-size: 8px;
             font-family: 'DejaVu Sans', serif;
         }
 
         h1 {
-            font-size: 18px;
+            font-size: 14px;
         }
 
         .ticket {
@@ -45,7 +45,7 @@ $medidaTicket = 180;
         }
 
         .cant{
-            padding-left: 4px;
+            padding-left: 2px;
         }
 
         td.producto {
@@ -78,7 +78,10 @@ $medidaTicket = 180;
         }
 
         .ticket {
-            margin: 0;
+            margin-left: 2px ;
+            margin-top: 0px;
+            margin-bottom: 0px;
+            margin-right: 2px;
             padding: 0;
         }
 

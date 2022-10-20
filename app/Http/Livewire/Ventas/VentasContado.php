@@ -23,18 +23,26 @@ class VentasContado extends Component
         $this->resetPage();
     }
 
-  
-
-   
     public function render()
     {
+        if($this->search){
+            $ventas = Venta::where('fecha', 'LIKE', '%' . $this->search . '%')
+                ->where('tipo_pago', 'Contado')
+                ->where('sucursal_id',$this->sucursal)
+                ->where('estado', 'activa')
+                ->latest('id')
+                ->paginate(10);
+        }
+        else{
+            $ventas = Venta::orderBy('id', 'DESC')
+                ->where('tipo_pago', 'Contado')
+                ->where('sucursal_id',$this->sucursal)
+                ->where('estado', 'activa')
+                ->take(15)
+                ->get();
+        }
 
-        $ventas = Venta::where('fecha', 'LIKE', '%' . $this->search . '%')
-                    ->where('tipo_pago', 'Contado')
-                    ->where('sucursal_id',$this->sucursal)
-                    ->where('estado', 'activa')
-                    ->latest('id')
-                    ->paginate(5);
+        
 
 
         return view('livewire.ventas.ventas-contado',compact('ventas'));

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Ventas;
 
+use App\Models\Metodo_pago;
 use App\Models\Producto_venta;
 use App\Models\Venta;
 use Illuminate\Database\Eloquent\Builder;
@@ -25,17 +26,26 @@ class VentasCredito extends Component
         $this->resetPage();
     }
 
-   
     public function render()
     {
     
+        if($this->search){
+            $ventas = Venta::where('fecha', 'LIKE', '%' . $this->search . '%')
+                ->where('tipo_pago', 'Credito')
+                ->where('sucursal_id',$this->sucursal)
+                ->where('estado', 'activa')
+                ->latest('id')
+                ->paginate(10);
+        }
+        else{
+            $ventas = Venta::orderBy('id', 'DESC')
+                ->where('tipo_pago', 'Credito')
+                ->where('sucursal_id',$this->sucursal)
+                ->where('estado', 'activa')
+                ->take(15)
+                ->get();
+        }
 
-        $ventas = Venta::where('fecha', 'LIKE', '%' . $this->search . '%')
-                        ->where('tipo_pago', 'Credito')
-                        ->where('estado', 'activa')
-                        ->where('sucursal_id',$this->sucursal)
-                        ->latest('id')
-                        ->paginate(5);
         return view('livewire.ventas.ventas-credito',compact('ventas'));
     }
 

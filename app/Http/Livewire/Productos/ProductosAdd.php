@@ -3,7 +3,9 @@
 namespace App\Http\Livewire\Productos;
 
 use App\Models\Compra;
+use App\Models\Metodo_pago;
 use App\Models\Moneda;
+use App\Models\MovimientoCaja;
 use App\Models\Producto;
 use App\Models\Producto_lote;
 use App\Models\Proveedor;
@@ -15,14 +17,15 @@ use App\Models\ProductoSerialSucursal;
 use App\Models\tasa_dia;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Livewire\Component;
 
 class ProductosAdd extends Component
 {
 
-    public $isopen = false,$tasa_dia,$moneda_nombre,$moneda_simbolo, $monedas, $moneda_id= "";
+    public $isopen = false,$tasa_dia,$moneda_nombre,$moneda_simbolo, $monedas, $moneda_id= 1, $metodos, $metodo_id, $saldado_proveedor = 1, $pago;
     public $producto, $lotes, $generar_serial, $pivot, $precio_compra, $proveedores, $cantidad, $sucursal_nombre, $sucursal_id = "", $lote_id = "",$sucursales, $proveedor_id = "";
-    public $limitacion_sucursal = true;
+    public $limitacion_sucursal = true, $cajas = [], $caja_id="";
     public $fecha_vencimiento,$vencimiento,$observaciones;
     public $utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $precio_entrada, $precio_letal, $precio_mayor,$act_utilidades="1", $act_old_rol=0;
 
@@ -43,7 +46,10 @@ class ProductosAdd extends Component
 
     public function mount(){
         $this->proveedores=Proveedor::all();
-        $this->lotes = Producto_lote::where('producto_id',$this->producto->id)->get();
+        $this->lotes = Producto_lote::where('producto_id',$this->producto->id)
+            ->where('status','activo')
+            ->get();
+
          $usuario_au = User::where('id',Auth::id())->first();
          $this->vencimiento = Producto::where('id',$this->producto->id)->first()->vencimiento;
 
@@ -57,7 +63,28 @@ class ProductosAdd extends Component
          }
 
          $this->monedas = Moneda::all();
+         $this->metodos = Metodo_pago::all();
+
+         if(session()->has('moneda')){
+            $this->moneda = Moneda::where('nombre',session('moneda'))->first();
+            $this->moneda_nombre = session('moneda');
+            $this->moneda_simbolo = session('simbolo_moneda');
+            if(session('moneda') == "Bolivar") $this->tasa_dia = 1;
+            else $this->tasa_dia = tasa_dia::where('moneda_id',$this->moneda->id)->first()->tasa;
+        } 
+        else{
+            $this->moneda = Moneda::where('nombre','Bolivar')->first();
+            $this->moneda_nombre = 'Bolivar';
+            $this->moneda_simbolo = 'Bs';
+            $this->tasa_dia = 1;
+        } 
      }
+
+     public function updatedSucursalId($value)
+    {
+        $sucursal_select = Sucursal::find($value);
+        $this->cajas = $sucursal_select->cajas;
+    }
  
     public function render()
     {
@@ -114,7 +141,12 @@ class ProductosAdd extends Component
             }
         }
 
-        if($this->lote_id != 'nuevo_lote') $this->moneda_lote = 'Bs';      
+       // if($this->lote_id != 'nuevo_lote') $this->moneda_lote = 'Bs'; 
+
+       if($this->lote_id != 'nuevo_lote'){
+            $this->moneda_lote = 'Bs'; 
+            $this->moneda_id = 1;    
+       } 
 
         return view('livewire.productos.productos-add');
     }
@@ -146,29 +178,24 @@ class ProductosAdd extends Component
             $this->fecha_actual = date('Y-m-d');
             $usuario_auth = Auth::id();
 
-            $total_compra = (($this->precio_compra*$tasa_dia) * $this->cantidad);
+            $total_compra = (($this->precio_entrada*$tasa_dia) * $this->cantidad);
 
             $rules = $this->rules;
             $this->validate($rules);
 
-            //Guardando movimiento de producto para kardex
-
-            $stock_antiguo = 0;
+           /* $stock_antiguo = 0;
             foreach($sucursales as $sucursalx){
-                $stock_antiguo = $this->producto->sucursals->find($sucursalx)->pivot->cantidad + $stock_antiguo;
-            }
+                $stock_antiguo = $producto_select->sucursals->find($sucursalx)->pivot->cantidad + $stock_antiguo;
+            }*/
 
-            $stock_nuevo = $stock_antiguo + $this->cantidad;
+            $stock_nuevo = $producto_select->cantidad + $this->cantidad;
             
-            $producto_select->update([
-                'cantidad' => $stock_nuevo,
-            ]);
-
+            //Guardando movimiento de producto para kardex
             $producto_select->movimientos()->create([
                 'fecha' => $this->fecha_actual,
                 'cantidad_entrada' => $this->cantidad,
                 'cantidad_salida' => 0,
-                'stock_antiguo' => $stock_antiguo,
+                'stock_antiguo' => $producto_select->cantidad,
                 'stock_nuevo' => $stock_nuevo,
                 'precio_entrada' =>$total_compra,
                 'precio_salida' => 0,
@@ -176,17 +203,12 @@ class ProductosAdd extends Component
                 'user_id' => $usuario_auth
             ]);
 
+            //modificando cantidad en tabla de productos
+            $producto_select->update([
+                'cantidad' => $stock_nuevo,
+            ]);
 
-            //modificando cantidad en tabla pivote producto_sucursal
-            $cantidad_nueva_sucursal = $this->producto->sucursals->find($this->sucursal_id)->pivot->cantidad + $this->cantidad;
-            $pivot = Pivot::where('sucursal_id',$this->sucursal_id)
-                            ->where('producto_id',$producto_select->id)
-                            ->first();
-            $pivot->cantidad = $cantidad_nueva_sucursal;
-            $pivot->save();
-            
             //agregando compra
-    
             $compra = new Compra();
             $compra->fecha = $this->fecha_actual;
             $compra->total = $total_compra;
@@ -196,13 +218,19 @@ class ProductosAdd extends Component
             $compra->user_id = $usuario_auth;
             $compra->sucursal_id = $this->sucursal_id;
             $compra->producto_id = $producto_select->id;
+            $compra->metodo_pago_id = $this->metodo_id;
+            $compra->caja_id = $this->caja_id;
+            if($this->saldado_proveedor != '1'){
+                $compra->deuda_a_proveedor = $total_compra - $this->pago;
+            }
             $compra->save();
 
             //Agregando en tabla de producto_lote
 
             if($this->lote_id == "nuevo_lote"){
+
                 $old_producto_lote_select = Producto_lote::where('producto_id',$this->producto->id)
-                    ->first();
+                ->get()->last();
                 
                 $new_lote = $old_producto_lote_select->lote + 1;
 
@@ -219,6 +247,7 @@ class ProductosAdd extends Component
                 $nuevo_lote_producto->utilidad_mayor = $this->utilidad_mayor*$tasa_dia;
                 $nuevo_lote_producto->margen_mayor = $this->margen_mayor;
                 $nuevo_lote_producto->stock = $this->cantidad;
+                $nuevo_lote_producto->status = 'activo';
                 $nuevo_lote_producto->observaciones = $this->observaciones;
                 $nuevo_lote_producto->save();
 
@@ -233,17 +262,53 @@ class ProductosAdd extends Component
                 ]);
             }
 
-            //agregando productos si contienen serial en tabla producto_cod_barra_serials
-        /*  if($producto_select->serial == '1'){
-                for ($i=0; $i < $this->cantidad; $i++) {
-                    $producto_select->producto_cod_barra_serials()->create([
-                        'serial' => '',
-                        'sucursal_id' => $this->sucursal_id
-                    ]);
-                }
-            }*/
+            //modificando cantidad en tabla pivote producto_sucursal
+            //$cantidad_nueva_sucursal = $this->producto->sucursals->find($this->sucursal_id)->pivot->cantidad + $this->cantidad;
 
-            //agregando productos a la tabla productosSerialSucursal
+            //guardando en tabla pivote de sucursal con producto
+            if($this->lote_id == "nuevo_lote"){
+                foreach($sucursales as $sucursal){
+                    if($sucursal->id == $this->sucursal_id){
+                        $producto_select->sucursals()->attach([
+                            $this->sucursal_id => [
+                                'cantidad' => $this->cantidad,
+                                'lote' => $new_lote,
+                                'status' => 'activo'
+                            ]
+                        ]);
+                    }else{
+                        $producto_select->sucursals()->attach([
+                            $sucursal->id => [
+                                'cantidad' => 0,
+                                'lote' => $new_lote,
+                                'status' => 'activo'
+                            ]
+                        ]);
+                    }
+                }
+            }
+            else{
+                $pivot = Pivot::where('sucursal_id',$this->sucursal_id)
+                            ->where('producto_id',$producto_select->id)
+                            ->where('lote',$this->lote_id )
+                            ->first();
+                $pivot->cantidad = $pivot->cantidad + $this->cantidad;
+                $pivot->save();
+            }
+
+             //registrar movimiento de egreso en tabla de movimiento_caja
+
+             $movimiento_caja = new MovimientoCaja();
+             $movimiento_caja->fecha = $this->fecha_actual;
+             $movimiento_caja->tipo_movimiento = 2;
+             if($this->saldado_proveedor == '1') $movimiento_caja->cantidad = $total_compra;
+             else $movimiento_caja->cantidad = $this->pago;
+             $movimiento_caja->estado = 'etregado';
+             $movimiento_caja->observacion = 'Compra de producto';
+             $movimiento_caja->user_id = $usuario_auth;
+             $movimiento_caja->sucursal_id = $this->sucursal_id;
+             $movimiento_caja->caja_id = $this->caja_id;
+             $movimiento_caja->save();
 
             $this->reset(['isopen','precio_compra','sucursal_id','proveedor_id','cantidad']);
             $this->emitTo('productos.productos-index','render');

@@ -74,12 +74,12 @@
                         <h2 class="w-full text-center text-md font-semibold text-gray-600 ">Precio</h2>
                                     
                         <div class="mt-2">
-                            <div class="w-full mr-2">
-                                <input wire:model="precio_letal" title="Precio Unitario" readonly type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                            <div class="w-full mr-2 bg-blue-200">
+                                <input wire:model="precio_letal" title="Precio Unitario" readonly type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
                                 <x-input-error for="precio_letal" />
                             </div>
-                            <div class="w-full mr-2 mt-4">
-                                <input wire:model="precio_mayor" title="Precio al mayor" readonly type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
+                            <div class="w-full mr-2 mt-4 bg-yellow-200">
+                                <input wire:model="precio_mayor" title="Precio al mayor" readonly type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
                                 <x-input-error for="precio_mayor" />
                             </div>
                         </div>
@@ -89,22 +89,22 @@
                     <h2 class="w-full text-center text-md font-semibold text-gray-600 ">Utilidad</h2>
                                     
                         <div class="mt-2">
-                            <div class="w-full mr-2">
+                            <div class="w-full mr-2 bg-blue-200">
                                 <div :class="{'hidden' : act_utilidades != '1'}">
-                                    <input wire:model="utilidad_letal" readonly title="Utilidad letal" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                                    <input wire:model="utilidad_letal" readonly title="Utilidad letal" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
                                 </div>
 
                                 <div :class="{'hidden' : act_utilidades == '1'}">
-                                    <input wire:model="utilidad_letal" title="Utilidad letal" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                                    <input wire:model="utilidad_letal" title="Utilidad letal" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
                                 </div>
                                 <x-input-error for="utilidad_letal" />
                             </div>
-                            <div class="w-full mr-2 mt-4">
+                            <div class="w-full mr-2 mt-4 bg-yellow-200">
                                 <div :class="{'hidden' : act_utilidades != '1'}">
-                                    <input wire:model="utilidad_mayor" readonly title="Utilidad al mayor" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
+                                    <input wire:model="utilidad_mayor" readonly title="Utilidad al mayor" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
                                 </div>
                                 <div :class="{'hidden' : act_utilidades == '1'}">
-                                    <input wire:model="utilidad_mayor" title="Utilidad al mayor" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
+                                    <input wire:model="utilidad_mayor" title="Utilidad al mayor" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
                                 </div>
                                 <x-input-error for="utilidad_mayor" />
                             </div>
@@ -115,21 +115,21 @@
                         <h2 class="w-full text-center text-md font-semibold text-gray-600 ">Margen de ganancia</h2>
                                     
                         <div class="mt-2">
-                            <div class="w-full">
+                            <div class="w-full bg-blue-200">
                                 <div :class="{'hidden' : act_utilidades != '2'}">
-                                    <input wire:model="margen_letal" readonly title="Margen de ganancia letal" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                                    <input wire:model="margen_letal" readonly title="Margen de ganancia letal" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
                                 </div>
                                     <div :class="{'hidden' : act_utilidades == '2'}">
-                                        <input wire:model="margen_letal" title="Margen de ganancia letal" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                                        <input wire:model="margen_letal" title="Margen de ganancia letal" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
                                     </div>
                                     <x-input-error for="margen_letal" />
                                 </div>
-                                <div class="w-full mt-4">
+                                <div class="w-full mt-4 bg-yellow-200">
                                     <div :class="{'hidden' : act_utilidades != '2'}">
-                                        <input wire:model="margen_mayor" readonly title="Margen de ganancia al mayor" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
+                                        <input wire:model="margen_mayor" readonly title="Margen de ganancia al mayor" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
                                     </div>
                                     <div :class="{'hidden' : act_utilidades == '2'}">
-                                        <input wire:model="margen_mayor" title="Margen de ganancia al mayor" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
+                                        <input wire:model="margen_mayor" title="Margen de ganancia al mayor" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Mayor">
                                     </div>
                                     <x-input-error for="margen_mayor" />
                                 </div>

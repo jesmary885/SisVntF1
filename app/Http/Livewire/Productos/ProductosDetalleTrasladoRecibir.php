@@ -85,41 +85,39 @@ class ProductosDetalleTrasladoRecibir extends Component
         $user_auth_nombre =  auth()->user()->name;
         $user_auth_apellido =  auth()->user()->apellido;
 
-
-        
-        $producto_delete = ProductosTraslado::where('id',$producto)
-                                            ->first();
+        $producto_delete = ProductosTraslado::where('id',$producto)->first();
 
         $product = Producto::where('id',$producto_delete->producto_id)->first();
 
         $product->update([
-                'cantidad' => $product->cantidad + $producto_delete->cantidad,
+            'cantidad' => $product->cantidad + $producto_delete->cantidad,
         ]);
 
         $sucursal = Sucursal::where('id',$producto_delete->sucursal_id)->first();
 
-            $pivot_increment = Pivot::where('sucursal_id', $producto_delete->sucursal_id)->where('producto_id', $producto_delete->producto_id)->first();
-            $pivot_increment->cantidad = $pivot_increment->cantidad + $producto_delete->cantidad;
-            $pivot_increment->save();
+        $pivot_increment = Pivot::where('sucursal_id', $producto_delete->sucursal_id)
+            ->where('producto_id', $producto_delete->producto_id)
+            ->where('lote', $producto_delete->lote)
+            ->first();
 
+        $pivot_increment->cantidad = $pivot_increment->cantidad + $producto_delete->cantidad;
+        $pivot_increment->save();
 
+        $traslado_pendiente_delete = Traslado::where('sucursal_origen',$producto_delete->sucursal_origen)
+            ->where('sucursal_id',$producto_delete->sucursal_id)
+            ->where('producto_id',$producto_delete->producto_id)
+            ->where('lote',$producto_delete->lote)
+            ->first(); 
 
-            $traslado_pendiente_delete = Traslado::where('sucursal_origen',$producto_delete->sucursal_origen)
-                                            ->where('sucursal_id',$producto_delete->sucursal_id)
-                                            ->where('producto_id',$producto_delete->producto_id)
-                                            ->first(); 
+        $traslado_pendiente_delete->update([
+            'cantidad_recibida' => $producto_delete->cantidad,
+            'estado' => 'RECIBIDO',
+            'observacion_final' => 'Recibido en almacen '. $sucursal->nombre .', por usuario '. $user_auth_nombre .' '. $user_auth_apellido. ' Fecha del registro: '. $fecha_actual
+        ]);
 
-            $traslado_pendiente_delete->update([
-                        'cantidad_recibida' => $producto_delete->cantidad,
-                        'estado' => 'RECIBIDO',
-                        'observacion_final' => 'Recibido en almacen '. $sucursal->nombre .', por usuario '. $user_auth_nombre .' '. $user_auth_apellido. ' Fecha del registro: '. $fecha_actual
-            ]);
-
-            $producto_delete->delete();
+        $producto_delete->delete();
             
-            $this->emitTo('productos.productos-traslado-recibir','render');
-
-
+        $this->emitTo('productos.productos-traslado-recibir','render');
     }
 
 

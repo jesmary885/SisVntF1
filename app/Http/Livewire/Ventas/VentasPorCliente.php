@@ -26,13 +26,21 @@ class VentasPorCliente extends Component
 
     public function render()
     {
-
-        $ventas = Venta::whereHas('cliente',function(Builder $query){
-            $query->where('nro_documento','LIKE', '%' . $this->search . '%')
-            ->where('estado', 'activa')
-            ->where('sucursal_id',$this->sucursal);
-         })->latest('id')
-         ->paginate(5);
+        if($this->search){
+            $ventas = Venta::whereHas('cliente',function(Builder $query){
+                $query
+                    ->where('nro_documento','LIKE', '%' . $this->search . '%')
+                    ->orwhere('nombre','LIKE', '%' . $this->search . '%')
+                    ->orwhere('apellido','LIKE', '%' . $this->search . '%')
+                ->where('estado', 'activa')
+                ->where('sucursal_id',$this->sucursal);
+             })->latest('id')
+             ->paginate(5);
+        }
+        else{
+            $ventas = [];
+        }
+        
 
         return view('livewire.ventas.ventas-por-cliente',compact('ventas'));
     }

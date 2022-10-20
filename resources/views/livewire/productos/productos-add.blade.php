@@ -1,4 +1,4 @@
-<div x-data="{vencimiento: @entangle('vencimiento'),act_utilidades: @entangle('act_utilidades'),lote_id: @entangle('lote_id')}">
+<div x-data="{vencimiento: @entangle('vencimiento'),act_utilidades: @entangle('act_utilidades'),lote_id: @entangle('lote_id'),saldado_proveedor: @entangle('saldado_proveedor')}">
     <button type="submit" class="btn btn-primary btn-sm" title="Añadir productos" wire:click="open">
         <i class="fas fa-plus-square"></i>
    </button> 
@@ -16,11 +16,13 @@
                         </div>
                     </div>
                     <div class="modal-body">
+                        
                         <div class="flex justify-between">
                             <div>
                                 <h2 class="text-sm ml-2 m-0 p-0 text-gray-500 font-semibold mb-4"><i class="fas fa-info-circle"></i> Complete todos los campos y presiona Guardar</h2> 
                             </div>
                             <div class="mt-2">
+                                {{$tasa_dia}}
                                 <div class="flex">
                                     <div class="bg-blue-200 w-6 h-6"></div>
                                     <p class="text-gray-500 ml-2 font-semibold">Precios Unitarios</p>
@@ -29,39 +31,19 @@
                                     <div class="bg-yellow-200 w-6 h-6"></div>
                                     <p class="text-gray-500 ml-2 font-semibold">Precios al mayor</p>
                                 </div>
+
+                                <div class="flex w-full">
+                                    <input type="checkbox" class=" ml-1" wire:model="saldado_proveedor" value="1">
+                                    <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">Cancelado al 100%</p>
+                                </div>
                             </div>
                         </div>
 
                         <hr>
 
                         <div class="flex mt-2 justify-between w-full">
-                        <div class="w-full">
-                                <select wire:model="lote_id" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                                    <option value="" selected>Lote</option>
-                                    @foreach ($lotes as $lote)
-                                        <option value="{{$lote->lote}}">{{$lote->lote}}</option>
-                                    @endforeach
-                                    <option value="nuevo_lote">Nuevo lote</option>
-                                </select>
-                                <x-input-error for="lote_id" />
-                            </div>
                             
-                            <div class="w-full ml-2">
-                                <select wire:model="proveedor_id" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
-                                    <option value="" selected>Proveedor</option>
-                                    @foreach ($proveedores as $proveedor)
-                                        <option value="{{$proveedor->id}}">{{$proveedor->nombre_proveedor}}</option>
-                                    @endforeach
-                                </select>
-                                <x-input-error for="proveedor_id" />
-                            </div>
-                        </div>
-                        <div class="flex mt-2 justify-between w-full">
                             <div class="w-full mr-2">
-                                <input wire:model.defer="cantidad" name="documento" type="number" min="0" class="px-4 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Cantidad">
-                                <x-input-error for="cantidad" />
-                            </div>
-                            <div class="w-full">
                                 @if ($limitacion_sucursal)
                                     <select wire:model="sucursal_id" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                                         <option value="" selected>Almacen</option>
@@ -74,7 +56,62 @@
                                     <input type="text" readonly value="Sucursal {{$sucursal_nombre}}" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" >
                                 @endif  
                             </div>
+
+                            <div class="w-full mr-2">
+                                <select wire:model="caja_id" class="block mr-2 w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-2 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                    <option value="" selected>Caja</option>
+                                        @foreach ($cajas as $caja)
+                                        <option value="{{$caja->id}}">{{$caja->nombre}}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error for=caja_id" />
+                            </div>
+                        </div>
+
+                        <div class="flex mt-2 justify-between w-full">
+                            <div class="w-full">
+                                    <select wire:model="lote_id" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                        <option value="" selected>Lote</option>
+                                        @foreach ($lotes as $lote)
+                                            <option value="{{$lote->lote}}">{{$lote->lote}}</option>
+                                        @endforeach
+                                        <option value="nuevo_lote">Nuevo lote</option>
+                                    </select>
+                                    <x-input-error for="lote_id" />
+                            </div>
+
+                            <div class="w-full ml-2">
+                                    <input wire:model.defer="cantidad" name="documento" type="number" min="0" class="px-4 appearance-none block w-full bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Cantidad">
+                                    <x-input-error for="cantidad" />
+                            </div>
+
+                            <div class="w-full mr-2 ml-2">
+                                    <select wire:model="proveedor_id" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                        <option value="" selected>Proveedor</option>
+                                        @foreach ($proveedores as $proveedor)
+                                            <option value="{{$proveedor->id}}">{{$proveedor->nombre_proveedor}}</option>
+                                        @endforeach
+                                    </select>
+                                    <x-input-error for="proveedor_id" />
+                            </div>
+                        </div>
+                       
+
+                        <div class="flex mt-2 justify-between w-full">
+                            <div class="w-1/2 mr-2">
+                                <select wire:model.lazy="metodo_id" class="w-full mr-2 bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                                    <option value="" selected>Seleccione el método pago</option>
+                                    @foreach ($metodos as $metodo)
+                                        <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
+                                    @endforeach
+                                </select>
+                                <x-input-error for="metodo_id" />
+                            </div>
                           
+                            <div class="w-1/2" :class="{'hidden': (saldado_proveedor == '1')}">
+                                <input wire:model="pago" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Monto pagado">
+                                <x-input-error for="pago" />
+                            </div>
                         </div>
                         
                         <div :class="{'hidden': (lote_id != 'nuevo_lote')}" >

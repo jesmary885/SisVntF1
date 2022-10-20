@@ -39,7 +39,8 @@
                 <table class="table table-bordered table-responsive-lg table-responsive-md table-responsive-sm" >
                     <thead class="thead-dark">
                         <tr>
-                            <th>Cantidd</th>
+                            <th>Cantidad</th>
+                            <th>Lote</th>
                             <th>Prod/Cat</th>
                             <th>Marc/Mod</th>
                             <th colspan="2"></th>
@@ -49,6 +50,7 @@
                         @foreach ($trasl as $p)
                             <tr>
                             <td>{{$p->cantidad}}</td>
+                            <td>{{$p->lote}}</td>
                             <td>{{$p->producto->nombre}}/{{$p->producto->categoria->nombre}}</td>
                             <td>{{$p->producto->marca->nombre}}/{{$p->producto->modelo->nombre}}</td>
 

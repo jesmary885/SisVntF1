@@ -1,4 +1,4 @@
-<div x-data="{vencimiento: @entangle('vencimiento'),act_utilidades: @entangle('act_utilidades')}">
+<div x-data="{vencimiento: @entangle('vencimiento'),act_utilidades: @entangle('act_utilidades'),saldado_proveedor: @entangle('saldado_proveedor')}">
     <div class="card">
         <h5 class="modal-title py-0 text-lg text-gray-800 ml-4"> <i class="fas fa-database"></i>  Registro de equipo</h5>
     </div>
@@ -20,6 +20,10 @@
                     <div class="flex">
                         <div class="bg-yellow-200 w-6 h-6"></div>
                         <p class="text-gray-500 ml-2 font-semibold">Precios al mayor</p>
+                    </div>
+                    <div class="flex w-full">
+                            <input type="checkbox" class=" ml-1" wire:model="saldado_proveedor" value="1">
+                            <p class="text-sm font-semibold text-gray-500 ml-2 mt-3">Cancelado al 100%</p>
                     </div>
                
                 </div>
@@ -352,6 +356,39 @@
             <div>
                 <textarea wire:model="observaciones" class="mt-2 resize-none rounded-md outline-none w-full px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="observaciones" cols="80" rows="2" required placeholder="Observaciones"></textarea>
                 <x-input-error for="observaciones" />
+            </div>
+
+            <hr>
+            <div class="flex">
+                <i class="fas fa-barcode mt-1 mr-2"></i>
+                <h2 class="text-lg inline mt-0">Información del pago</h2>
+            </div>
+
+            <div class="flex mt-2 justify-between w-full">
+                <div class="w-1/2 mr-2">
+                    <select wire:model.lazy="metodo_id" class="w-full mr-2 bg-gray-50 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        <option value="" selected>Seleccione el método pago</option>
+                        @foreach ($metodos as $metodo)
+                            <option value="{{$metodo->id}}">{{$metodo->nombre}}</option>
+                        @endforeach
+                    </select>
+                    <x-input-error for="metodo_id" />
+                </div>
+
+                <div class="w-1/2 mr-2">
+                    <select wire:model="caja_id" class="block mr-2 w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-2 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                        <option value="" selected>Caja</option>
+                            @foreach ($cajas as $caja)
+                            <option value="{{$caja->id}}">{{$caja->nombre}}</option>
+                        @endforeach
+                    </select>
+                    <x-input-error for=caja_id" />
+                </div>
+                          
+                <div class="w-1/2" :class="{'hidden': (saldado_proveedor == '1')}">
+                    <input wire:model="pago" type="number" min="0" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Monto pagado">
+                    <x-input-error for="pago" />
+                </div>
             </div>
 
             <hr class="mb-2">

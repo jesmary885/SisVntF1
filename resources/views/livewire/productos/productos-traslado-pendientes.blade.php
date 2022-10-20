@@ -39,6 +39,7 @@
                 <thead class="thead-dark">
                     <tr>
                         <th>Cantidad</th>
+                        <th>Lote</th>
                         <th>Prod/Cat</th>
                         <th>Marc/Mod</th>
                         <th>Sucursal destino</th>
@@ -51,6 +52,7 @@
                     @foreach ($productos_pendientes as $producto)
                         <tr>
                             <td>{{$producto->cantidad}}</td>
+                            <td>{{$producto->lote}}</td>
                             <td>{{ $producto->producto->nombre }}/{{ $producto->producto->categoria->nombre }}
                             </td>
                             <td>{{ $producto->producto->marca->nombre }}/{{ $producto->producto->modelo->nombre }}

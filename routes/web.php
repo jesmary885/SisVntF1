@@ -90,6 +90,9 @@ Route::get('traslado/{sucursal}/{producto}',[MovimientosController::class,'selec
 
 //Mostrar ventas al contado y a credito
 Route::get('Mostrar_ventas/{sucursal}/{tipo}',[MovimientosController::class,'mostrar_ventas'])->name('mostrar.ventas');
+//Mostrar ventas por clientes
+Route::get('ventas_clientes',[VentasViewController::class,'index'])->name('ventas.clientes');
+Route::get('ventas_clientes/{sucursal}',[VentasViewController::class,'view'])->name('ventas.clientes.view');
 
 
 Route::get('devolucion',[MovimientosController::class,'devolucion'])->name('devolucion.index');
@@ -109,7 +112,6 @@ Route::get('Nuevo_movimiento_caja/{sucursal}',[MovimientoController::class,'view
 Route::get('Nuevo_movimiento_pendiente_caja/{sucursal}',[MovimientoController::class,'view_pendiente'])->name('movimiento.caja_pendiente.view');
 
 
-
 //Reportes
 
 //reportes de historial de productos
@@ -119,45 +121,33 @@ Route::get('historial_modalidad/productos_cod_barra',[MovimientosController::cla
 Route::get('historial_modalidad/productos_serial',[MovimientosController::class,'historial_prod_serial'])->name('movimientos.historial_prod_serial');
 Route::get('historial_modalidad/{vista}/{producto}/{fecha_inicio}/{fecha_fin}',[MovimientosController::class,'historial_detalle'])->name('movimientos.historial.detalle');
 
-//reporte de productos mas vendidos
+//Productos mas vendidos
 Route::get('reporte_poducto',[ReportesController::class,'index_producto'])->name('reportes.index.productos');
 Route::get('reportes_productos/{sucursal_id}/{fecha_inicio}/{fecha_fin}',[ReportesController::class,'productos'])->name('productos.reportes');
-//reporte de ventas
+//Ventas
 Route::get('reporte_venta',[ReportesController::class,'index_venta'])->name('reportes.index.ventas');
 Route::get('reportes_ventas/{sucursal_id}/{fecha_inicio}/{fecha_fin}',[ReportesController::class,'ventas'])->name('ventas.reportes');
-
-//Mostrar ventas por clientes
-Route::get('ventas_clientes',[VentasViewController::class,'index'])->name('ventas.clientes');
-Route::get('ventas_clientes/{sucursal}',[VentasViewController::class,'view'])->name('ventas.clientes.view');
-//reporte de traslados
+//Traslados
 Route::get('reporte_traslados',[ReportesController::class,'index_traslados'])->name('reportes.index.traslados'); 
 Route::get('reportes_traslados/{fecha_inicio}/{fecha_fin}',[ReportesController::class,'traslados'])->name('traslados.reportes');
 
 //reporte de productos desactivados
 Route::get('reporte_desactivados',[ReportesController::class,'index_desactivados'])->name('reportes.index.desactivados'); 
-
-
 //reporte movimientos en caja
 Route::get('reporte_caja',[ReportesController::class,'index_caja'])->name('reportes.index.caja');
 Route::get('reportes_caja/{sucursal_id}/{fecha_inicio}/{fecha_fin}',[ReportesController::class,'cajas'])->name('cajas.reportes');
 //reporte de kardex
 Route::get('reporte_kardex',[ReportesController::class,'index_kardex'])->name('reportes.index.kardex');
 Route::get('reportes_kardex/{fecha_inicio}/{fecha_fin}',[ReportesController::class,'kardex'])->name('kardex.reportes');
-
-
-
-// livewire
-
-//Route::get('productos/{sucursal}/traslado', ProductosTraslado::class)->name('reportes.index.traslados');
+//Productos por agotarse
+Route::get('productos_por_agotar',[ReportesController::class,'producto_agotar'])->name('reportes.producto_agotar');
+//Productos por vencer
+Route::get('productos_por_vencer',[ReportesController::class,'producto_vencer'])->name('reportes.producto_vencer');
 
 //Cargar imagen de producto
 Route::post('productos/{product}/files', [FilesController::class, 'files'])->name('productos.files');
 
-//productos por serial
 
-// Route::get('productos_serial',[ProductosSerialController::class,'index'])->name('productos.serial.index');
-// Route::post('productos_serial',[ProductosSerialController::class,'store'])->name('productos.serial.store');
-// Route::get('productos_serial/{sucursal}',[ProductosSerialController::class,'view'])->name('productos.serial.view');
 
 //Ajustes
 
@@ -165,6 +155,8 @@ Route::get('cambiar_contrasena',[AjustesController::class,'ccontrasena'])->name(
 Route::get('sobre_empresa',[AjustesController::class,'empresa'])->name('ajustes.empresa');
 Route::get('cambiar_moneda',[AjustesController::class,'moneda'])->name('cambiar-moneda');
 Route::get('aperturar_caja',[AjustesController::class,'aperturaCaja'])->name('apertura-caja.index');
+Route::get('cuentas_por_pagar',[AjustesController::class,'cuentasPagar'])->name('cuentas-pagar.index');
+Route::get('cuentas_por_cobrar',[AjustesController::class,'cuentasCobrar'])->name('cuentas-cobrar.index');
 
 });
 

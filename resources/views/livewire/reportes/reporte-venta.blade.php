@@ -1,5 +1,4 @@
 <div>
-
     <div class="card">
         @if ($cantidad_venta)
             <div class="card-body">
@@ -16,9 +15,9 @@
                     <tbody>
                         <tr>
                             <td class="text-center">{{$cantidad_venta[0]->cantidad}}</td>
-                            <td class="text-center">S/ {{$total_venta[0]->quantity}}</td>
-                            <td class="text-center">S/ {{$costo_venta[0]->quantity}}</td>
-                            <td class="text-center">S/ {{($total_venta[0]->quantity)-($costo_venta[0]->quantity)}}</td>
+                            <td class="text-center">{{ $moneda_simbolo }}  {{round(($total_venta[0]->quantity/ $tasa_dia),2)}}</td>
+                            <td class="text-center">{{ $moneda_simbolo }}  {{round(($costo_venta[0]->quantity/ $tasa_dia),2)}}</td>
+                            <td class="text-center">{{ $moneda_simbolo }}  {{round((($total_venta[0]->quantity)-($costo_venta[0]->quantity)/ $tasa_dia),2)}}</td>
                         </tr>
                     </tbody>
                 </table>

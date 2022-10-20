@@ -43,7 +43,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::uNwlkf6HoG0Wxjvg',
+            '_route' => 'generated::EaJZj65tCYj3qOPh',
           ),
           1 => NULL,
           2 => 
@@ -82,7 +82,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::BMl6USIdW0UnggO4',
+            '_route' => 'generated::ai2O349E72EJsRGy',
           ),
           1 => NULL,
           2 => 
@@ -102,7 +102,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::3ZP94Mn21dBDYV72',
+            '_route' => 'generated::BfLqJ6cdWTgBsbT1',
           ),
           1 => NULL,
           2 => 
@@ -122,7 +122,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::iu8yTHs9UZpo8FYW',
+            '_route' => 'generated::Eg7uzFLngTjWAdsx',
           ),
           1 => NULL,
           2 => 
@@ -142,7 +142,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::dwQUe8dkhBAoZilF',
+            '_route' => 'generated::pA3gR3lD9LtXlD1H',
           ),
           1 => NULL,
           2 => 
@@ -199,7 +199,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::nTjjrELUZSVZ9A6C',
+            '_route' => 'generated::dhHqwpAnyNLrp5P3',
           ),
           1 => NULL,
           2 => 
@@ -254,7 +254,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::lKZUtBd3CNxLpTxC',
+            '_route' => 'generated::YrcJQq0lkZ6Xs3qa',
           ),
           1 => NULL,
           2 => 
@@ -345,7 +345,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::82n13Jsgike6XMuO',
+            '_route' => 'generated::eWodnFGfoOnDkpIQ',
           ),
           1 => NULL,
           2 => 
@@ -877,6 +877,26 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
+      '/ventas_clientes' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'ventas.clientes',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
       '/devolucion' => 
       array (
         0 => 
@@ -1113,26 +1133,6 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      '/ventas_clientes' => 
-      array (
-        0 => 
-        array (
-          0 => 
-          array (
-            '_route' => 'ventas.clientes',
-          ),
-          1 => NULL,
-          2 => 
-          array (
-            'GET' => 0,
-            'HEAD' => 1,
-          ),
-          3 => NULL,
-          4 => false,
-          5 => false,
-          6 => NULL,
-        ),
-      ),
       '/reporte_traslados' => 
       array (
         0 => 
@@ -1213,6 +1213,46 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
+      '/productos_por_agotar' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'reportes.producto_agotar',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/productos_por_vencer' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'reportes.producto_vencer',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
       '/cambiar_contrasena' => 
       array (
         0 => 
@@ -1280,6 +1320,46 @@ app('router')->setCompiledRoutes(
           0 => 
           array (
             '_route' => 'apertura-caja.index',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/cuentas_por_pagar' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'cuentas-pagar.index',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/cuentas_por_cobrar' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'cuentas-cobrar.index',
           ),
           1 => NULL,
           2 => 
@@ -2114,7 +2194,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::uNwlkf6HoG0Wxjvg' => 
+    'generated::EaJZj65tCYj3qOPh' => 
     array (
       'methods' => 
       array (
@@ -2135,7 +2215,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 'web',
         ),
-        'as' => 'generated::uNwlkf6HoG0Wxjvg',
+        'as' => 'generated::EaJZj65tCYj3qOPh',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2245,7 +2325,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::BMl6USIdW0UnggO4' => 
+    'generated::ai2O349E72EJsRGy' => 
     array (
       'methods' => 
       array (
@@ -2257,7 +2337,7 @@ app('router')->setCompiledRoutes(
       array (
         'uses' => 'Livewire\\Controllers\\LivewireJavaScriptAssets@source',
         'controller' => 'Livewire\\Controllers\\LivewireJavaScriptAssets@source',
-        'as' => 'generated::BMl6USIdW0UnggO4',
+        'as' => 'generated::ai2O349E72EJsRGy',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2273,7 +2353,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::3ZP94Mn21dBDYV72' => 
+    'generated::BfLqJ6cdWTgBsbT1' => 
     array (
       'methods' => 
       array (
@@ -2285,7 +2365,7 @@ app('router')->setCompiledRoutes(
       array (
         'uses' => 'Livewire\\Controllers\\LivewireJavaScriptAssets@maps',
         'controller' => 'Livewire\\Controllers\\LivewireJavaScriptAssets@maps',
-        'as' => 'generated::3ZP94Mn21dBDYV72',
+        'as' => 'generated::BfLqJ6cdWTgBsbT1',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2301,7 +2381,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::iu8yTHs9UZpo8FYW' => 
+    'generated::Eg7uzFLngTjWAdsx' => 
     array (
       'methods' => 
       array (
@@ -2324,7 +2404,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::iu8yTHs9UZpo8FYW',
+        'as' => 'generated::Eg7uzFLngTjWAdsx',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2340,7 +2420,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::dwQUe8dkhBAoZilF' => 
+    'generated::pA3gR3lD9LtXlD1H' => 
     array (
       'methods' => 
       array (
@@ -2362,7 +2442,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::dwQUe8dkhBAoZilF',
+        'as' => 'generated::pA3gR3lD9LtXlD1H',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2452,7 +2532,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::nTjjrELUZSVZ9A6C' => 
+    'generated::dhHqwpAnyNLrp5P3' => 
     array (
       'methods' => 
       array (
@@ -2472,7 +2552,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::nTjjrELUZSVZ9A6C',
+        'as' => 'generated::dhHqwpAnyNLrp5P3',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2561,7 +2641,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::lKZUtBd3CNxLpTxC' => 
+    'generated::YrcJQq0lkZ6Xs3qa' => 
     array (
       'methods' => 
       array (
@@ -2581,7 +2661,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::lKZUtBd3CNxLpTxC',
+        'as' => 'generated::YrcJQq0lkZ6Xs3qa',
       ),
       'fallback' => false,
       'defaults' => 
@@ -2780,7 +2860,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::82n13Jsgike6XMuO' => 
+    'generated::eWodnFGfoOnDkpIQ' => 
     array (
       'methods' => 
       array (
@@ -2800,7 +2880,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::82n13Jsgike6XMuO',
+        'as' => 'generated::eWodnFGfoOnDkpIQ',
       ),
       'fallback' => false,
       'defaults' => 
@@ -4481,6 +4561,82 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
+    'ventas.clientes' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'ventas_clientes',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Ventas\\VentasViewController@index',
+        'controller' => 'App\\Http\\Controllers\\Ventas\\VentasViewController@index',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'ventas.clientes',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'ventas.clientes.view' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'ventas_clientes/{sucursal}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Ventas\\VentasViewController@view',
+        'controller' => 'App\\Http\\Controllers\\Ventas\\VentasViewController@view',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'ventas.clientes.view',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
     'devolucion.index' => 
     array (
       'methods' => 
@@ -5164,82 +5320,6 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'ventas.clientes' => 
-    array (
-      'methods' => 
-      array (
-        0 => 'GET',
-        1 => 'HEAD',
-      ),
-      'uri' => 'ventas_clientes',
-      'action' => 
-      array (
-        'middleware' => 
-        array (
-          0 => 'web',
-          1 => 'auth',
-        ),
-        'uses' => 'App\\Http\\Controllers\\Ventas\\VentasViewController@index',
-        'controller' => 'App\\Http\\Controllers\\Ventas\\VentasViewController@index',
-        'namespace' => NULL,
-        'prefix' => '',
-        'where' => 
-        array (
-        ),
-        'as' => 'ventas.clientes',
-      ),
-      'fallback' => false,
-      'defaults' => 
-      array (
-      ),
-      'wheres' => 
-      array (
-      ),
-      'bindingFields' => 
-      array (
-      ),
-      'lockSeconds' => NULL,
-      'waitSeconds' => NULL,
-      'withTrashed' => false,
-    ),
-    'ventas.clientes.view' => 
-    array (
-      'methods' => 
-      array (
-        0 => 'GET',
-        1 => 'HEAD',
-      ),
-      'uri' => 'ventas_clientes/{sucursal}',
-      'action' => 
-      array (
-        'middleware' => 
-        array (
-          0 => 'web',
-          1 => 'auth',
-        ),
-        'uses' => 'App\\Http\\Controllers\\Ventas\\VentasViewController@view',
-        'controller' => 'App\\Http\\Controllers\\Ventas\\VentasViewController@view',
-        'namespace' => NULL,
-        'prefix' => '',
-        'where' => 
-        array (
-        ),
-        'as' => 'ventas.clientes.view',
-      ),
-      'fallback' => false,
-      'defaults' => 
-      array (
-      ),
-      'wheres' => 
-      array (
-      ),
-      'bindingFields' => 
-      array (
-      ),
-      'lockSeconds' => NULL,
-      'waitSeconds' => NULL,
-      'withTrashed' => false,
-    ),
     'reportes.index.traslados' => 
     array (
       'methods' => 
@@ -5506,6 +5586,82 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
+    'reportes.producto_agotar' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'productos_por_agotar',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Reportes\\ReportesController@producto_agotar',
+        'controller' => 'App\\Http\\Controllers\\Reportes\\ReportesController@producto_agotar',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'reportes.producto_agotar',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'reportes.producto_vencer' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'productos_por_vencer',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Reportes\\ReportesController@producto_vencer',
+        'controller' => 'App\\Http\\Controllers\\Reportes\\ReportesController@producto_vencer',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'reportes.producto_vencer',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
     'productos.files' => 
     array (
       'methods' => 
@@ -5680,6 +5836,82 @@ app('router')->setCompiledRoutes(
         array (
         ),
         'as' => 'apertura-caja.index',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'cuentas-pagar.index' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'cuentas_por_pagar',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'uses' => 'App\\Http\\Controllers\\AjustesController@cuentasPagar',
+        'controller' => 'App\\Http\\Controllers\\AjustesController@cuentasPagar',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'cuentas-pagar.index',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'cuentas-cobrar.index' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'cuentas_por_cobrar',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+        ),
+        'uses' => 'App\\Http\\Controllers\\AjustesController@cuentasCobrar',
+        'controller' => 'App\\Http\\Controllers\\AjustesController@cuentasCobrar',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'cuentas-cobrar.index',
       ),
       'fallback' => false,
       'defaults' => 

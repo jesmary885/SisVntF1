@@ -66,4 +66,12 @@ class ReportesController extends Controller
         return view('reportes.kardex',compact('fecha_inicio','fecha_fin'));
     }
 
+    public function producto_agotar(){
+        return view('reportes.productos_agotar');
+    }
+
+    public function producto_vencer(){
+        return view('reportes.productos_vencer');
+    }
+
 }

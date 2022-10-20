@@ -45,10 +45,27 @@ class Movimientos extends Component
         $usuario_ac = $usuario_auth->sucursal->nombre;
         $sucursal_act = $usuario_auth->sucursal->id;
 
-        $movimientos = MovimientoCaja::where('fecha',$fecha_actual)
-                                            ->where('sucursal_id',$sucursal_act)
-                                            ->where('estado','entregado')
-                                            ->paginate(5);
+        if($usuario_auth->apertura == "si"){
+            $fecha_apertura = $usuario_auth->ultima_fecha_apertura;
+            $caja_apertura = $usuario_auth->ultima_caja_id_apertura;
+            $sucursal_apertura = $usuario_auth->ultima_sucursal_id_apertura;
+
+            /*$movimientos = MovimientoCaja::where('fecha','>=',$fecha_apertura)
+                ->where('sucursal_id',$sucursal_apertura)
+                ->where('caja_id',$caja_apertura)
+                ->paginate(10);*/
+            $movimientos = MovimientoCaja::where('sucursal_id',$sucursal_apertura)
+                ->where('caja_id',$caja_apertura)
+                ->where('tipo_movimiento',1)
+                ->orwhere('tipo_movimiento',2)
+                ->paginate(10);
+        }
+
+        else{
+            $movimientos=[];
+        }
+
+        
 
         return view('livewire.home.movimientos',compact('movimientos','usuario_ac'));
     }
@@ -64,9 +81,9 @@ class Movimientos extends Component
         $sucursal_act = $usuario_auth->sucursal->id;
 
         $movimientos = MovimientoCaja::where('fecha',$fecha_actual)
-                                            ->where('sucursal_id',$sucursal_act)
-                                            ->where('estado','entregado')
-                                            ->get();
+            ->where('sucursal_id',$sucursal_act)
+            ->where('estado','entregado')
+            ->get();
 
         $data = [
             'movimientos' => $movimientos,

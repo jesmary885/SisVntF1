@@ -32,7 +32,7 @@
                     <tbody>
                         @foreach ($ventas as $venta)
                             <tr>
-                                <td class="text-center">{{$venta->fecha}}</td>
+                                <td class="text-center">{{  \Carbon\Carbon::parse($venta->fecha)->format('d-m-Y') }}</td>
                                 <td class="text-center">{{$venta->cliente->nombre}} {{$venta->cliente->apellido}}</td>
                                 <td class="text-center">{{$venta->cliente->nro_documento}}</td>
                                 <td class="text-center">{{$venta->estado_entrega}}</td>
@@ -40,7 +40,7 @@
                                 <td class="text-center">{{$venta->total_pagado_cliente}}</td>
                                 <td class="text-center">{{$venta->deuda_cliente}}</td>
                                 <td width="10px">
-                                      @livewire('ventas.ventas-credito-abono', ['venta' => $venta,'vista' => '2'],key($venta->id)) 
+                                      @livewire('ventas.ventas-credito-abono', ['venta' => $venta,'vista' => '2','sucursal' => $sucursal],key($venta->id)) 
                                      {{-- <a href="#" class="btn btn-info btn-sm"><i class="fas fa-plus-square"></i></a> --}}
                                 </td>
                                 <td width="10px">
@@ -59,9 +59,11 @@
                     </tbody>
                 </table>
             </div>
-            <div class="card-footer">
-                {{$ventas->links()}}
-            </div>
+            @if($search)
+                <div class="card-footer">
+                    {{$ventas->links()}}
+                </div>
+            @endif
         @else
              <div class="card-body">
                 <strong>No hay registros</strong>

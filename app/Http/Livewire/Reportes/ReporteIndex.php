@@ -32,8 +32,8 @@ class ReporteIndex extends Component
         $this->validate($rules);
         
         $sucursal_id = $this->sucursal_id;
-        $fecha_inicio = Carbon::parse($this->fecha_inicio);
-        $fecha_fin = Carbon::parse($this->fecha_fin);
+        $fecha_inicio = Carbon::parse($this->fecha_inicio)->format('d-m-Y');
+        $fecha_fin = Carbon::parse($this->fecha_fin)->format('d-m-Y');
 
         if($this->vista == 'productos') return redirect()->route('productos.reportes',compact('sucursal_id','fecha_inicio','fecha_fin'));
         if($this->vista == 'cajas') return redirect()->route('cajas.reportes',compact('sucursal_id','fecha_inicio','fecha_fin'));

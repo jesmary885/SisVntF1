@@ -29,6 +29,10 @@ class Venta extends Model
         return $this->belongsTo(Caja::class);
     }
 
+    public function metodoPago(){
+        return $this->belongsTo(Metodo_pago::class);
+    }
+
     //Relacion uno a muchos
    
     public function producto_ventas(){
