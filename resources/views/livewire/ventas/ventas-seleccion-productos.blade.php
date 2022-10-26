@@ -7,13 +7,14 @@
                         <div class="w-1/4">
                             <select wire:model="buscador" id="buscador" class="form-control text-m" name="buscador">
                                 <option value="0">Código de barra</option>
-                                <option value="1">Marca</option>
-                                <option value="2">Categoria</option>
-                                <option value="3">Modelo</option>
+                                <option value="1">Nombre</option>
+                                <option value="2">Marca</option>
+                                <option value="3">Categoria</option>
+                                <option value="4">Modelo</option>
                             </select>
                             <x-input-error for="buscador" />
                         </div>
-                        <input autofocus wire:model="search" placeholder="Ingrese {{$item_buscar}}" class="form-control ml-2">
+                        <input autofocus wire:model="search" placeholder="Ingrese el producto a buscar" class="form-control ml-2">
                             
                     </div>
                     
@@ -28,29 +29,33 @@
                 </div>
                
             </div>
-            @if ($productos != '0')
+            @if ($productos)
                 <div class="card-body">
-                    <div class="flex justify-between">
-                        <div>
-                            <h4 class="text-gray-600 font-semibold">
-                            {{$productos->nombre}} {{$productos->categoria->nombre}} {{$productos->modelo->nombre}} / {{$productos->marca->nombre}}
-                            </h4>
-                        </div>
+                    @foreach ($productos as $producto)
+                        <div class="flex justify-between">
+                            <div>
+                                <h4 class="text-gray-600 font-semibold">
+                                {{$producto->nombre}} {{$producto->categoria->nombre}} {{$producto->modelo->nombre}} / {{$producto->marca->nombre}}
+                                </h4>
+                            </div>
 
-                        <div>
-                            @if ($producto_lotes != '0')
-                                @foreach ($producto_lotes as $producto_lote)
-                                <div class="flex">
-                                    <p class=" mt-2 text-md text-gray-800 font-semibold">Lote Nro. {{$producto_lote->lote}}</p>
-                                    <div>
-                                        @livewire('ventas.ventas-seleccion-cantidades', ['producto' => $producto_lote,'sucursal' => $sucursal, 'usuario' => $usuario],key($producto_lote->id))
-                                    </div>    
-                                </div>
-                               
+                            <div>
+                                @foreach ($producto->producto_lotes as $producto_lote)
+                                    <div class="flex">
+                                        <p class=" mt-2 text-md text-gray-800 font-semibold">Lote Nro. {{$producto_lote->lote}}</p>
+                                            <div>
+                                                @livewire('ventas.ventas-seleccion-cantidades', ['producto' => $producto_lote,'sucursal' => $sucursal, 'usuario' => $usuario],key($producto_lote->id))
+                                            </div>    
+                                    </div>
                                 @endforeach
-                            @endif
+                            </div>
                         </div>
-                    </div>
+                        <hr>
+                    @endforeach
+                </div>
+
+                <div class="card-footer">
+                    {{$productos->links()}}
                 </div>
 
             @else

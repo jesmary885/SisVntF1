@@ -15,6 +15,8 @@ class CajaCreate extends Component
     protected $rules = [
         'nombre' => 'required|max:50',
         'sucursal_id' => 'required',
+        'status' => 'required',
+        'saldo' => 'required',
     ];
 
     public function mount(Caja $caja){

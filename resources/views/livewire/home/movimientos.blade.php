@@ -14,7 +14,7 @@
     </div>
 
     <div class="card mt-0">
-        @if ($movimientos)
+        @if ($movimientos != '0')
           <div class="card-body">
               <table class="table table-bordered ">
                   <thead class="thead-dark">

@@ -54,7 +54,7 @@ class Producto extends Model
         return $this->hasMany(ProductosTraslado::class);
     }
 
-    public function producto_lote(){
+    public function producto_lotes(){
         return $this->hasMany(Producto_lote::class);
     }
 

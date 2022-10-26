@@ -1,112 +1,311 @@
-
 <html lang="en">
-    <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <title>Tu Negocio</title>
-      <link 
-        rel="stylesheet" 
-        href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" /> 
-        
-        <style>
-          body{
-            background: darkgray;
-          }
-           * {
-    box-sizing: border-box;
-    font-family: sans-serif;
-  }
-  .login {
-    width: 320px;
-    height: 450px;
-    border: 1px solid #CCC;
-    box-shadow: 10px 5px 5px gray;
-    background: url(https://images.pexels.com/photos/760645/pexels-photo-760645.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1) center center no-repeat;
-    background-size: cover;
-    margin: 30px auto;
-    border-radius: 20px;
-  }
-  .login .form {
-    width: 100%;
-    height: 100%;
-    padding: 15px 25px;
-  }
-  .login .form h2 {
-    color: #FFF;
-    text-align: center;
-    font-weight: normal;
-    font-size: 18px;
-    margin-top: 60px;
-    margin-bottom: 80px;
-  }
-  
-  .login .form img{
-      width:150px;
-      height:150px;
-      border-radius:50%;
-      border: solid 3px white;
-      overflow:hidden;
-      margin-left: auto; 
-  
-  margin-right: auto;
-  
-    opacity:0.4;
-  
-   
-  }
-  .login .form input {
-    width: 100%;
-    height: 40px;
-    margin-top: 20px;
-    background: rgba(255,255,255,.5);
-    border: 1px solid rgba(255,255,255,.1);
-    padding: 0 15px;
-    color: #FFF;
-    border-radius: 5px;
-    font-size: 14px;
-  }
-  .login .form input:focus {
-    border: 1px solid rgba(255,255,255,.8);
-    outline: none;
-  }
-  ::-webkit-input-placeholder {
-      color: #aa2828;
-  }
-  .login .form input.submit {
-    background: rgba(255,255,255,.9);
-    color: #444;
-    font-weight: bold;
-    font-size: 15px;
-    margin-top: 40px;
-    font-weight: bold;
-  }
-  
-        </style>
-    </head>
-    <body>   
-      <div class="login">
-        @if (session('info'))
-        <div class="alert alert-success">
-            {{session('info')}}
-        </div>
-        @endif
-          <div class="form">
-              <form method="POST" action="{{ route('login') }}">
-                @csrf
-                <img class="mb-4" src="storage/logo/logo.png" alt="">
-  
-              <input type="email" name="email"  id="email" placeholder="Email" required>
-              <x-input-error for="email" />
-              <input type="password" id="password" name="password" required placeholder="Contraseña">
-              <x-input-error for="password" />
-              <x-button class="mt-6 w-full">
-                {{ __('Ingresar') }}
-            </x-button>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="plugins/fontawesome-free/css/all.min.css">
+    <title>Tu Negocio</title>
+    
+    
+  <style>
 
-              </form>
-              
-          </div>
-        </div>
+      @import url(http://weloveiconfonts.com/api/?family=fontawesome);
+      @import url(https://meyerweb.com/eric/tools/css/reset/reset.css);
+
+      [class*="fontawesome-"]:before {
+        font-family: 'FontAwesome', sans-serif;
+      }
+
+      /* ---------- GENERAL ---------- */
+      * {
+        -moz-box-sizing: border-box;
+            box-sizing: border-box;
+      }
+      *:before, *:after {
+        -moz-box-sizing: border-box;
+            box-sizing: border-box;
+      }
+
+      body {
+        background: #FFFFFF;
+        color: #bbc2c9;
+        font: 87.5%/1.5em 'Open Sans', sans-serif;
+        margin: 0;
+        overflow-y:auto !important;
+        overflow-x:hidden !important;
+      }
+      a {
+        color: #eee;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      input {
+        border: none;
+        font-family: 'Open Sans', Arial, sans-serif;
+        font-size: 14px;
+        line-height: 1.5em;
+        padding: 0;
+        -webkit-appearance: none;
+      }
+
+      p {
+        line-height: 1.5em;
+      }
+
+      .clearfix {
+        *zoom: 1;
+      }
+      .clearfix:before, .clearfix:after {
+        content: ' ';
+        display: table;
+      }
+      .clearfix:after {
+        clear: both;
+      }
+
+      .container {
+        left: 50%;
+        position:absolute;
+        top: 50%;
+        -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+                transform: translate(-50%, -50%);
+      }
+
+      /* ---------- LOGIN ---------- */
+
+      .error {
+        color: #f52f07;
+        font-size: 14px;
+      }
+
+      #login {
+        width: 100%;
+      }
+
+      #login form span {
+        background-color: #667480
+      ;
+        border-radius: 3px 0px 0px 3px;
+        color: #c8d9e8;
+        display: block;
+        float: left;
+        height: 50px;
+        line-height: 50px;
+        text-align: center;
+        width: 80px;
+      }
+
+      #login form input {
+        height: 50px;
+      }
+
+      #login form input[type="text"], input[type="password"] {
+        background-color: #4f6273;
+        border-radius: 0px 3px 3px 0px;
+        color: #c8d9e8;
+        margin-bottom: 1em;
+        padding: 0 16px;
+        width: 330px;
+      }
+
+      #login form input[type="submit"] {
+        border-radius: 3px;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+        background-color: #6386ab;
+        color: #eee;
+        font-weight: bold;
+        margin-bottom: 2em;
+        text-transform: uppercase;
+        width: 410px;
+      }
+
+      #login form input[type="submit"]:hover {
+        background-color: #163e69;
+      }
+
+      #login > p {
+        text-align: center;
+      }
+
+      #login > p span {
+        padding-left: 5px;
+      }
+
+      /*Lets start with the cloud formation rather*/
+
+      /*The container will also serve as the SKY*/
+
+      *{ margin: 0; padding: 0;}
+
+      #clouds{
+        padding: 150px 0;
+        background: #138ceb;
+        background: -webkit-linear-gradient(top, #7098b8 0%, #fff 100%);
+        background: -linear-gradient(top, #c9dbe9 0%, #fff 100%);
+        background: -moz-linear-gradient(top, #c9dbe9 0%, #fff 100%);
+      }
+
+      /*Time to finalise the cloud shape*/
+      .cloud {
+        width: 200px; height: 60px;
+        background: #fff;
+        
+        border-radius: 200px;
+        -moz-border-radius: 200px;
+        -webkit-border-radius: 200px;
+        
+        position: relative; 
+      }
+
+      .cloud:before, .cloud:after {
+        content: '';
+        position: absolute; 
+        background: #fff;
+        width: 100px; height: 80px;
+        position: absolute; top: -15px; left: 10px;
+        
+        border-radius: 100px;
+        -moz-border-radius: 100px;
+        -webkit-border-radius: 100px;
+        
+        -webkit-transform: rotate(30deg);
+        transform: rotate(30deg);
+        -moz-transform: rotate(30deg);
+      }
+
+      .cloud:after {
+        width: 120px; height: 120px;
+        top: -55px; left: auto; right: 15px;
+      }
+
+      /*Time to animate*/
+      .x1 {
+        -webkit-animation: moveclouds 15s linear infinite;
+        -moz-animation: moveclouds 15s linear infinite;
+        -o-animation: moveclouds 15s linear infinite;
+      }
+
+      /*variable speed, opacity, and position of clouds for realistic effect*/
+      .x2 {
+        left: 200px;
+        
+        -webkit-transform: scale(0.6);
+        -moz-transform: scale(0.6);
+        transform: scale(0.6);
+        opacity: 0.6; /*opacity proportional to the size*/
+        
+        /*Speed will also be proportional to the size and opacity*/
+        /*More the speed. Less the time in 's' = seconds*/
+        -webkit-animation: moveclouds 25s linear infinite;
+        -moz-animation: moveclouds 25s linear infinite;
+        -o-animation: moveclouds 25s linear infinite;
+      }
+
+      .x3 {
+        left: -250px; top: -200px;
+        
+        -webkit-transform: scale(0.8);
+        -moz-transform: scale(0.8);
+        transform: scale(0.8);
+        opacity: 0.8; /*opacity proportional to the size*/
+        
+        -webkit-animation: moveclouds 20s linear infinite;
+        -moz-animation: moveclouds 20s linear infinite;
+        -o-animation: moveclouds 20s linear infinite;
+      }
+
+      .x4 {
+        left: 470px; top: -250px;
+        
+        -webkit-transform: scale(0.75);
+        -moz-transform: scale(0.75);
+        transform: scale(0.75);
+        opacity: 0.75; /*opacity proportional to the size*/
+        
+        -webkit-animation: moveclouds 18s linear infinite;
+        -moz-animation: moveclouds 18s linear infinite;
+        -o-animation: moveclouds 18s linear infinite;
+      }
+
+      .x5 {
+        left: -150px; top: -150px;
+        
+        -webkit-transform: scale(0.8);
+        -moz-transform: scale(0.8);
+        transform: scale(0.8);
+        opacity: 0.8; /*opacity proportional to the size*/
+        
+        -webkit-animation: moveclouds 20s linear infinite;
+        -moz-animation: moveclouds 20s linear infinite;
+        -o-animation: moveclouds 20s linear infinite;
+      }
+
+      @-webkit-keyframes moveclouds {
+        0% {margin-left: 1000px;}
+        100% {margin-left: -1000px;}
+      }
+      @-moz-keyframes moveclouds {
+        0% {margin-left: 1000px;}
+        100% {margin-left: -1000px;}
+      }
+      @-o-keyframes moveclouds {
+        0% {margin-left: 1000px;}
+        100% {margin-left: -1000px;}
+      }
+      .bottom {
+        width:100%;text-align:center; padding:10px 0; height:100%; position:absolute;
+      }
+      .bottom h3 {color:#6f9da6; font-size:15px; font-weight:bold; margin-top:20px; padding-bottom:3px;}
+      .bottom a {color:#6f9da6; font-size:15px; font-weight:bold; margin-top:20px; padding-bottom:3px;}
+      .bottom p {color:#6f9da6; font-size:15px; font-weight:bold; padding-bottom:10px;}
+
+      .bottom_f p {color:#163e69; font-size:15px; font-weight:bold; margin-top:5px; padding-bottom:10px;}
+
+      .blue { color:#09c; text-align:center;}
+      </style>
+  </head>
+  <body>   
+    <div id="clouds">
+      <div class="cloud x1"></div>
+      <div class="cloud x2"></div>
+      <div class="cloud x3"></div>
+      <div class="cloud x4"></div>
+      <div class="cloud x5"></div>
+    </div>
+
+  <div class="container">
+      <div id="login">
+        <form method="POST" action="{{ route('login') }}">
+        @csrf
+          <fieldset class="clearfix">
+
+            <p><span class="fontawesome-user"></span><input type="text" name="email" placeholder="Email"  onBlur="if(this.value == '') this.value = 'Email'" onFocus="if(this.value == 'Email') this.value = ''" required></p> 
+            <x-input-error class="error" for="email" />
+            <p><span class="fontawesome-lock"></span><input type="password" name="password"  placeholder="Contraseña" onBlur="if(this.value == '') this.value = 'Contraseña'" onFocus="if(this.value == 'Contraseña') this.value = ''" required></p> 
+            <x-input-error class="error" for="password" />
+            <p><input type="submit" value="Ingresar"></p>
+
+          </fieldset>
+
+        </form>
+
+        <p class="bottom_f">¿Ha olvidado su contraseña? <a href="{{ route('password.request') }}" class="blue">Recuperala</a><span class="fontawesome-arrow-right"></span></p>
+
+      </div>
+
       
-    </body>
+      <div class="bottom">
+        <h3> COPYRIGHT© 2021 <a href="https://www.instagram.com/codesupportonline/">CODESUPPORT</a></h3>
+        <br>
+        <p>Version 1.0</p>
+      </div>
+  </div>
+</body>
   
+
+
+ 
+    

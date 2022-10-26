@@ -305,19 +305,14 @@ return [
                     'can' => 'ventas.ventas.index'
                 ],
                 [
-                    'text'    => 'Ventas al contado',
+                    'text'    => 'Ver ventas a contado',
                     'route'     => 'ventas.mostrar_ventas.index',
                     'can' => 'ventas.mostrar_ventas_contado'
                 ],
                 [
-                    'text' => 'Ventas a credito',
+                    'text' => 'Ver ventas a credito',
                     'route'  => 'ventas.mostrar_ventas.create',
                     'can' => 'ventas.mostrar_ventas_credito'
-                ],
-                [
-                    'text' => 'Ventas por cliente',
-                    'route'  => 'ventas.clientes',
-                    'can' => 'ventas.mostrar_ventas_clientes'
                 ],
             ],
             

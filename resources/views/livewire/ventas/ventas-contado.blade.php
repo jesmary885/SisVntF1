@@ -1,8 +1,32 @@
-<div>
+<div  x-data="{buscador: @entangle('buscador')}">
     <div class="card">
         <div class="card-header flex items-center justify-between">
             <div class="flex-1">
-                <input wire:model="search" placeholder="Ingrese la fecha de la venta a buscar. Ejemplo 20-1-2022" class="form-control">
+                <div class="flex">
+                    <div class="w-1/4">
+                        <select title="Categoría de la busqueda" wire:model="buscador" id="buscador" class="form-control text-m" name="buscador">
+                                <option value="0">Por cliente</option>
+                                <option value="1">Por fechas</option>
+                            </select>
+                        <x-input-error for="buscador" />
+                    </div>
+                    <div class="flex-1 mr-2" :class="{'hidden' : buscador == '1'}">
+                        <input wire:model="search" placeholder="Ingrese el nombre o nro de documento del cliente a buscar" class="form-control ml-2">
+                    </div>
+                    <div :class="{'hidden' : buscador == '0'}">
+                        <div class="lg:flex justify-items-stretch w-full mt-2 ml-4">
+                            <div>
+                                <x-input.date wire:model.lazy="fecha_inicio" id="fecha_inicio" placeholder="Seleccione la fecha inicio" class="px-4 outline-none"/>
+                                <x-input-error for="fecha_inicio"/>     
+                            </div>
+                            <p class="ml-2 mr-2 text-gray-700 font-semibold">-</p>
+                            <div>
+                                <x-input.date wire:model.lazy="fecha_fin" id="fecha_fin" placeholder="Seleccione la fecha fin" class="px-4 outline-none"/>
+                                <x-input-error for="fecha_fin"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
             <div class="ml-2">
                 <button
@@ -13,7 +37,7 @@
                 </button>
             </div>
         </div>
-        @if ($ventas->count())
+        @if ($ventas != '0' && $ventas->count())
             <div class="card-body mt-0">
                 <table class="table table-striped table-responsive-lg table-responsive-md table-responsive-sm">
                     <thead class="thead-dark">
@@ -51,11 +75,9 @@
                     </tbody>
                 </table>
             </div>
-            @if($search)
                 <div class="card-footer">
                     {{$ventas->links()}}
                 </div>
-            @endif
         @else
              <div class="card-body">
                 <strong>No hay registros</strong>

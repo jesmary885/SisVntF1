@@ -42,21 +42,19 @@ class ProductosCreate extends Component
 
     protected $listeners = ['refreshimg'];
 
-     protected $rules = [
+    protected $rules = [
          'nombre' => 'required|unique:productos',
-         'cod_barra'=>'required|unique:productos|min:8|max:12',
+         'cod_barra'=>'required|unique:productos|min:5|max:25',
          'precio_entrada' => 'required|numeric',
          'precio_letal' => 'required|numeric',
          'precio_mayor' => 'required|numeric',
          'cantidad' => 'required|numeric',
-       //  'puntos' => 'required|numeric',
          'categoria_id' => 'required',
          'marca_id' => 'required',
          'modelo_id' => 'required',
          'proveedor_id' => 'required',
          'sucursal_id' => 'required',
          'estado' => 'required',
-         'descuento' => 'required',
          'presentacion' => 'required',
          'stock_minimo' => 'required|numeric',
          'vencimiento' => 'required',
@@ -66,13 +64,18 @@ class ProductosCreate extends Component
          'utilidad_mayor' => 'required|numeric',
          'margen_mayor' => 'required|numeric',
          'file' => 'max:1024',
+         'metodo_id' => 'required',
+         'caja_id' => 'required'
+      ];
+
+      protected $rules_pago = [
+        'pago' => 'required',
       ];
 
       protected $rule_file = [
         'file' => 'image|max:1024',
      ];
 
- 
     public function mount(){
 
         $usuario_au = User::where('id',Auth::id())->first();
@@ -116,6 +119,11 @@ class ProductosCreate extends Component
         $rules = $this->rules;
         $this->validate($rules);
 
+        if($this->saldado_proveedor != '1'){
+            $rules_pago = $this->rules_pago;
+            $this->validate($rules_pago);
+        }
+
         $sucursales = Sucursal::all();
 
         $this->fecha_actual = date('Y-m-d');
@@ -137,7 +145,6 @@ class ProductosCreate extends Component
             if($this->cod_barra) $producto->cod_barra = $this->cod_barra;
             else $producto->cod_barra = Str::random(8);
             $producto->presentacion = $this->presentacion;
-           // $producto->puntos = $this->puntos;
             $producto->modelo_id = $this->modelo_id;
             $producto->marca_id = $this->marca_id;
             $producto->cantidad= $this->cantidad;
@@ -148,8 +155,8 @@ class ProductosCreate extends Component
             $producto->vencimiento = $this->vencimiento;
             $producto->unidad_tiempo_garantia = $this->unidad_tiempo_garantia;
             $producto->tipo_garantia = $this->tipo_garantia;
-            if($this->exento == '1')  $producto->exento = 'si';
-            else $producto->exento = 'no';
+            if($this->exento == '1')  $producto->exento = 'Si';
+            else $producto->exento = 'No';
             $producto->save();
 
             //agregando imagen de producto en tabla imagenes
@@ -232,7 +239,7 @@ class ProductosCreate extends Component
             $movimiento_caja = new MovimientoCaja();
             $movimiento_caja->fecha = $this->fecha_actual;
             $movimiento_caja->tipo_movimiento = 2;
-            $movimiento_caja->cantidad = $this->total_pagado;
+            $movimiento_caja->cantidad = $total_compra;
             $movimiento_caja->estado = 'etregado';
             $movimiento_caja->observacion = 'Compra de producto';
             $movimiento_caja->user_id = $usuario_auth;

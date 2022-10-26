@@ -37,7 +37,7 @@
                         </div>
                         <div class="flex justify-between w-full mt-2">
                             <div class="w-full mr-2">
-                                <input wire:model="saldo" type="text" title="Saldo"
+                                <input wire:model="saldo" type="number" title="Saldo"
                                     class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     placeholder="Saldo de la caja">
                                 <x-input-error for="saldo" />

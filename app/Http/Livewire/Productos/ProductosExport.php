@@ -70,36 +70,19 @@ class ProductosExport extends Component
         //SI SON TODOS LOS ESTADOS Y TODAS LAS SUCUSALES
         if($this->estado == 1){
             if($this->sucursal_id == 0){
-                if($this->vista == 'barra'){
-                    $productos_sucursal = DB::select('SELECT p.nombre, p.cod_barra, p.precio_letal, p.precio_mayor,p.categoria_id,p.marca_id,p.modelo_id, p.observaciones,p.categoria_id, p.modelo_id, p.marca_id, mc.nombre as marca_nombre, md.nombre as modelo_nombre, c.nombre as categoria_nombre, sum(ps.cantidad) as quantity from productos p 
+                    $productos_sucursal = DB::select('SELECT p.nombre, p.cod_barra,p.categoria_id,p.marca_id,p.modelo_id,p.categoria_id, p.modelo_id, p.marca_id, mc.nombre as marca_nombre, md.nombre as modelo_nombre, c.nombre as categoria_nombre, sum(ps.cantidad) as quantity from productos p 
                     right join categorias c on p.categoria_id = c.id
                     right join modelos md on p.modelo_id = md.id
                     right join marcas mc on p.marca_id = mc.id
                     inner join producto_sucursal ps on p.id = ps.producto_id
-                    group by p.nombre, p.cod_barra, p.precio_letal, p.precio_mayor, p.observaciones, p.categoria_id, p.modelo_id, p.marca_id, c.nombre, md.nombre, mc.nombre');
+                    group by p.nombre, p.cod_barra, p.categoria_id, p.modelo_id, p.marca_id, c.nombre, md.nombre, mc.nombre');
 
                     $data=json_encode($productos_sucursal);
                     $array = json_decode($data, true);
                     $relacion = 'sql';
                     $sucursal = 0;
-                }
-                else{
-                    $array = ProductoSerialSucursal::all();
-                    $relacion ='eloquent';
-                    $sucursal = 0;
-                }
-
-               /* for($i=0 ; $i<sizeof($array); $i++){
-                    $array[$i]['categoria_id'] = Categoria::where('id',$array[$i]['categoria_id'])->first()->nombre;
-                    $array[$i]['marca_id'] = Marca::where('id',$array[$i]['marca_id'])->first()->nombre;
-                    $array[$i]['modelo_id'] = Modelo::where('id',$array[$i]['modelo_id'])->first()->nombre;
-                }*/
-                
             }
             else{//SI SON TODOS LOS ESTADOS Y UNA SUCURSAL EN PARTICULAR
-                if($this->vista == 'barra'){
-                  //  $productos_sucursal = Pivot::where('sucursal_id',$this->sucursal_id)->get();
-
                   $productos_sucursal = Producto::whereHas('sucursals',function(Builder $query) {
                     $query->where('sucursal_id',$this->sucursal_id);
                 })->get();
@@ -107,72 +90,39 @@ class ProductosExport extends Component
                     $array = $productos_sucursal;
                     $relacion ='eloquent';
                     $sucursal = $this->sucursal_id;
-
-                   
-
-                   //dd('hola');
-                }
-                else{
-                    $array = ProductoSerialSucursal::where('sucursal_id',$this->sucursal_id)
-                                                    ->get();
-                    $relacion ='eloquent';
-                    $sucursal = $this->sucursal_id;
-
-                }
             }
         }
         else{
             
 
             if($this->sucursal_id == 0){//TODAS LAS SUCURSALES PERO UN ESTADO EN PARTICULAR
-                if($this->vista == 'barra'){
+               
                     if($this->estado == 2) $estado = 1;
                     elseif($this->estado == 3) $estado = 2;
-                    $productos_sucursal = DB::select('SELECT p.nombre, p.cod_barra, p.precio_letal, p.precio_mayor,p.categoria_id,p.marca_id,p.modelo_id, p.observaciones,p.categoria_id,p.marca_id,p.modelo_id,p.categoria_id, p.modelo_id, p.marca_id, mc.nombre as marca_nombre, md.nombre as modelo_nombre, c.nombre as categoria_nombre, sum(ps.cantidad) as quantity from productos p 
+                    $productos_sucursal = DB::select('SELECT p.nombre, p.cod_barra,p.categoria_id,p.marca_id,p.modelo_id,p.categoria_id,p.marca_id,p.modelo_id,p.categoria_id, p.modelo_id, p.marca_id, mc.nombre as marca_nombre, md.nombre as modelo_nombre, c.nombre as categoria_nombre, sum(ps.cantidad) as quantity from productos p 
                     right join categorias c on p.categoria_id = c.id
                     right join modelos md on p.modelo_id = md.id
                     right join marcas mc on p.marca_id = mc.id
                     inner join producto_sucursal ps on p.id = ps.producto_id where p.estado = :estado
-                    group by p.nombre, p.cod_barra, p.precio_letal, p.precio_mayor,p.categoria_id,p.marca_id,p.modelo_id, p.observaciones, c.nombre, md.nombre, mc.nombre',array('estado' => $estado));
+                    group by p.nombre, p.cod_barra,p.categoria_id,p.marca_id,p.modelo_id, c.nombre, md.nombre, mc.nombre',array('estado' => $estado));
                     $data=json_encode($productos_sucursal);
                     $array = json_decode($data, true);
                     $relacion = 'sql';
                     $sucursal = 0;
-                }
-                else{
-                    if($this->estado == 2) $estado = 'activo';
-                    elseif($this->estado == 3) $estado = 'inactivo';
-                    $array = ProductoSerialSucursal::where('estado',$estado)->get();
-                    $relacion ='eloquent';
-                    $sucursal = 0;
-                }
             }
 
             else{//UNA SUCURSAL EN PARTICULAR Y UN ESTADO EN PARTICULAR
-                if($this->vista == 'barra'){
+               
                     if($this->estado == 2) $estado = 1;
                     elseif($this->estado == 3) $estado = 2;
                     $productos_sucursal = Producto::where('estado',$estado)
                                                 ->whereHas('sucursals',function(Builder $query) {
                                                     $query->where('sucursal_id',$this->sucursal_id);
                                                 })->get();
-                    //dd($productos_sucursal);
 
                     $array = $productos_sucursal;
                     $relacion ='eloquent';
                     $sucursal = $this->sucursal_id;
-
-                  
-                }
-                else{
-                    if($this->estado == 2) $estado = 'activo';
-                    elseif($this->estado == 3) $estado = 'inactivo';
-                    $array = ProductoSerialSucursal::where('sucursal_id',$this->sucursal_id)
-                                                    ->where('estado',$estado)
-                                                    ->get();
-                    $relacion ='eloquent';
-                    $sucursal = $this->sucursal_id;
-                }
             }
         }
         $this->reset(['isopen','estado','sucursal_id']);

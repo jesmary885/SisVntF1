@@ -62,7 +62,7 @@ class Movimientos extends Component
         }
 
         else{
-            $movimientos=[];
+            $movimientos = 0;
         }
 
         

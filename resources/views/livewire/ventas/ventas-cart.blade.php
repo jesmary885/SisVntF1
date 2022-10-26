@@ -329,20 +329,13 @@
                             </p>
                             <p class="flex justify-between items-center">
                             Descuento
-                            {{-- @if ($canjeo == false)
-                                <span class="font-semibold">{{ $moneda_simbolo }} {{(Cart::subtotal() * ($this->descuento / 100)) * $tasa_dia}}</span>
-                            @else --}}
                                 <span class="font-semibold">{{ $moneda_simbolo }} {{ round($descuento_total / $tasa_dia,2)}}</span>
-                            {{-- @endif --}}
-                            {{-- <span class="font-semibold">{{ $moneda_simbolo }} {{$descuento_total = Cart::subtotal() * ($this->descuento / 100)}}</span> --}}
+
                             </p>
                             <p class="flex justify-between items-center">
                             Subtotal menos descuento
-                            {{-- @if ($canjeo == false)
-                            <span class="font-semibold">{{ $moneda_simbolo }} {{(Cart::subtotal() - (Cart::subtotal() * ($this->descuento / 100))) * $tasa_dia}}</span>
-                            @else --}}
+                         
                             <span class="font-semibold">{{ $moneda_simbolo }} {{round(($subtotal - $descuento_total) / $tasa_dia,2)}}</span>
-                            {{-- @endif --}}
                             </p>
                              <p class="flex justify-between items-center">
                             IVA {{$iva_empresa}} %
@@ -362,11 +355,7 @@
                                 <p class="flex justify-between items-center">
                                     Pendiente por pagar
                                     <span class="font-semibold">
-                                    {{-- @if ($canjeo == false)
-                                        {{ $moneda_simbolo }} {{(Cart::subtotal() - (Cart::subtotal() * ($this->descuento / 100))) - ($pago_cliente)}}
-                                    @else --}}
                                     {{ $moneda_simbolo }} {{round(($total_venta - $pago_cliente) / $tasa_dia,2)}}
-                                    {{-- @endif --}}
                                 </span>
                                 </p>
                             </div>
@@ -374,13 +363,9 @@
                             <hr class="mt-4 mb-3">
                             <p class="flex justify-between items-center font-semibold">
                             <span class="text-lg">Total a pagar</span>
-                            {{-- @if ($canjeo == false) --}}
-                            {{-- S/ {{Cart::subtotal() - (Cart::subtotal() * ($this->descuento / 100))}} --}}
+
                             {{ $moneda_simbolo }} {{round(($total_venta / $tasa_dia),2)}}
-                            {{-- @else --}}
-                            {{-- S/ {{Cart::subtotal() - ($this->descuento_total)}} --}}
-                            {{-- S/ {{Cart::subtotal() - ($this->descuento_total)}}
-                            @endif --}}
+    
                             </p>
                         </div>
 

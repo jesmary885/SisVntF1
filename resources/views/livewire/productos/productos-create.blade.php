@@ -141,11 +141,11 @@
                     <div class="mt-2">
                         <div class="w-full mr-2 bg-blue-200">
                             <div :class="{'hidden' : act_utilidades != '1'}">
-                                <input wire:model="utilidad_letal" readonly title="Utilidad letal" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200  py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                                <input wire:model="utilidad_letal" readonly title="Utilidad detal" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200  py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
                             </div>
 
                             <div :class="{'hidden' : act_utilidades == '1'}">
-                                <input wire:model="utilidad_letal" title="Utilidad letal" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                                <input wire:model="utilidad_letal" title="Utilidad detal" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
                             </div>
                             <x-input-error for="utilidad_letal" />
                         </div>
@@ -170,7 +170,7 @@
                                 <input wire:model="margen_letal" readonly title="Margen de ganancia letal" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
                             </div>
                             <div :class="{'hidden' : act_utilidades == '2'}">
-                                <input wire:model="margen_letal" title="Margen de ganancia letal" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
+                                <input wire:model="margen_letal" title="Margen de ganancia detal" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Unitario">
                             </div>
                             <x-input-error for="margen_letal" />
                         </div>
@@ -382,7 +382,7 @@
                             <option value="{{$caja->id}}">{{$caja->nombre}}</option>
                         @endforeach
                     </select>
-                    <x-input-error for=caja_id" />
+                    <x-input-error for="caja_id" />
                 </div>
                           
                 <div class="w-1/2" :class="{'hidden': (saldado_proveedor == '1')}">

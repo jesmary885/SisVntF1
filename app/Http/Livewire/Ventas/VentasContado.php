@@ -17,7 +17,7 @@ class VentasContado extends Component
 
     protected $listeners = ['render' => 'render','confirmacion' => 'confirmacion'];
 
-    public $search,$sucursal;
+    public $search,$sucursal,$buscador=0,$fecha_inicio,$fecha_fin;
 
     public function updatingSearch(){
         $this->resetPage();
@@ -25,25 +25,37 @@ class VentasContado extends Component
 
     public function render()
     {
-        if($this->search){
-            $ventas = Venta::where('fecha', 'LIKE', '%' . $this->search . '%')
-                ->where('tipo_pago', 'Contado')
-                ->where('sucursal_id',$this->sucursal)
+        
+        if($this->search || $this->fecha_fin){
+            if($this->buscador == 0){
+                $ventas = Venta::whereHas('cliente',function(Builder $query){
+                    $query
+                        ->where('nro_documento','LIKE', '%' . $this->search . '%')
+                        ->orwhere('nombre','LIKE', '%' . $this->search . '%')
+                        ->orwhere('apellido','LIKE', '%' . $this->search . '%');
+                })
                 ->where('estado', 'activa')
+                ->where('sucursal_id',$this->sucursal)
+                ->where('tipo_pago', 'Contado')
                 ->latest('id')
                 ->paginate(10);
+            }
+
+            else{
+                $fecha_inicio = date("Y-m-d", strtotime($this->fecha_inicio));
+                $fecha_fin = date("Y-m-d", strtotime($this->fecha_fin));
+
+                $ventas = Venta::whereBetween('fecha',[$fecha_inicio,$fecha_fin])
+                    ->where('estado', 'activa')
+                    ->where('tipo_pago', 'Contado')
+                    ->where('sucursal_id',$this->sucursal)
+                    ->latest('id')
+                    ->paginate(10);
+            }
         }
         else{
-            $ventas = Venta::orderBy('id', 'DESC')
-                ->where('tipo_pago', 'Contado')
-                ->where('sucursal_id',$this->sucursal)
-                ->where('estado', 'activa')
-                ->take(15)
-                ->get();
+            $ventas = 0;
         }
-
-        
-
 
         return view('livewire.ventas.ventas-contado',compact('ventas'));
     }

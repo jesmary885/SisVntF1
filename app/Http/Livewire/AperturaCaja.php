@@ -19,10 +19,16 @@ class AperturaCaja extends Component
     public $movimiento,$array,$array_cambios,$array_compras,$inicial_bolivares,$inicial_dolares;
 
     protected $listeners = ['render' => 'render'];
+
+    protected $rules = [
+        'monto_bolivares' => 'required',
+        'monto_dolares'=>'required',
+        'sucursal_id' => 'required',
+        'caja_id' => 'required',
+     ];
     
     public function render()
     {
-
         $user =  Auth::user();
         $user_auth = User::where('id',$user->id)->first(); 
 
@@ -111,8 +117,12 @@ class AperturaCaja extends Component
 
     public function aperturar(){
         //validaciones
+        $rules = $this->rules;
+        $this->validate($rules);
+
         $user =  Auth::user();
         $fecha = Carbon::now();
+
         $user_auth = User::where('id',$user->id)->first(); 
        
         $user_auth->update([

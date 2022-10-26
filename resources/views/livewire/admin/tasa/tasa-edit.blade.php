@@ -17,7 +17,7 @@
                                 <input wire:model="tasa_dia" type="text" title="Tasa del día"
                                     class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                                     placeholder="tasa">
-                                <x-input-error for="tasa" />
+                                <x-input-error for="tasa_dia" />
                       
                     </div>
                     <div class="modal-footer">

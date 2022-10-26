@@ -28,28 +28,64 @@ class VentasCart extends Component
     use WithPagination;
 
     public $publico_general = 1, $sucursal,$caja, $caja_detalle, $sucursal_detalle,$producto,$cambio,$moneda_actual,$tasa_dia,$moneda_nombre,$moneda_simbolo;
-    public $cash_received,$tipo_pago = "Contado",$tipo_comprobante,$send_mail,$imprimir,$ticket = 0, $impresoras, $impresora_id ="";
+    public $cash_received,$tipo_pago = "Contado",$tipo_comprobante,$send_mail,$imprimir,$ticket = 0;
     public $metodo_pago, $total, $client, $search;
     public $cliente_select, $total_venta, $pago_cliente, $deuda_cliente, $descuento, $estado_entrega = "Entregado",$subtotal,$proforma;
     public $siguiente_venta = 0, $monto1, $monto2, $monto3, $monto4, $monto5,$metodo_id_1,$metodo_id_2,$metodo_id_3,$metodo_id_4,$metodo_id_5,$vuelto=0, $monto_vuelto, $metodo_cambio_id;
     public $iva, $carrito,$valor, $iva_empresa,$cant_metodos = 1,$metodos;
-    public $puntos_canjeo, $canjeo, $puntos_canjeados, $descuento_total,$porcentaje_descuento_puntos = 0,$empresa, $other_method;
+    public $descuento_total = 0,$empresa, $other_method;
 
-    protected $listeners = ['render'];
+    protected $listeners = ['render' => 'render'];
+
     protected $paginationTheme = "bootstrap";
 
     public $rules = [
         'tipo_pago' => 'required',
-        'metodo_pago' => 'required',
         'estado_entrega' => 'required',
         'cliente_select' => 'required',
+        'cant_metodos' => 'required',
+        'monto1' => 'required',
+        'metodo_id_1' => 'required'
     ];
+
+    public $rules_cant_pago_2 = [
+        'monto2' => 'required',
+        'metodo_id_2' => 'required'
+    ];
+
+    public $rules_cant_pago_3 = [
+        'monto2' => 'required',
+        'metodo_id_2' => 'required',
+        'monto3' => 'required',
+        'metodo_id_3' => 'required'
+    ];
+
+    public $rules_cant_pago_4 = [
+        'monto2' => 'required',
+        'metodo_id_2' => 'required',
+        'monto3' => 'required',
+        'metodo_id_3' => 'required',
+        'monto4' => 'required',
+        'metodo_id_4' => 'required'
+    ];
+
+    public $rules_cant_pago_5 = [
+        'monto2' => 'required',
+        'metodo_id_2' => 'required',
+        'monto3' => 'required',
+        'metodo_id_3' => 'required',
+        'monto4' => 'required',
+        'metodo_id_4' => 'required',
+        'monto5' => 'required',
+        'metodo_id_5' => 'required'
+    ];
+
     public $rule_credito = [
-        'tipo_pago' => 'required',
-        'metodo_pago' => 'required',
-        'estado_entrega' => 'required',
         'pago_cliente' => 'required',
-        'cliente_select' => 'required',
+    ];
+
+    public $rule_imprimir = [
+        'tipo_comprobante' => 'required',
     ];
 
     public function updatingSearch(){
@@ -63,12 +99,10 @@ class VentasCart extends Component
             ]);
         }
     } 
-    
 
     public function destroy(){
         Cart::destroy();
         $this->emitTo('ventas-seleccion-productos','render');
-
     }
 
     public function delete($rowID){
@@ -81,10 +115,6 @@ class VentasCart extends Component
         $this->client = Cliente::where('id','1')->first();
         $this->cliente_select = $this->client->nombre." ".$this->client->apellido;
         $this->metodos = Metodo_pago::all();
-
-        //$this->puntos_canjeo = 0;
-        //$this->canjeo = false;
-        //$this->puntos_canjeados = 0;
         $this->empresa = Empresa::first();
         $this->iva_empresa = $this->empresa->impuesto;
         $this->caja_detalle = Caja::where('id',$this->caja)->first();
@@ -94,15 +124,12 @@ class VentasCart extends Component
     public function select_u($cliente_id){
         $this->client = Cliente::where('id',$cliente_id)->first();
         $this->cliente_select = $this->client->nombre." ".$this->client->apellido;
-        //$this->puntos_canjeo = $this->client->puntos;
     }
 
     public function render()
     {
         if($this->publico_general == '1') {
             $this->client = Cliente::where('id','1')->first();
-
-            //$this->cliente_select = $this->client->nombre." ".$this->client->apellido;
         }
         if(session()->has('moneda')){
             $this->moneda = Moneda::where('nombre',session('moneda'))->first();
@@ -119,7 +146,7 @@ class VentasCart extends Component
         } 
 
         $caracter=",";
-        $this->subtotal = str_replace($caracter,"",Cart::subtotal());
+        $this->subtotal = (str_replace($caracter,"",Cart::subtotal())) - $this->descuento;
         $subt = 0;
 
         foreach (Cart::content() as $item) {
@@ -129,31 +156,23 @@ class VentasCart extends Component
             else{
                 $subt = $subt + 0; 
             }
-           
+
+            if($item->options['descuento'] != "null"){
+                $this->descuento_total = $this->descuento_total + $item->options['descuento'];
+            }
+
         }
 
         $this->iva= ($this->empresa->impuesto / 100) * $subt;
 
-       // if($this->canjeo==false){
-            if($this->descuento != null){
-                $this->descuento_total = $this->subtotal  * $this->descuento / 100;
-                $this->total_venta = ($this->subtotal  - $this->descuento_total) + $this->iva;
-            }
-            else{
-                $this->total_venta = $this->subtotal +  $this->iva;
-                $this->descuento_total = 0;
-            } 
-        /*}else{
-            $this->porcentaje_descuento_puntos = $this->empresa->porcentaje_puntos;
-            if($this->descuento != null){
-            $this->descuento_total = $this->subtotal  * (($this->descuento / 100) + ($this->porcentaje_descuento_puntos / 100));
-            $this->total_venta = ($this->subtotal ) - $this->descuento_total;
-            }
-            $this->descuento_total = $this->subtotal  * ($this->porcentaje_descuento_puntos / 100); 
-            $this->total_venta = ($this->subtotal ) - $this->descuento_total;
-        } */
-
-        //if($this->cash_received != null && $this->other_method == null) $this->cambio = abs($this->cash_received - $this->total_venta);
+        if($this->descuento != null){
+            $this->descuento_total = ($this->subtotal  * $this->descuento / 100) + $this->descuento_total;
+            $this->total_venta = ($this->subtotal  - $this->descuento_total) + $this->iva;
+        }
+        else{
+            $this->total_venta = ($this->subtotal +  $this->iva) - $this->descuento_total;
+        } 
+       
         if($this->cash_received != null && $this->other_method == null) $this->cambio = $this->cash_received - $this->total_venta;
         elseif($this->cash_received != null && $this->other_method != null) $this->cambio = (($this->cash_received + $this->other_method) - $this->total_venta);
         else $this->cambio = 0;
@@ -175,23 +194,41 @@ class VentasCart extends Component
         return view('livewire.ventas.ventas-cart',compact('cliente'));
     }
 
-   /* public function canjear($producto_id){
-        $this->puntos_canjeo = "1";
-        $this->canjeo = true;
-        $this->porcentaje_descuento_puntos = $this->empresa->porcentaje_puntos;
-        $product_canje = Producto::where('id',$producto_id)->first();
-        $this->puntos_canjeados = $product_canje->puntos;
-    }*/
 
     public function save(){
-    /*    if ($this->tipo_pago == "1"){
-            $rules = $this->rules;
-            $this->validate($rules);
-        }
-        else{
+       
+        $rules = $this->rules;
+        $this->validate($rules);
+        
+        if ($this->tipo_pago == "2"){
             $rule_credito = $this->rule_credito;
             $this->validate($rule_credito);   
-        }*/
+        }
+
+        if($this->cant_metodos == "2"){
+            $rules_cant_pago_2 = $this->rules_cant_pago_2;
+            $this->validate($rules_cant_pago_2);   
+        }
+
+        if($this->cant_metodos == "3"){
+            $rules_cant_pago_3 = $this->rules_cant_pago_3;
+            $this->validate($rules_cant_pago_3);   
+        }
+
+        if($this->cant_metodos == "4"){
+            $rules_cant_pago_4 = $this->rules_cant_pago_4;
+            $this->validate($rules_cant_pago_4);   
+        }
+
+        if($this->cant_metodos == "5"){
+            $rules_cant_pago_5 = $this->rules_cant_pago_5;
+            $this->validate($rules_cant_pago_5);   
+        }
+
+        if ($this->imprimir == "1"){
+            $rule_imprimir = $this->rule_imprimir;
+            $this->validate($rule_imprimir);   
+        }
  
         $user_auth =  auth()->user()->id;
 
@@ -236,29 +273,9 @@ class VentasCart extends Component
         //VENTA
         else
         {
-            /*$caja_final= Sucursal::where('id',$this->sucursal)->first();
-            $saldo_caja_final = $caja_final->saldo;*/
             $caja = Caja::where('id',$this->caja)->first();
             $efectivo_dls_decrec = 0;
             $efectivo_bs_decrec = 0;
-
-             //PROCESO DE SUMAR O RESTAR PUNTOS EN TABLA DE CLIENTES
-           /* if($this->canjeo==false){
-                $nuevos_puntos = $this->client->puntos + round($this->total_venta,0);
-                //Agregando nuevos puntos al cliente
-                $this->client->update([
-                    'puntos' => round($nuevos_puntos),
-                ]);
-            }
-            else{
-                //descontando puntos y agregando los nuevos
-                $nuevos_puntos = ($this->client->puntos - $this->puntos_canjeados) + round($this->total_venta,0);
-
-                $this->client->update([
-                    'puntos' => round($nuevos_puntos),
-                ]);
-            }   */
-
 
             //REGISTRANDO VENTA EN TABLA DE VENTAS
             $venta = new Venta();
@@ -266,7 +283,6 @@ class VentasCart extends Component
             $venta->cliente_id = $this->client->id;
             $venta->fecha = date('Y-m-d');
             $venta->tipo_pago = $this->tipo_pago;
-           // $venta->metodo_pago = $this->metodo_pago;
             if ($this->tipo_pago == "Credito"){
                 $venta->total_pagado_cliente = $this->pago_cliente;
                 $venta->deuda_cliente = $this->total_venta - $this->pago_cliente;
@@ -528,6 +544,7 @@ class VentasCart extends Component
             'pagado' => $this->pago_cliente,
             'deuda' => $this->total_venta - $this->pago_cliente,
             'iva' => $this->iva,];
+
         //factura
         if($this->tipo_comprobante == "1"){ 
             if ($this->tipo_pago == "Contado") $pdf = PDF::loadView('ventas.FacturaContado',$data)->output();
@@ -548,7 +565,6 @@ class VentasCart extends Component
         }
         //ticket 
         elseif($this->tipo_comprobante == "2"){ 
-            //$pdf = PDF::loadView('ventas.TicketContado',$data)->output();
             $nombreImpresora = "POS-58";
             $connector = new WindowsPrintConnector($nombreImpresora);
             $impresora = new Printer($connector);
@@ -613,8 +629,11 @@ class VentasCart extends Component
             }
         }
         cart::destroy();
-        $this->siguiente_venta = '1';
-        $this->reset(['monto1','monto2','monto3','monto4','monto5','metodo_id_1','metodo_id_2','metodo_id_3','metodo_id_4','metodo_id_5','cliente_select','send_mail','cash_received','total_venta','pago_cliente','descuento','descuento_total','tipo_comprobante','metodo_pago','tipo_pago','estado_entrega','subtotal']);
+
+        $this->client = Cliente::where('id','1')->first();
+        $this->cliente_select = $this->client->nombre." ".$this->client->apellido;
+
+        $this->reset(['monto1','monto2','monto3','monto4','monto5','metodo_id_1','metodo_id_2','metodo_id_3','metodo_id_4','metodo_id_5','send_mail','cash_received','total_venta','pago_cliente','descuento','descuento_total','metodo_pago','tipo_pago','estado_entrega','subtotal']);
        
         if($this->imprimir == 1){
             $this->reset(['imprimir']);
@@ -622,12 +641,12 @@ class VentasCart extends Component
             $this->emitTo('ventas.ventas-cart','render');
     
             //GENERANDO PDF
-           /* if($this->tipo_comprobante != "2"){
+           if($this->tipo_comprobante == 1 || $this->tipo_comprobante == 3){
                 return response()->streamDownload(
                     fn () => print($pdf),
                 "Comprobante.pdf"
                 );
-            }*/
+            }
          }
          else {
             $this->emitTo('ventas.ventas-seleccion-productos','render');

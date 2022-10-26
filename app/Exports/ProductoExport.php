@@ -20,13 +20,14 @@ class ProductoExport implements FromView
          $this->fecha_actual = date('d-m-Y');
 
          
-
         // dd($this->sucursal);
      }
 
     public function view(): View
 	{
-        if($this->vista == 'barra') return view('exportexcel.productos', ['productos'=> $this->array,'relacion' => $this->relacion,'sucursal' => $this->sucursal,'fecha_actual' => $this->fecha_actual]);
-        else return view('exportexcel.productos_serial', ['productos'=> $this->array,'relacion' => $this->relacion,'sucursal' => $this->sucursal,'fecha_actual' => $this->fecha_actual]);
+       /* if($this->vista == 'barra') return view('exportexcel.productos', ['productos'=> $this->array,'relacion' => $this->relacion,'sucursal' => $this->sucursal,'fecha_actual' => $this->fecha_actual]);
+        else return view('exportexcel.productos_serial', ['productos'=> $this->array,'relacion' => $this->relacion,'sucursal' => $this->sucursal,'fecha_actual' => $this->fecha_actual]);*/
+
+        return view('exportexcel.productos', ['productos'=> $this->array,'relacion' => $this->relacion,'sucursal' => $this->sucursal,'fecha_actual' => $this->fecha_actual]);
 	}
 }

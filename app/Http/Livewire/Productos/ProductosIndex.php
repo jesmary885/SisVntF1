@@ -38,28 +38,28 @@ class ProductosIndex extends Component
                 ->orwhere('nombre', 'LIKE', '%' . $this->search . '%')
                 ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(5);
+                ->paginate(10);
 
             }
             elseif($this->buscador == 1){
 
                 $productos = Producto::whereHas('categoria',function(Builder $query){
-                    $query->where('nombre','LIKE', '%' . $this->search . '%')
-                    ->where('estado','Habilitado');
+                    $query->where('nombre','LIKE', '%' . $this->search . '%');
                 })
+                ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(5);
+                ->paginate(10);
 
                 $this->item_buscar = "la categoria del producto a buscar";
             }
             elseif($this->buscador == 2){
 
                 $productos = Producto::whereHas('marca',function(Builder $query){
-                    $query->where('nombre','LIKE', '%' . $this->search . '%')
-                    ->where('estado','Habilitado');
+                    $query->where('nombre','LIKE', '%' . $this->search . '%');
                 })
+                ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(5);
+                ->paginate(10);
 
                 $this->item_buscar = "la marca del producto a buscar";
             }
@@ -67,9 +67,10 @@ class ProductosIndex extends Component
             else{
                 $productos = Producto::whereHas('modelo',function(Builder $query){
                     $query->where('nombre','LIKE', '%' . $this->search . '%');
-                })->where('estado','Habilitado')
+                })
+                ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(5);
+                ->paginate(10);
             }
         }
         else{

@@ -12,15 +12,15 @@ use Livewire\Component;
 class VentasSeleccionCantidades extends Component
 {
 
+    protected $listeners = ['render' => 'render'];
+
     public $quantity,$producto, $sucursal, $precios = 1, $usuario, $change_price, $precio_manual;
     public $qty = 1;
 
     public $options = [
         'exento' => null,
         'modelo' => null,
-  
     ];
-
 
     public function decrement(){
         $this->qty = $this->qty - 1;
@@ -33,17 +33,10 @@ class VentasSeleccionCantidades extends Component
     public function mount(){
         $product=$this->producto->producto_id;
         $sucur=$this->sucursal;
-
-     /*$producto_lote = Producto_lote::where('producto_id',$this->producto->id)
-            ->where('status','activo')
-            ->oldest()
-            ->first();*/
         $producto_lote = Producto_lote::where('id',$this->producto->id)
             ->first();
 
     $this->quantity = qty_available($product,$sucur,$producto_lote);
-    
-
     }
 
 
@@ -57,6 +50,7 @@ class VentasSeleccionCantidades extends Component
         elseif($this->precios == 3) $precio_venta = $this->precio_manual;
             
         $this->options['exento'] = $this->producto->producto->exento;
+        $this->options['descuento'] = $this->producto->producto->descuento;
         $this->options['modelo'] = $this->producto->producto->modelo->nombre;
         $this->options['lote'] = $producto_lote->id;
 
@@ -83,8 +77,6 @@ class VentasSeleccionCantidades extends Component
 
         if($usuario_aut->changePrice == 'si') $this->change_price = 'si';
         elseif ($usuario_aut->changePrice == 'no') $this->change_price = 'no';
-        
-
         return view('livewire.ventas.ventas-seleccion-cantidades');
     }
 }

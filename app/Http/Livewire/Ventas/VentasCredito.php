@@ -20,7 +20,7 @@ class VentasCredito extends Component
 
     protected $listeners = ['render' => 'render','confirmacion' => 'confirmacion'];
 
-    public $search;
+    public $search,$buscador=0,$fecha_inicio,$fecha_fin;
 
     public function updatingSearch(){
         $this->resetPage();
@@ -29,21 +29,34 @@ class VentasCredito extends Component
     public function render()
     {
     
-        if($this->search){
-            $ventas = Venta::where('fecha', 'LIKE', '%' . $this->search . '%')
-                ->where('tipo_pago', 'Credito')
-                ->where('sucursal_id',$this->sucursal)
-                ->where('estado', 'activa')
-                ->latest('id')
-                ->paginate(10);
+        if($this->search || $this->fecha_fin){
+            if($this->buscador == 0){
+                $ventas = Venta::whereHas('cliente',function(Builder $query){
+                    $query
+                        ->where('nro_documento','LIKE', '%' . $this->search . '%')
+                        ->orwhere('nombre','LIKE', '%' . $this->search . '%')
+                        ->orwhere('apellido','LIKE', '%' . $this->search . '%');
+                 })->latest('id')
+                    ->where('estado', 'activa')
+                    ->where('sucursal_id',$this->sucursal)
+                    ->where('tipo_pago', 'Credito')
+                    ->paginate(10);
+            }
+
+            else{
+                $fecha_inicio = date("Y-m-d", strtotime($this->fecha_inicio));
+                $fecha_fin = date("Y-m-d", strtotime($this->fecha_fin));
+
+                $ventas = Venta::whereBetween('fecha',[$fecha_inicio,$fecha_fin])
+                    ->where('estado', 'activa')
+                    ->where('tipo_pago', 'Credito')
+                    ->where('sucursal_id',$this->sucursal)
+                    ->latest('id')
+                    ->paginate(10);
+            }
         }
         else{
-            $ventas = Venta::orderBy('id', 'DESC')
-                ->where('tipo_pago', 'Credito')
-                ->where('sucursal_id',$this->sucursal)
-                ->where('estado', 'activa')
-                ->take(15)
-                ->get();
+            $ventas = 0;
         }
 
         return view('livewire.ventas.ventas-credito',compact('ventas'));

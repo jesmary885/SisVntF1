@@ -12,19 +12,16 @@ use Livewire\Component;
 Use Livewire\WithPagination;
 use Illuminate\Database\Eloquent\Builder;
 
-
 class VentasSeleccionProductos extends Component
 {
-
     use WithPagination;
     public $search, $sucursal,$pivot,$buscador=0,$modalidad_busqueda,$tipo,$proforma,$caja;
     protected $listeners = ['render']; 
     protected $paginationTheme = "bootstrap";
 
-
     public function mount(){
-        //$this->buscador = "1";
         $this->reset(['search']);
+    
     }
 
     public function render()
@@ -34,72 +31,55 @@ class VentasSeleccionProductos extends Component
         $sucursales = Sucursal::all();
         $proforma = $this->proforma;
 
-       if($this->buscador == '0'){
-
         if($this->search != ''){
-            $productos = Producto::where('estado', 'Habilitado')
-                ->where('cod_barra', $this->search)
-                ->first();
-            
-            if($productos){
+            if($this->buscador == '0'){
+                $productos = Producto::with('producto_lotes')
+                    ->where('estado', 'Habilitado')
+                    ->where('cod_barra', 'LIKE', '%' . $this->search . '%')
+                    ->latest('id')
+                    ->paginate(10);
 
-                $producto_lotes = Producto_lote::where('producto_id',$productos->id)
-                ->where('status','activo')
-                ->oldest()
-                ->get();
-
-                $productos=$productos;
             }
-            else{
-                $productos = 0;
-                $producto_lotes = 0;
-            } 
-
-            if($producto_lotes)$producto_lotes=$producto_lotes;
-            else $producto_lotes = 0;
+            elseif($this->buscador == '1'){
+                $productos = Producto::with('producto_lotes')
+                    ->where('estado', 'Habilitado')
+                    ->where('nombre', 'LIKE', '%' . $this->search . '%')
+                    ->latest('id')
+                    ->paginate(10);
+            }
+            elseif($this->buscador == '2'){
+                $productos = Producto::with('producto_lotes')
+                    ->where('estado', 'Habilitado')
+                    ->whereHas('marca',function(Builder $query){
+                        $query->where('nombre', 'LIKE', '%' . $this->search . '%');
+                    })->latest('id')
+                    ->paginate(10);
+            }
+    
+            elseif($this->buscador == '3'){
+                $productos = Producto::with('producto_lotes')
+                    ->where('estado', 'Habilitado')
+                    ->whereHas('categoria',function(Builder $query){
+                        $query->where('nombre', 'LIKE', '%' . $this->search . '%');
+                    })->latest('id')
+                 ->paginate(10);
+            }
+    
+            elseif($this->buscador == '4'){
+                $productos = Producto::with('producto_lotes')
+                    ->where('estado', 'Habilitado')
+                    ->whereHas('modelo',function(Builder $query){
+                        $query->where('nombre', 'LIKE', '%' . $this->search . '%');
+                    })
+                ->latest('id')
+                ->paginate(10);
+            }
         }
         else{
-            $productos = 0;
-            $producto_lotes = 0;
-        }
-             $this->item_buscar = "el código de barra del producto a buscar";
+            $productos = [];
         }
 
-        elseif($this->buscador == '1'){
-
-            $productos = Producto::where('estado', 'Habilitado')
-            ->whereHas('marca',function(Builder $query){
-                $query->where('nombre', 'LIKE', '%' . $this->search . '%');
-             })->latest('id')
-             ->paginate(19);
-    
-             $this->item_buscar = "la marca del producto a buscar";
-        }
-
-        elseif($this->buscador == '2'){
-
-
-            $productos = Producto::where('estado', 'Habilitado')
-            ->whereHas('categoria',function(Builder $query){
-                $query->where('nombre', 'LIKE', '%' . $this->search . '%');
-             })->latest('id')
-             ->paginate(19);
-    
-             $this->item_buscar = "la categoria del producto a buscar";
-        }
-
-        elseif($this->buscador == '3'){
-            $productos = Producto::where('estado', 'Habilitado')
-            ->whereHas('modelo',function(Builder $query){
-                $query->where('nombre', 'LIKE', '%' . $this->search . '%');
-            })->latest('id')
-            ->paginate(19);
-    
-            $this->item_buscar = "el modelo del producto a buscar";
-        }
-
-
-        return view('livewire.ventas.ventas-seleccion-productos',compact('producto_lotes','productos','sucursal','sucursales','proforma','usuario'));
+        return view('livewire.ventas.ventas-seleccion-productos',compact('productos','sucursal','sucursales','proforma','usuario'));
     }
 
     public function ayuda(){

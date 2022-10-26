@@ -90,6 +90,7 @@ class UsuariosCreate extends Component
             $usuario->limitacion = $this->limitacion;
             if($this->changePrice == "1")   $usuario->changePrice = 'si';
             else $usuario->changePrice = 'no';
+            $usuario->apertura = 'no';
             $usuario->save();
             $usuario->roles()->sync($this->roles_id);
 

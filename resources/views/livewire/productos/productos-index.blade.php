@@ -62,10 +62,8 @@
                                     </td>
                                     <td class="text-center">{{$producto->cod_barra}}</td>
                                     <td class="text-justify">{{$producto->nombre}}</td>
-                                    <td class="text-justify">{{$producto->marca->nombre}}/{{$producto->modelo->nombre}}</td>
-                                    
+                                    <td class="text-justify">{{$producto->marca->nombre}}/{{$producto->modelo->nombre}}</td> 
                                     <td class="text-center {{$estado_bg}}">@livewire('productos.productos-stock-sucursal', ['producto' => $producto],key(0.,'$producto->id')) </td>
-                                        {{-- <b>{{$sucursal->nombre}}</b> = {{$producto->sucursals->find($sucursal)->pivot->cantidad}}, --}}
                                     <td width="10px">
                                         @livewire('productos.productos-add', ['producto' => $producto],key(02.,'$producto->id'))
                                     </td>
