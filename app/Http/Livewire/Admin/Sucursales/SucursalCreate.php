@@ -18,17 +18,11 @@ class SucursalCreate extends Component
     protected $rules = [
         'estado_id' => 'required',
         'ciudad_id' => 'required',
-        'nombre' => 'required|max:50',
+        'nombre' => 'required|max:50|unique:sucursales',
         'direccion' => 'required|max:50',
         'telefono' => 'required|min:5',
         'status' => 'required'
     ];
-
-   /* public function updatedCiudadId($value)
-    {
-        $ciudad_select = Ciudad::find($value);
-        $this->estados = $ciudad_select->estados;
-    }*/
 
     public function updatedEstadoId($value)
     {

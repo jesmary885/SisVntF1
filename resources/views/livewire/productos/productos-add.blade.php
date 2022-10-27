@@ -22,7 +22,6 @@
                                 <h2 class="text-sm ml-2 m-0 p-0 text-gray-500 font-semibold mb-4"><i class="fas fa-info-circle"></i> Complete todos los campos y presiona Guardar</h2> 
                             </div>
                             <div class="mt-2">
-                                {{$tasa_dia}}
                                 <div class="flex">
                                     <div class="bg-blue-200 w-6 h-6"></div>
                                     <p class="text-gray-500 ml-2 font-semibold">Precios Unitarios</p>
@@ -64,7 +63,7 @@
                                         <option value="{{$caja->id}}">{{$caja->nombre}}</option>
                                     @endforeach
                                 </select>
-                                <x-input-error for=caja_id" />
+                                <x-input-error for="caja_id" />
                             </div>
                         </div>
 

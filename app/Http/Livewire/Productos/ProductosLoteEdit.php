@@ -18,6 +18,18 @@ class ProductosLoteEdit extends Component
     public $proveedor_id ="", $proveedores, $nombre, $cod_barra,$nro_lote, $fecha_vencimiento,$observaciones,$status,$vencimiento = "No",$sucursal_lote_productos, $sucursal_lote_product=[];
     public $utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $precio_entrada, $precio_letal, $precio_mayor,$act_utilidades="1", $act_old_rol=0;
 
+    protected $rules = [
+        'precio_entrada' => 'required',
+        'precio_letal' => 'required',
+        'precio_mayor' => 'required',
+        'utilidad_letal' => 'required',
+        'utilidad_mayor' => 'required',
+        'margen_letal' => 'required',
+        'margen_mayor' => 'required',
+        'proveedor_id' => 'required',
+        'status' => 'required',
+    ];
+    
     public function mount(){
 
         $this->sucursal_lote_productos = Producto_sucursal::where('producto_id',$this->lote->producto_id)
@@ -28,7 +40,7 @@ class ProductosLoteEdit extends Component
         $this->utilidad_letal = $this->lote->utilidad_letal;
         $this->precio_entrada = $this->lote->precio_entrada;
         $this->precio_mayor = $this->lote->precio_mayor;
-        $this->margen_mayor = $this->lote->utilidad_mayor;
+        $this->margen_mayor = $this->lote->margen_mayor;
         $this->margen_letal = $this->lote->margen_letal;
         $this->utilidad_mayor = $this->lote->utilidad_mayor;
         $this->observaciones = $this->lote->observaciones;
@@ -54,11 +66,6 @@ class ProductosLoteEdit extends Component
     public function render()
     {
         if($this->precio_entrada != ''){
-            /*if($this->act_old_rol == '1'){
-                $this->act_old_rol = 0;
-                $this->reset(['precio_letal','margen_letal','precio_mayor','margen_mayor','precio_entrada','utilidad_letal','utilidad_mayor','fecha_vencimiento']);
-            }*/
-
             if($this->act_utilidades == 1){
                 if($this->margen_letal != ''){
                     $this->reset(['precio_letal','utilidad_letal']);
@@ -113,27 +120,37 @@ class ProductosLoteEdit extends Component
 
     public function update(){
 
-        if($this->fecha_vencimiento != "null") $fecha_vencimiento = Carbon::parse($this->fecha_vencimiento);
-        else $fecha_vencimiento = null;
+        if($this->precio_entrada < 0 || $this->precio_letal < 0 || $this->precio_mayor < 0 || $this->utilidad_letal < 0 || $this->utilidad_mayor < 0 || $this->margen_letal < 0 || $this->margen_mayor < 0){
+            $this->emit('errorSize','Ha ingresado un valor incorrecto, intentelo de nuevo');
+           // $this->reset(['precio_compra','cantidad']);
+        }else{
 
-        if($this->tasa_dia == '1') $tasa_dia = 1;
-        else $tasa_dia = tasa_dia::where('moneda_id',$this->moneda_id)->first()->tasa;         
+            //validaciones
+            $rules = $this->rules;
+            $this->validate($rules);
 
-        $this->lote->update([
-            "proveedor_id"      => $this->proveedor_id,
-            "producto_id"       => $this->lote->producto_id,
-            "fecha_vencimiento" => $fecha_vencimiento,
-            "precio_entrada"    => $this->precio_entrada*$tasa_dia,
-            "precio_letal"      => $this->precio_letal*$tasa_dia,
-            "precio_mayor"      => $this->precio_mayor*$tasa_dia,
-            "utilidad_letal"    => $this->utilidad_letal*$tasa_dia,
-            "margen_letal"      => $this->margen_letal,
-            "utilidad_mayor"    => $this->utilidad_mayor*$tasa_dia,
-            "margen_mayor"      => $this->margen_mayor,
-            "observaciones"     => $this->observaciones,
-        ]);
+            if($this->fecha_vencimiento != "null") $fecha_vencimiento = Carbon::parse($this->fecha_vencimiento);
+            else $fecha_vencimiento = null;
 
-        $this->emitTo('productos.productos-lote','render');
-        $this->emit('alert','Lote modificado correctamente');
+            if($this->tasa_dia == '1') $tasa_dia = 1;
+            else $tasa_dia = tasa_dia::where('moneda_id',$this->moneda_id)->first()->tasa;         
+
+            $this->lote->update([
+                "proveedor_id"      => $this->proveedor_id,
+                "producto_id"       => $this->lote->producto_id,
+                "fecha_vencimiento" => $fecha_vencimiento,
+                "precio_entrada"    => $this->precio_entrada*$tasa_dia,
+                "precio_letal"      => $this->precio_letal*$tasa_dia,
+                "precio_mayor"      => $this->precio_mayor*$tasa_dia,
+                "utilidad_letal"    => $this->utilidad_letal*$tasa_dia,
+                "margen_letal"      => $this->margen_letal,
+                "utilidad_mayor"    => $this->utilidad_mayor*$tasa_dia,
+                "margen_mayor"      => $this->margen_mayor,
+                "observaciones"     => $this->observaciones,
+            ]);
+
+            $this->emitTo('productos.productos-lote','render');
+            $this->emit('alert','Lote modificado correctamente');
+        }
     }
 }

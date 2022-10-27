@@ -195,7 +195,7 @@
                                 <option value="activo">Habilitado</option>
                                 <option value="inactivo">Deshabilitado</option>
                                 </select>
-                            <x-input-error for="estado" />
+                            <x-input-error for="status" />
                         </div>
              
                         <div class="ml-2">

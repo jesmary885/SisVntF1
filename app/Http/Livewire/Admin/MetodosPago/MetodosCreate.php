@@ -12,7 +12,7 @@ class MetodosCreate extends Component
     public $accion,$metodo;
 
     protected $rules = [
-        'nombre' => 'required|max:50',
+        'nombre' => 'required|max:50|unique:metodo_pagos',
     ];
 
     public function mount(Metodo_pago $metodo){

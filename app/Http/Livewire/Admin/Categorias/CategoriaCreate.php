@@ -12,7 +12,7 @@ class CategoriaCreate extends Component
     public $accion,$categoria;
 
     protected $rules = [
-        'nombre' => 'required|max:50',
+        'nombre' => 'required|max:50|unique:categorias',
     ];
 
     public function mount(Categoria $categoria){

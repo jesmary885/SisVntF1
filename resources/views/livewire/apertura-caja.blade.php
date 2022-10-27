@@ -23,7 +23,7 @@
                     </div>
 
                     <div :class="{'hidden': (limitacion == 'no')}" class="w-full mr-2">
-                       <input wire:model="sucursal_select" type="text" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
+                       <input title="Sucursal" wire:model="sucursal_select" type="text" class="w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500">
                        <x-input-error for="sucursal_select" />
                    </div>
 

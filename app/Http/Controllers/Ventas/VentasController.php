@@ -22,10 +22,14 @@ class VentasController extends Controller
         $proforma = 'venta';
         $usuario_auth = User::where('id',Auth::id())->first();
 
+   
+
+
         if($usuario_auth->apertura == 'no'){
             return view('ventas.sin_apertura');
         }
         else{
+
             $movimiento = MovimientoCaja::where('tipo_movimiento','4')
             ->where('user_id',$usuario_auth->id)
             ->firstOrFail();
@@ -36,56 +40,20 @@ class VentasController extends Controller
             return view('ventas.seleccion_producto',compact('sucursal','proforma','caja'));
         }
 
-        /*if($usuario_auth->limitacion == '1') return view('ventas.seleccion_sucursal',compact('vista','proforma'));
-        else return view('ventas.seleccion_producto',compact('sucursal','proforma'));*/
-
-        
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
 
-     
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store()
-    {
-      
-    }
 
     public function facturacion($sucursal)
     {
         return view('ventas.facturacion',compact('sucursal'));
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+  
     public function show($sucursal)
     {
         return view('ventas.cart',compact('sucursal'));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
 
 
     public function edit($sucursal,$proforma)
@@ -94,25 +62,5 @@ class VentasController extends Controller
         return view('ventas.seleccion_producto',compact('sucursal','proforma'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update($id){
-
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+  
 }

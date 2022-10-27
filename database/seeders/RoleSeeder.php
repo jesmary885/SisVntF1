@@ -55,14 +55,14 @@ class RoleSeeder extends Seeder
 
         //TASA DE CAMBIO
         Permission::create(['name' => 'admin.tasa.index',
-                            'description' => 'Mostrar tasa de cambio'])->syncRoles([$role1]);
+                            'description' => 'Mostrar tasa de cambio'])->syncRoles([$role1,$role2]);
         Permission::create(['name' => 'admin.tasa.edit',
                             'description' => 'Editar tasa de cambio'])->syncRoles([$role1]);
 
         //MODULO VENTAS
 
         Permission::create(['name' => 'ventas.ventas.index',
-                            'description' => 'Registrar ventas'])->syncRoles([$role1]);
+                            'description' => 'Registrar ventas'])->syncRoles([$role1,$role2]);
 
         Permission::create(['name' => 'ventas.mostrar_ventas_contado',
                             'description' => 'Ver y administrar ventas al contado'])->syncRoles([$role1]);
@@ -70,27 +70,22 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'ventas.mostrar_ventas_credito',
                             'description' => 'Ver y administrar ventas a credito'])->syncRoles([$role1]);
 
-        Permission::create(['name' => 'ventas.mostrar_ventas_clientes',
-                            'description' => 'Ver y administrar ventas por cliente'])->syncRoles([$role1]);
 
         //MODULO PROFORMAS
 
-        Permission::create(['name' => 'proformas.proformas.index',
-        'description' => 'Registrar proformas'])->syncRoles([$role1]);
+        // Permission::create(['name' => 'proformas.proformas.index',
+        // 'description' => 'Registrar proformas'])->syncRoles([$role1]);
 
-        Permission::create(['name' => 'proformas.mostrar_proformas',
-        'description' => 'Ver proformas registradas'])->syncRoles([$role1]);
+        // Permission::create(['name' => 'proformas.mostrar_proformas',
+        // 'description' => 'Ver proformas registradas'])->syncRoles([$role1]);
 
-         //MODULO MOVIMIENTOS
+        //  //MODULO MOVIMIENTOS
 
-         Permission::create(['name' => 'movimientos_caja.index',
-         'description' => 'Ver y registrar movimientos de caja'])->syncRoles([$role1]);
-         Permission::create(['name' => 'movimientos_caja_pendiente.index',
-         'description' => 'Movimientos pendientes en caja'])->syncRoles([$role1]);
+        //  Permission::create(['name' => 'movimientos_caja.index',
+        //  'description' => 'Ver y registrar movimientos de caja'])->syncRoles([$role1]);
+        //  Permission::create(['name' => 'movimientos_caja_pendiente.index',
+        //  'description' => 'Movimientos pendientes en caja'])->syncRoles([$role1]);
  
-       
-
-
 
         //MODULO PRODUCTOS
                             

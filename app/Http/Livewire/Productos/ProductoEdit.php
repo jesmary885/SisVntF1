@@ -31,7 +31,6 @@ class ProductoEdit extends Component
         'modelo_id' => 'required',
         'sucursal_id' => 'required',
         'estado' => 'required',
-       // 'puntos' => 'required',
         'nombre' => 'required',
         'vencimiento' => 'required',
         'presentacion' => 'required',

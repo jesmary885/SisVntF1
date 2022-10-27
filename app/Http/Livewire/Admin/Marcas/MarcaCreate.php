@@ -12,7 +12,7 @@ class MarcaCreate extends Component
     public $accion,$marca;
 
     protected $rules = [
-        'nombre' => 'required|max:50',
+        'nombre' => 'required|max:50|unique:marcas',
     ];
 
     public function mount(Marca $marca){

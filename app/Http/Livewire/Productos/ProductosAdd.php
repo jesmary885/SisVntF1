@@ -34,6 +34,9 @@ class ProductosAdd extends Component
     protected $rules = [
         'cantidad' => 'required',
         'sucursal_id' => 'required',
+        'caja_id' => 'required',
+        'lote_id' => 'required',
+        'metodo_id' => 'required',
         'precio_entrada' => 'required',
         'precio_letal' => 'required',
         'precio_mayor' => 'required',
@@ -42,6 +45,10 @@ class ProductosAdd extends Component
         'margen_letal' => 'required',
         'margen_mayor' => 'required',
         'proveedor_id' => 'required',
+    ];
+
+    protected $rule_pago = [
+        'pago' => 'required',
     ];
 
     public function mount(){
@@ -169,6 +176,15 @@ class ProductosAdd extends Component
            // $this->reset(['precio_compra','cantidad']);
         }else{
 
+            //validaciones
+            $rules = $this->rules;
+            $this->validate($rules);
+
+            if($this->saldado_proveedor != '1'){
+                $rule_pago = $this->rule_pago;
+                $this->validate($rule_pago);
+            }
+
             if($this->moneda_id == '1') $tasa_dia = 1;
             else $tasa_dia = tasa_dia::where('moneda_id',$this->moneda_id)->first()->tasa;            
 
@@ -179,15 +195,6 @@ class ProductosAdd extends Component
             $usuario_auth = Auth::id();
 
             $total_compra = (($this->precio_entrada*$tasa_dia) * $this->cantidad);
-
-            $rules = $this->rules;
-            $this->validate($rules);
-
-           /* $stock_antiguo = 0;
-            foreach($sucursales as $sucursalx){
-                $stock_antiguo = $producto_select->sucursals->find($sucursalx)->pivot->cantidad + $stock_antiguo;
-            }*/
-
             $stock_nuevo = $producto_select->cantidad + $this->cantidad;
             
             //Guardando movimiento de producto para kardex
@@ -261,9 +268,6 @@ class ProductosAdd extends Component
                     'stock' => $producto_lote_select->stock + $this->cantidad,
                 ]);
             }
-
-            //modificando cantidad en tabla pivote producto_sucursal
-            //$cantidad_nueva_sucursal = $this->producto->sucursals->find($this->sucursal_id)->pivot->cantidad + $this->cantidad;
 
             //guardando en tabla pivote de sucursal con producto
             if($this->lote_id == "nuevo_lote"){

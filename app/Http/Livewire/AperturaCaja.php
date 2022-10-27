@@ -38,9 +38,11 @@ class AperturaCaja extends Component
             $this->sucursales = Sucursal::all();
         }
         else {
-            $this->limitacion = 'no';
+            $this->limitacion = 'si';
             $this->sucursal_select = $user_auth->sucursal->nombre;
-            $this->sucursal_id = $user_auth->sucursal->sucursal_id;
+            $this->sucursal_id = $user_auth->sucursal->id;
+            $this->sucursales = Sucursal::all();
+            $this->cajas = Caja::where('sucursal_id',$this->sucursal_id)->get();
         }
 
         if($user_auth->apertura == 'si'){

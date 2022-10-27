@@ -20,7 +20,7 @@ class CreateMovimientoCajasTable extends Migration
             $table->string('tipo_movimiento');
             $table->float('cantidad');
             $table->string('estado');
-            $table->string('observacion');
+            $table->string('observacion')->nullable();
 
             $table->integer('apertura')->nullable();
             $table->integer('cierre')->nullable();
