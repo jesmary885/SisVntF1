@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Productos;
 
+use App\Models\Compra;
 use App\Models\Moneda;
 use App\Models\Producto_lote;
 use App\Models\Producto_sucursal;
@@ -16,7 +17,7 @@ class ProductosLoteEdit extends Component
     public $isopen = false,$lote,$tasa_dia,$moneda_nombre,$moneda_simbolo,$monedas, $moneda_id= "";
 
     public $proveedor_id ="", $proveedores, $nombre, $cod_barra,$nro_lote, $fecha_vencimiento,$observaciones,$status,$vencimiento = "No",$sucursal_lote_productos, $sucursal_lote_product=[];
-    public $utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $precio_entrada, $precio_letal, $precio_mayor,$act_utilidades="1", $act_old_rol=0;
+    public $moneda_select,$utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $precio_entrada, $precio_letal, $precio_mayor,$act_utilidades="1", $act_old_rol=0;
 
     protected $rules = [
         'precio_entrada' => 'required',
@@ -29,8 +30,16 @@ class ProductosLoteEdit extends Component
         'proveedor_id' => 'required',
         'status' => 'required',
     ];
+
+    public function updatedMonedaId($value)
+    {
+        $moneda_bdd = Moneda::where('id',$value)->first();
+        $this->moneda_select = $moneda_bdd->simbolo;
+    }
     
     public function mount(){
+
+        $this->moneda_id = '1';
 
         $this->sucursal_lote_productos = Producto_sucursal::where('producto_id',$this->lote->producto_id)
             ->where('lote',$this->lote->lote)
@@ -61,6 +70,7 @@ class ProductosLoteEdit extends Component
             $this->fecha_vencimiento = $this->lote->fecha_vencimiento;
         }
         $this->monedas = Moneda::all();
+        $this->moneda_select = 'Bs'; 
     }
 
     public function render()
@@ -132,7 +142,7 @@ class ProductosLoteEdit extends Component
             if($this->fecha_vencimiento != "null") $fecha_vencimiento = Carbon::parse($this->fecha_vencimiento);
             else $fecha_vencimiento = null;
 
-            if($this->tasa_dia == '1') $tasa_dia = 1;
+            if($this->moneda_id == '1') $tasa_dia = 1;
             else $tasa_dia = tasa_dia::where('moneda_id',$this->moneda_id)->first()->tasa;         
 
             $this->lote->update([
@@ -147,7 +157,23 @@ class ProductosLoteEdit extends Component
                 "utilidad_mayor"    => $this->utilidad_mayor*$tasa_dia,
                 "margen_mayor"      => $this->margen_mayor,
                 "observaciones"     => $this->observaciones,
+                "status"            => $this->status,
             ]);
+            
+
+            $compra = Compra::where('producto_id',$this->lote->producto_id)
+                ->where('lote',$this->lote->lote)
+                ->get()->last();
+
+
+
+            $cantidad_old = $compra->cantidad;
+
+            $compra->update([
+                'precio_compra' => $this->precio_entrada*$tasa_dia,
+                'total' => $this->precio_entrada*$cantidad_old,
+            ]);
+
 
             $this->emitTo('productos.productos-lote','render');
             $this->emit('alert','Lote modificado correctamente');

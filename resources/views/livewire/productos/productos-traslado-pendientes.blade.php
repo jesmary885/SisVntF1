@@ -9,7 +9,7 @@
                     <div class="w-1/4">
 
                         <select wire:model="buscador" id="buscador" class="form-control text-m" name="buscador">
-                            <option value="0">Modelo</option>
+                            <option value="0">Presentación</option>
                             <option value="1">Marca</option>
                             <option value="2">Categoria</option>
                             <option value="3">Código de barra</option>
@@ -41,7 +41,7 @@
                         <th>Cantidad</th>
                         <th>Lote</th>
                         <th>Prod/Cat</th>
-                        <th>Marc/Mod</th>
+                        <th>Marc/Pres</th>
                         <th>Sucursal destino</th>
 
                      

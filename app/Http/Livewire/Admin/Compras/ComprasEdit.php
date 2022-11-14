@@ -2,7 +2,11 @@
 
 namespace App\Http\Livewire\Admin\Compras;
 
+use App\Models\Caja;
 use App\Models\Compra;
+use App\Models\Metodo_pago;
+use App\Models\MovimientoCaja;
+use App\Models\Pago_venta;
 use App\Models\Producto;
 use Livewire\Component;
 use App\Models\Producto_sucursal as Pivot;
@@ -16,13 +20,10 @@ class ComprasEdit extends Component
 
     public $isopen = false;
     public $producto, $pivot, $precio_compra, $proveedores, $cantidad, $sucursal_nombre, $sucursal_id = "", $sucursales, $proveedor_id = "",$compra;
-    public $limitacion_sucursal = true;
+    public $limitacion_sucursal = true,$total_pagado_cliente,$metodos, $metodo_id,$cajas,$caja_id;
       
     protected $rules = [
-        'cantidad' => 'required',
-        'sucursal_id' => 'required',
-        'precio_compra' => 'required',
-        'proveedor_id' => 'required',
+        'total_pagado_cliente' => 'required',
     ];
 
     public function open()
@@ -34,23 +35,10 @@ class ComprasEdit extends Component
         $this->isopen = false;  
     }
 
-    public function mount(Compra $compra){
+    public function mount(){
         
-         $usuario_au = User::where('id',Auth::id())->first();
-         if($usuario_au->limitacion == '1'){
-             $this->sucursales=Sucursal::all();
-         }else{
-             $this->limitacion_sucursal = false;
-             $this->sucursal_id = $usuario_au->sucursal_id;
-             $sucursal_usuario = Sucursal::where('id',$this->sucursal_id)->first();
-             $this->sucursal_nombre = $sucursal_usuario->nombre;
-         }
-         $this->proveedor_id = $compra->proveedor_id;
-         $this->cantidad = $compra->cantidad;
-         $this->precio_compra = $compra->precio_compra;
-         $this->sucursal_id = $compra->sucursal_id;
-
-         $this->proveedores=Proveedor::all();
+        $this->metodos = Metodo_pago::all();
+        $this->cajas = Caja::all();
      }
 
     public function render()
@@ -58,62 +46,62 @@ class ComprasEdit extends Component
         return view('livewire.admin.compras.compras-edit');
     }
 
-   public function save(){
-
+   public function update(){
         $rules = $this->rules;
         $this->validate($rules);
+        $user_auth =  auth()->user()->id;
 
-        $usuario_auth = Auth::id();
-        $this->fecha_actual = date('Y-m-d');
-        $total_compra = ($this->precio_compra * $this->cantidad);
-        $producto = Producto::where('id',$this->compra->producto_id)->first();
-
-        if($this->cantidad < $this->compra->cantidad) {
-            $cant_diferencia = $this->compra->cantidad - $this->cantidad;
-            $cantidad_nueva_sucursal = $producto->sucursals->find($this->sucursal_id)->pivot->cantidad - $cant_diferencia;
-        } elseif ($this->cantidad > $this->compra->cantidad){
-            $cant_diferencia = $this->cantidad - $this->compra->cantidad;
-            $cantidad_nueva_sucursal = $producto->sucursals->find($this->sucursal_id)->pivot->cantidad + $cant_diferencia;
-
-        }elseif($this->cantidad == $this->compra->cantidad){
-            $cantidad_nueva_sucursal = $this->cantidad;
+        if ($this->total_pagado_cliente < 0){
+            $this->emit('errorSize','Ha ingresado un valor negativo, intentelo de nuevo');
+            $this->reset(['total_pagado_cliente']);
         }
 
-        if($this->sucursal_id == $this->compra->sucursal_id){
-            $pivot = Pivot::where('sucursal_id',$this->sucursal_id)
-            ->where('producto_id',$producto->id)
-            ->first();
-            $pivot->cantidad = $cantidad_nueva_sucursal;
-            $pivot->save();
-        } else{
-            $pivot = Pivot::where('sucursal_id',$this->sucursal_id)
-            ->where('producto_id',$producto->id)
-            ->first();
-            $pivot->cantidad = $cantidad_nueva_sucursal;
-            $pivot->save();
-
-            $pivot2 = Pivot::where('sucursal_id',$this->compra->sucursal_id)
-            ->where('producto_id',$producto->id)
-            ->first();
-            $cant_diferencia_sucursal = $pivot2->cantidad - $this->compra->cantidad;
-            $pivot2->cantidad = $cant_diferencia_sucursal;
-            $pivot2->save();
+        elseif($this->total_pagado_cliente > $this->compra->deuda_a_proveedor){
+            $this->emit('errorSize','El valor ingresado es mayor que la deuda, intentelo de nuevo');
+            $this->reset(['total_pagado_cliente']);
         }
 
-        $this->compra->update([
-            'total' => $total_compra,
-            'precio_compra' => $this->precio_compra,
-            'cantidad' => $this->cantidad,
-            'proveedor_id' => $this->proveedor_id,
-            'sucursal_id' => $this->sucursal_id,
-            'user_id' => $usuario_auth
-        ]);
-
-         //registrando moviemientos en tabla movimientos
+        else{
+            $deuda_total = $this->compra->deuda_a_proveedor -  $this->total_pagado_cliente;
     
+            $this->compra->update([
+                'deuda_a_proveedor' => $deuda_total
+            ]);
 
-        $this->reset(['isopen']);
-        $this->emitTo('admin.compras.compra-index','render');
-        $this->emit('alert','Datos modificados correctamente');
+            //IDENTIFICANDO LA CAJA DE LA SUCURSAL INICIAL
+            $caja_detalle = Caja::where('id',$this->caja_id)->first();
+
+
+            if($this->metodo_id == 3){
+                $caja_detalle->update([
+                    'saldo_bolivares' => ($caja_detalle->saldo_bolivares - $this->total_pagado_cliente) ,
+                ]);
+            }
+
+            if($this->metodo_id == 4){
+                $caja_detalle->update([
+                    'saldo_dolares' => ($caja_detalle->saldo_dolares - $this->total_pagado_cliente),
+                ]);
+            }
+
+            //REGISTRANDO MOVIMIENTO EN CAJA
+            $movimiento = new MovimientoCaja();
+            $movimiento->fecha = date('Y-m-d');
+            $movimiento->tipo_movimiento = 2;
+            $movimiento->cantidad = $this->total_pagado_cliente;
+            $movimiento->observacion = 'Abono a deuda de compra de producto';
+            $movimiento->user_id = $user_auth;
+            $movimiento->sucursal_id = $caja_detalle->sucursal_id;
+            $movimiento->estado = 'entregado';
+            $movimiento->save();
+
+            $this->reset(['isopen']);
+            
+            $this->emitTo('admin.compras.compra-index','render');
+            
+            $this->emit('alert','Pago registrado correctamente');
+            $this->reset(['total_pagado_cliente','metodo_id','caja_id']);
+        }
     }
+
 }

@@ -1,6 +1,6 @@
 <div>
     <button type="submit" class="btn btn-success btn-sm" title="Exportar a excel" wire:click="open">
-    <i class="fas fa-file-import"></i> Importar productos
+    <i class="fas fa-file-import"></i> Importar inventario
     </button> 
 
    @if($isopen)

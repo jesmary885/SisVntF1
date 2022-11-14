@@ -8,7 +8,7 @@ use Livewire\Component;
 
 class CajaCreate extends Component
 {
-    public $nombre,$status,$saldo,$sucursal_id="";
+    public $nombre,$status,$saldo_bolivares, $saldo_dolares, $sucursal_id="";
     public $isopen = false;
     public $accion,$sucursales;
 
@@ -16,7 +16,8 @@ class CajaCreate extends Component
         'nombre' => 'required|max:50',
         'sucursal_id' => 'required',
         'status' => 'required',
-        'saldo' => 'required',
+        'saldo_bolivares' => 'required',
+        'saldo_dolares' => 'required',
     ];
 
     public function mount(Caja $caja){
@@ -27,7 +28,8 @@ class CajaCreate extends Component
            $this->nombre = $this->caja->nombre;
            $this->sucursal_id = $this->caja->sucursal_id;
            $this->status= $this->caja->status;
-           $this->saldo= $this->caja->saldo;
+           $this->saldo_bolivares= $this->caja->saldo_bolivares;
+           $this->saldo_dolares= $this->caja->saldo_dolares;
         }
     }
     
@@ -55,10 +57,11 @@ class CajaCreate extends Component
             $caja->nombre = $this->nombre;
             $caja->sucursal_id = $this->sucursal_id;
             $caja->status = $this->status;
-            $caja->saldo = $this->saldo;
+            $caja->saldo_bolivares = $this->saldo_bolivares;
+            $caja->saldo_dolares = $this->saldo_dolares;
             $caja->save();
 
-            $this->reset(['nombre','isopen','sucursal_id','status','saldo']);
+            $this->reset(['nombre','isopen','sucursal_id','status','saldo_bolivares','saldo_dolares']);
             $this->emitTo('admin.cajas.caja-index','render');
 
             $this->emit('alert','Caja creada correctamente');
@@ -68,8 +71,9 @@ class CajaCreate extends Component
             $this->caja->update([
                 'nombre' => $this->nombre,
                 'sucursal_id' => $this->sucursal_id,
-                'status_id' => $this->status_id,
-                'saldo' => $this->saldo,
+                'status' => $this->status,
+                'saldo_bolivares' => $this->saldo_bolivares,
+                'saldo_dolares' => $this->saldo_dolares,
             ]);
 
             $this->reset(['isopen']);

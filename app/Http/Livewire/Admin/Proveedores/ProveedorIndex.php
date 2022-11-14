@@ -24,7 +24,7 @@ class ProveedorIndex extends Component
         $proveedores = Proveedor::where('nombre_proveedor', 'LIKE', '%' . $this->search . '%')
         ->orwhere('nro_documento', 'LIKE', '%' . $this->search . '%')
         ->latest('id')
-        ->paginate(5);
+        ->paginate(15);
 
         return view('livewire.admin.proveedores.proveedor-index',compact('proveedores'));
     }

@@ -40,25 +40,27 @@ class Movimientos extends Component
         } 
 
         $usuario_auth = auth()->user();
-        $fecha_actual = date('Y-m-d');
+        $fecha_actual = date("Y-m-d h:i:s");
+
 
         $usuario_ac = $usuario_auth->sucursal->nombre;
         $sucursal_act = $usuario_auth->sucursal->id;
 
         if($usuario_auth->apertura == "si"){
             $fecha_apertura = $usuario_auth->ultima_fecha_apertura;
+            $fecha_cierre = $usuario_auth->ultima_fecha_cierre;
             $caja_apertura = $usuario_auth->ultima_caja_id_apertura;
             $sucursal_apertura = $usuario_auth->ultima_sucursal_id_apertura;
 
-            /*$movimientos = MovimientoCaja::where('fecha','>=',$fecha_apertura)
+            $movimientos= MovimientoCaja::whereBetween('created_at',[$fecha_apertura ,$fecha_actual])
+                ->whereBetween('tipo_movimiento',[1,2])
                 ->where('sucursal_id',$sucursal_apertura)
                 ->where('caja_id',$caja_apertura)
-                ->paginate(10);*/
-            $movimientos = MovimientoCaja::where('sucursal_id',$sucursal_apertura)
-                ->where('caja_id',$caja_apertura)
-                ->where('tipo_movimiento',1)
-                ->orwhere('tipo_movimiento',2)
                 ->paginate(10);
+
+            if($movimientos->count() > 0) $movimientos=$movimientos;
+            else $movimientos = 0;
+            
         }
 
         else{
@@ -73,16 +75,26 @@ class Movimientos extends Component
     public function export_pdf(){
 
         $usuario_auth = auth()->user();
-        $fecha_actual = date('Y-m-d');
-        $fecha = date('d-m-Y');
+        $fecha_actual = date("Y-m-d h:i:s");
+        $fecha = date('d-m-Y h:i:s');
         $empresa = Empresa::first();
+
+        $fecha_apertura = $usuario_auth->ultima_fecha_apertura;
+        $caja_apertura = $usuario_auth->ultima_caja_id_apertura;
 
         $usuario_ac = $usuario_auth->sucursal->nombre;
         $sucursal_act = $usuario_auth->sucursal->id;
+        $sucursal_apertura = $usuario_auth->ultima_sucursal_id_apertura;
 
-        $movimientos = MovimientoCaja::where('fecha',$fecha_actual)
+        /*$movimientos = MovimientoCaja::where('fecha',$fecha_actual)
             ->where('sucursal_id',$sucursal_act)
             ->where('estado','entregado')
+            ->get();*/
+
+        $movimientos= MovimientoCaja::whereBetween('created_at',[$fecha_apertura ,$fecha_actual])
+            ->whereBetween('tipo_movimiento',[1,2])
+            ->where('sucursal_id',$sucursal_apertura)
+            ->where('caja_id',$caja_apertura)
             ->get();
 
         $data = [

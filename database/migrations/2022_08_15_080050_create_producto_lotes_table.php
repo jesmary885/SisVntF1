@@ -17,7 +17,7 @@ class CreateProductoLotesTable extends Migration
             $table->id();
             $table->timestamps();
             $table->integer('lote');
-            $table->unsignedBigInteger('proveedor_id');
+            $table->unsignedBigInteger('proveedor_id')->nullable();
             $table->foreign('proveedor_id')->references('id')->on('proveedors');
             $table->unsignedBigInteger('producto_id');
             $table->foreign('producto_id')->references('id')->on('productos')->onDelete('cascade');

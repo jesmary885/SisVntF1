@@ -13,6 +13,8 @@
         </div>
     </div>
 
+
+
     <div class="card mt-0">
         @if ($movimientos != '0')
           <div class="card-body">

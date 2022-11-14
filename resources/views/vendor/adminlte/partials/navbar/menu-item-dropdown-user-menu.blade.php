@@ -13,30 +13,45 @@
     @php( $logout_url = $logout_url ? url($logout_url) : '' )
 @endif
 
-<li class="nav-item dropdown">
 
-    {{-- User menu toggler --}}
-    <a href="#" class="nav-link dropdown-toggle text-gray-800 font-semibold" data-toggle="dropdown">
-        @if(Auth::user()->apertura == "no" )
-        <span class="text-red-600 font-semibold">
-            Caja: Cerrada  
-        </span>
-        @else
-        <span class="text-green-700 font-semibold">
-            Caja: Aperturada
-        </span>
-        @endif
-    </a>
 
-    <ul class="dropdown-menu">
-        @if(Auth::user()->apertura == "no" )
-        <a class="block dropdown-item stretched-link text-success fw-bolder" href="{{route('apertura-caja.index')}}"> Aperturar</a>
-        @else
-        <a class="block dropdown-item stretched-link text-danger fw-bolder" href="{{route('apertura-caja.index')}}"> Cerrar</a>
-        @endif
 
-    </ul>
-</li>
+@can('apertura-caja.index')
+    <li class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle text-gray-800 font-semibold" data-toggle="dropdown">
+            @if(Auth::user()->apertura == "no" )
+            <span class="text-red-600 font-semibold">
+                Caja: Cerrada  
+            </span>
+            @else
+            <span class="text-green-700 font-semibold">
+                Caja: Aperturada
+            </span>
+            @endif
+        </a>
+
+        <ul class="dropdown-menu">
+            @if(Auth::user()->apertura == "no" )
+            <a class="block dropdown-item stretched-link text-success fw-bolder" href="{{route('apertura-caja.index')}}"> Aperturar</a>
+            @else
+            <a class="block dropdown-item stretched-link text-danger fw-bolder" href="{{route('apertura-caja.index')}}"> Cerrar</a>
+            @endif
+
+        </ul>
+    </li>
+@endcan
+
+@can('reportes.reportes_seniat')
+    <li class="nav-item dropdown">
+        <a href="#" class="nav-link dropdown-toggle text-gray-800 font-semibold" data-toggle="dropdown">
+            Reportes
+        </a>
+        <ul class="dropdown-menu">
+            <a class="block dropdown-item " href="{{route('reporte.x')}}"> Reporte X</a>
+            <a class="block dropdown-item " href="{{route('reporte.x')}}"> Reporte Z</a>
+        </ul>
+    </li>
+@endcan
 
 
 <li class="nav-item dropdown">
@@ -131,6 +146,13 @@
 
     </ul>
 
+</li>
+
+
+<li class="nav-item">
+    <a class="nav-link" data-widget="fullscreen" href="#" role="button">
+        <i class="fas fa-expand-arrows-alt"></i>
+    </a>
 </li>
 
 

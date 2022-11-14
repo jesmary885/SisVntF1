@@ -3,7 +3,7 @@
 @section('content_header')
 
     <div class="flex justify-between">
-        <h1 class="flex-1 text-lg"> <i class="fas fa-clipboard-list"></i> Inventario de equipos</h1>
+        <h1 class="flex-1 text-lg"> <i class="fas fa-clipboard-list"></i> Inventario de productos</h1>
         <div class=" justify-end mr-2">
             @livewire('productos.productos-export',['vista' => 'barra'])
         </div>
@@ -13,7 +13,7 @@
         </div> 
 
         <div class="ml-2 justify-end">
-            <a href="{{route('productos.productos.create')}}" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i> Nuevo equipo</a>
+            <a href="{{route('productos.productos.create')}}" class="btn btn-primary btn-sm"><i class="fas fa-plus-square"></i> Nuevo producto</a>
         </div>
     </div>
 

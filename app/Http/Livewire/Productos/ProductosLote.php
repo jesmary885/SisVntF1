@@ -33,7 +33,7 @@ class ProductosLote extends Component
                 $query->where('cod_barra', 'LIKE', '%' . $this->search . '%')
                 ->where('estado','Habilitado');
             })
-                ->where('status','activo')
+               // ->where('status','activo')
                 ->latest('id')
                 ->paginate(5);
         }

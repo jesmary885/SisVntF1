@@ -81,7 +81,7 @@ class ReporteVenta extends Component
                if($sucursal->id==1)$t_v=$total_ventas_sucursal_111[0]->quantity;
                elseif($sucursal->id==2)$t_v=$total_ventas_sucursal_222[0]->quantity;
                else $t_v=$total_ventas_sucursal_333[0]->quantity;
-                $puntos[]=['name' => $sucursal->nombre, 'y' => $t_v];
+                $puntos[]=['name' => $sucursal->nombre, 'y' => $t_v /  $this->tasa_dia];
                 $data2 = json_encode($puntos);
             }
 

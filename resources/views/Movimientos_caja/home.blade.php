@@ -220,7 +220,7 @@
                     <tr id="fa">
                         <th class="text-center">Ingresos</th>
                         <th class="text-center">Egresos</th>
-                        <th class="text-center">Transferencias</th>
+           
                     </tr>
                 </thead>
                 <tbody>
@@ -228,7 +228,7 @@
                     <tr>
                         <td class="text-center">{{$total_ingreso}} </td>
                         <td class="text-center">{{$total_egreso}}</td>
-                        <td class="text-center">{{$total_transferencia}}</td>
+
                     </tr>
        
                 </tbody>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Livewire\Productos;
 
+use App\Models\Caja;
 use App\Models\Compra;
 use App\Models\Metodo_pago;
 use App\Models\Moneda;
@@ -23,20 +24,18 @@ use Livewire\Component;
 class ProductosAdd extends Component
 {
 
-    public $isopen = false,$tasa_dia,$moneda_nombre,$moneda_simbolo, $monedas, $moneda_id= 1, $metodos, $metodo_id, $saldado_proveedor = 1, $pago;
-    public $producto, $lotes, $generar_serial, $pivot, $precio_compra, $proveedores, $cantidad, $sucursal_nombre, $sucursal_id = "", $lote_id = "",$sucursales, $proveedor_id = "";
+    public $total_pagar, $isopen = false,$tasa_dia,$moneda_nombre,$moneda_simbolo, $monedas, $moneda_id= 1, $metodos, $metodo_id, $saldado_proveedor = 1, $pago;
+    public $moneda_select,$producto, $lotes, $generar_serial, $pivot, $precio_compra, $proveedores, $cantidad, $sucursal_nombre, $sucursal_id = "", $lote_id = "",$sucursales, $proveedor_id = "";
     public $limitacion_sucursal = true, $cajas = [], $caja_id="";
     public $fecha_vencimiento,$vencimiento,$observaciones;
-    public $utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $precio_entrada, $precio_letal, $precio_mayor,$act_utilidades="1", $act_old_rol=0;
+    public $tipo_pago = 0, $utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $precio_entrada, $precio_letal, $precio_mayor,$act_utilidades="1", $act_old_rol=0;
 
     protected $listeners = ['render' => 'render'];
       
     protected $rules = [
         'cantidad' => 'required',
         'sucursal_id' => 'required',
-        'caja_id' => 'required',
         'lote_id' => 'required',
-        'metodo_id' => 'required',
         'precio_entrada' => 'required',
         'precio_letal' => 'required',
         'precio_mayor' => 'required',
@@ -45,13 +44,27 @@ class ProductosAdd extends Component
         'margen_letal' => 'required',
         'margen_mayor' => 'required',
         'proveedor_id' => 'required',
+        'tipo_pago' => 'required',
     ];
 
     protected $rule_pago = [
         'pago' => 'required',
+        'metodo_id' => 'required',
+        'caja_id' => 'required',
+    ];
+    protected $rule_metodo_pago = [
+        'metodo_id' => 'required',
+        'caja_id' => 'required',
     ];
 
+    public function updatedMonedaId($value)
+    {
+        $moneda_bdd = Moneda::where('id',$value)->first();
+        $this->moneda_select = $moneda_bdd->simbolo;
+    }
+
     public function mount(){
+        $this->moneda_id = '1';
         $this->proveedores=Proveedor::all();
         $this->lotes = Producto_lote::where('producto_id',$this->producto->id)
             ->where('status','activo')
@@ -67,6 +80,8 @@ class ProductosAdd extends Component
              $this->sucursal_id = $usuario_au->sucursal_id;
              $sucursal_usuario = Sucursal::where('id',$this->sucursal_id)->first();
              $this->sucursal_nombre = $sucursal_usuario->nombre;
+             $this->cajas = Caja::where('sucursal_id',$this->sucursal_id)->get();
+
          }
 
          $this->monedas = Moneda::all();
@@ -85,11 +100,13 @@ class ProductosAdd extends Component
             $this->moneda_simbolo = 'Bs';
             $this->tasa_dia = 1;
         } 
+
+        $this->moneda_select = 'Bs'; 
      }
 
      public function updatedSucursalId($value)
     {
-        $sucursal_select = Sucursal::find($value);
+       $sucursal_select = Sucursal::find($value);
         $this->cajas = $sucursal_select->cajas;
     }
  
@@ -103,6 +120,10 @@ class ProductosAdd extends Component
                         $this->act_old_rol = 0;
                         $this->reset(['precio_letal','margen_letal','precio_mayor','margen_mayor','precio_entrada','utilidad_letal','utilidad_mayor','fecha_vencimiento']);
                     }
+
+                    if($this->cantidad != ''){
+                        $this->total_pagar = ($this->precio_entrada * $this->cantidad);
+                    } 
                     if($this->act_utilidades == 1){
                         if($this->margen_letal != ''){
                             $this->reset(['precio_letal','utilidad_letal']);
@@ -136,7 +157,6 @@ class ProductosAdd extends Component
                 $producto_lote_select = Producto_lote::where('producto_id',$this->producto->id)
                     ->where('lote',$this->lote_id)
                     ->first();
-
                 $this->precio_letal = $producto_lote_select->precio_letal;
                 $this->utilidad_letal = $producto_lote_select->utilidad_letal;
                 $this->precio_entrada = $producto_lote_select->precio_entrada;
@@ -144,8 +164,14 @@ class ProductosAdd extends Component
                 $this->margen_mayor = $producto_lote_select->utilidad_mayor;
                 $this->margen_letal = $producto_lote_select->margen_letal;
                 $this->utilidad_mayor = $producto_lote_select->utilidad_mayor;
+
                 if($this->vencimiento == 'Si') $this->fecha_vencimiento = date("d-m-Y",strtotime($producto_lote_select->fecha_vencimiento));
+            
             }
+
+            if($this->cantidad != ''){
+                $this->total_pagar = ($this->precio_entrada * $this->cantidad);
+         } 
         }
 
        // if($this->lote_id != 'nuevo_lote') $this->moneda_lote = 'Bs'; 
@@ -177,12 +203,17 @@ class ProductosAdd extends Component
         }else{
 
             //validaciones
-            $rules = $this->rules;
+           $rules = $this->rules;
             $this->validate($rules);
 
-            if($this->saldado_proveedor != '1'){
+            if($this->tipo_pago == '1'){
                 $rule_pago = $this->rule_pago;
                 $this->validate($rule_pago);
+            }
+
+            if($this->tipo_pago == '3'){
+            $rules_metodo = $this->rule_metodo_pago;
+            $this->validate($rules_metodo);
             }
 
             if($this->moneda_id == '1') $tasa_dia = 1;
@@ -215,23 +246,6 @@ class ProductosAdd extends Component
                 'cantidad' => $stock_nuevo,
             ]);
 
-            //agregando compra
-            $compra = new Compra();
-            $compra->fecha = $this->fecha_actual;
-            $compra->total = $total_compra;
-            $compra->cantidad = $this->cantidad;
-            $compra->precio_compra = $this->precio_entrada*$tasa_dia;
-            $compra->proveedor_id = $this->proveedor_id;
-            $compra->user_id = $usuario_auth;
-            $compra->sucursal_id = $this->sucursal_id;
-            $compra->producto_id = $producto_select->id;
-            $compra->metodo_pago_id = $this->metodo_id;
-            $compra->caja_id = $this->caja_id;
-            if($this->saldado_proveedor != '1'){
-                $compra->deuda_a_proveedor = $total_compra - $this->pago;
-            }
-            $compra->save();
-
             //Agregando en tabla de producto_lote
 
             if($this->lote_id == "nuevo_lote"){
@@ -262,12 +276,38 @@ class ProductosAdd extends Component
                 $producto_lote_select = Producto_lote::where('producto_id',$this->producto->id)
                     ->where('lote',$this->lote_id)
                     ->first();
+
+                $new_lote = $this->lote_id;
                 
                 $producto_lote_select->update([
                     'proveedor_id' => $this->proveedor_id,
                     'stock' => $producto_lote_select->stock + $this->cantidad,
                 ]);
             }
+
+            //agregando compra
+            $compra = new Compra();
+            $compra->fecha = $this->fecha_actual;
+            $compra->total = $total_compra;
+            $compra->cantidad = $this->cantidad;
+            $compra->precio_compra = $this->precio_entrada*$tasa_dia;
+            $compra->proveedor_id = $this->proveedor_id;
+            $compra->user_id = $usuario_auth;
+            $compra->sucursal_id = $this->sucursal_id;
+            $compra->producto_id = $producto_select->id;
+            $compra->metodo_pago_id = $this->metodo_id;
+            $compra->lote=$new_lote;
+            if($this->tipo_pago == '1'){
+                $compra->deuda_a_proveedor = $total_compra - $this->pago;
+                $compra->caja_id = $this->caja_id;
+            }
+            elseif($this->tipo_pago == '2'){
+                $compra->deuda_a_proveedor = $total_compra;
+            }
+            else{
+                $compra->caja_id = $this->caja_id;
+            }
+            $compra->save();
 
             //guardando en tabla pivote de sucursal con producto
             if($this->lote_id == "nuevo_lote"){
@@ -302,17 +342,19 @@ class ProductosAdd extends Component
 
              //registrar movimiento de egreso en tabla de movimiento_caja
 
-             $movimiento_caja = new MovimientoCaja();
-             $movimiento_caja->fecha = $this->fecha_actual;
-             $movimiento_caja->tipo_movimiento = 2;
-             if($this->saldado_proveedor == '1') $movimiento_caja->cantidad = $total_compra;
-             else $movimiento_caja->cantidad = $this->pago;
-             $movimiento_caja->estado = 'etregado';
-             $movimiento_caja->observacion = 'Compra de producto';
-             $movimiento_caja->user_id = $usuario_auth;
-             $movimiento_caja->sucursal_id = $this->sucursal_id;
-             $movimiento_caja->caja_id = $this->caja_id;
-             $movimiento_caja->save();
+             if($this->tipo_pago != '2'){
+                $movimiento_caja = new MovimientoCaja();
+                $movimiento_caja->fecha = $this->fecha_actual;
+                $movimiento_caja->tipo_movimiento = 2;
+                if($this->saldado_proveedor == '1') $movimiento_caja->cantidad = $total_compra;
+                else $movimiento_caja->cantidad = $this->pago;
+                $movimiento_caja->estado = 'etregado';
+                $movimiento_caja->observacion = 'Compra de producto';
+                $movimiento_caja->user_id = $usuario_auth;
+                $movimiento_caja->sucursal_id = $this->sucursal_id;
+                $movimiento_caja->caja_id = $this->caja_id;
+                $movimiento_caja->save();
+             }
 
             $this->reset(['isopen','precio_compra','sucursal_id','proveedor_id','cantidad']);
             $this->emitTo('productos.productos-index','render');

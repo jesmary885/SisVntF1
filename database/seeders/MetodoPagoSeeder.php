@@ -25,7 +25,7 @@ class MetodoPagoSeeder extends Seeder
                'nombre' => 'Efectivo Bolivares',
             ],
             [
-               'nombre' => 'Efectivo Dólares',
+               'nombre' => 'Efectivo Dolares',
             ],
             [
                'nombre' => 'Transferencia',

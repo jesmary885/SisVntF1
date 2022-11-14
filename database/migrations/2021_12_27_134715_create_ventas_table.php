@@ -24,6 +24,7 @@ class CreateVentasTable extends Migration
             $table->float('subtotal');
             $table->float('total');
             $table->float('impuesto');
+            $table->float('exento');
             $table->float('total_pagado_cliente');
             $table->float('deuda_cliente')->nullable();
             $table->string('estado');

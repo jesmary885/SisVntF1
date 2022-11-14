@@ -150,9 +150,9 @@ return [
     'sidebar_mini' => 'lg',
     'sidebar_collapse' => false,
     'sidebar_collapse_auto_size' => false,
-    'sidebar_collapse_remember' => false,
+    'sidebar_collapse_remember' => true,
     'sidebar_collapse_remember_no_transition' => true,
-    'sidebar_scrollbar_theme' => 'os-theme-light',
+    'sidebar_scrollbar_theme' => 'os-theme-dark',
     'sidebar_scrollbar_auto_hide' => 'l',
     'sidebar_nav_accordion' => true,
     'sidebar_nav_animation_speed' => 300,
@@ -230,6 +230,7 @@ return [
         [
             'text'    => 'ADMINISTRACION',
             'icon'    => 'fas fa-toolbox fa-fw',
+            'can' => 'admin',
             'submenu' => [
                 [
                     'text' => 'Usuarios',
@@ -276,21 +277,7 @@ return [
                     'route'     => 'admin.index.metodos',
                     'can' => 'admin.index.metodos',
                 ],
-                [
-                    'text' => 'Categorias',
-                    'route'     => 'admin.categorias.index',
-                    'can' => 'admin.categorias.index',
-                ],
-                [
-                    'text' => 'Marcas',
-                    'route'     => 'admin.marcas.index',
-                    'can' => 'admin.marcas.index',
-                ],
-                [
-                    'text' => 'Modelos',
-                    'route'     => 'admin.modelos.index',
-                    'can' => 'admin.modelos.index',
-                ],
+               
             ],
             
         ],
@@ -298,6 +285,7 @@ return [
         [
             'text'    => 'VENTAS',
             'icon'    => 'fas fa-file-invoice-dollar fa-fw',
+            'can' => 'ventas',
             'submenu' => [
                 [
                     'text' => 'Nueva venta',
@@ -357,6 +345,7 @@ return [
         [
             'text'    => 'PRODUCTOS',
             'icon'    => 'fas fa-boxes fa-fw',
+            'can' => 'productos',
             'submenu' => [
                 [
                     'text' => 'Registro e inventario',
@@ -367,6 +356,21 @@ return [
                     'text' => 'Lotes',
                     'route'  => 'productos.lotes.index',
                     'can' => 'productos.lotes.index'
+                ],
+                [
+                    'text' => 'Categorias',
+                    'route'     => 'admin.categorias.index',
+                    'can' => 'admin.categorias.index',
+                ],
+                [
+                    'text' => 'Marcas',
+                    'route'     => 'admin.marcas.index',
+                    'can' => 'admin.marcas.index',
+                ],
+                [
+                    'text' => 'Presentaciones',
+                    'route'     => 'admin.modelos.index',
+                    'can' => 'admin.modelos.index',
                 ],
               /*  [
                     'text'    => 'Devolucion',
@@ -379,6 +383,7 @@ return [
         [
             'text'    => 'TRASLADOS',
             'icon'    => 'fas fa-truck-loading',
+            'can' => 'traslados',
             'submenu' => [
                 [
                     'text'    => 'Envio',
@@ -396,6 +401,7 @@ return [
        [
             'text'    => 'REPORTES',
             'icon'    => 'fas fa-chart-bar fa-fw',
+            'can' => 'reportes',
             'submenu' => [
                 [
                     'text' => 'Productos más vendidos',
@@ -416,6 +422,11 @@ return [
                     'text'    => 'Ventas',
                     'route'     => 'reportes.index.ventas',
                     'can' => 'reportes.ventas'
+                ],
+                [
+                    'text'    => 'IVA',
+                    'route'     => 'reportes.producto_agotar',
+                    'can' => 'reportes.producto_agotar'
                 ],
                 // [
                 //     'text'    => 'Movimientos en caja',
@@ -449,6 +460,7 @@ return [
         [
             'text'    => 'AJUSTES',
             'icon'    => 'fas fa-cogs fa-fw',
+            'can' => 'ajustes',
             'submenu' => [
                 [
                     'text' => 'Cambiar contrasena',

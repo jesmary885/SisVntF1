@@ -10,7 +10,7 @@
                                 <option value="0">Código de barra</option>
                                 <option value="1">Categoria</option>
                                 <option value="2">Marca</option>
-                                <option value="3">Modelo</option>
+                                <option value="3">Presentación</option>
                             </select>
         
                             <x-input-error for="buscador" />
@@ -38,7 +38,7 @@
                                 <th class="text-center">Imagen</th>
                                 <th class="text-center">Código</th>
                                 <th class="text-center">Producto</th>
-                                <th class="text-center">Marc/Mod</th>
+                                <th class="text-center">Marc/Pres/th>
                                 <th class="text-center">Stock</th>
                                
                            

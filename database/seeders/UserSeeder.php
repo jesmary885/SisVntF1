@@ -23,7 +23,7 @@ class UserSeeder extends Seeder
             'password_cifrada' => Crypt::encryptString('12345678'),
             'telefono' => '04248888888',
             'direccion' => 'Venezuela',
-            'tipo_documento' => '3',
+            'tipo_documento' => 'Otro',
             'changePrice' => 'si',
             'nro_documento' => '17591985',
             'ciudad_id' => '1',
@@ -34,24 +34,6 @@ class UserSeeder extends Seeder
             'apertura' => 'no'
         ])->assignRole('Administrador');
         
-        User::create([
-            'name' => 'Maria',
-            'apellido' => 'Perez',
-            'email' => 'perez@admin.com',
-            'password' => bcrypt('12345678'),
-            'password_cifrada' => Crypt::encryptString('12345678'),
-            'telefono' => '0424889966',
-            'changePrice' => 'no',
-            'direccion' => 'Venezuela',
-            'tipo_documento' => '3',
-            'nro_documento' => '17523698',
-            'ciudad_id' => '1',
-            'estado_id' => '1',
-            'estado' => '1',
-            'limitacion' => '2',
-            'sucursal_id' => '2',
-            'apertura' => 'no'
-        ])->assignRole('Administrador');
-        
+
     }
 }

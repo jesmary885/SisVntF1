@@ -22,7 +22,7 @@ class CajaSeeder extends Seeder
                'saldo_dolares' => '0',
                'status' => 'Habilitada',
             ],
-            [
+           /* [
                 'nombre' => 'Principal_Caja2',
                 'sucursal_id' => '1',
                 'saldo_bolivares' => '0',
@@ -49,7 +49,7 @@ class CajaSeeder extends Seeder
                 'saldo_bolivares' => '0',
                'saldo_dolares' => '0',
                 'status' => 'Habilitada',
-             ],
+             ],*/
             ];
 
              foreach ($cajas as $caja){

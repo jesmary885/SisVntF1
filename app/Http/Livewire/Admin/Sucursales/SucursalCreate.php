@@ -18,7 +18,7 @@ class SucursalCreate extends Component
     protected $rules = [
         'estado_id' => 'required',
         'ciudad_id' => 'required',
-        'nombre' => 'required|max:50|unique:sucursales',
+        'nombre' => 'required|max:50|unique:sucursals',
         'direccion' => 'required|max:50',
         'telefono' => 'required|min:5',
         'status' => 'required'
@@ -79,6 +79,7 @@ class SucursalCreate extends Component
             $sucursal->ciudad_id = $this->ciudad_id;
             $sucursal->estado_id = $this->estado_id;
             $sucursal->status = $this->status;
+            $sucursal->saldo = 0;
             $sucursal->save();
 
             $this->reset(['nombre','telefono','direccion','ciudad_id','estado_id','isopen','status']);
@@ -95,6 +96,7 @@ class SucursalCreate extends Component
                 'ciudad_id' => $this->ciudad_id,
                 'estado_id' => $this->estado_id,
                 'status' => $this->status,
+                'saldo' => 0,
             ]);
             $this->reset(['isopen']);
             $this->emitTo('admin.sucursales.sucursal-index','render');

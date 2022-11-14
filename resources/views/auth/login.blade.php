@@ -298,7 +298,7 @@
 
       
       <div class="bottom">
-        <h3> COPYRIGHT© 2021 <a href="https://www.instagram.com/codesupportonline/">CODESUPPORT</a></h3>
+        <h3> COPYRIGHT© 2022 <a href="https://www.instagram.com/codesupportonline/">CODESUPPORT</a></h3>
         <br>
         <p>Version 1.0</p>
       </div>

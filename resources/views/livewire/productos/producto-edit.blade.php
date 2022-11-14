@@ -151,7 +151,7 @@
                                 <select id="estado" wire:model="estado" title="Estado del producto" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-4 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="estado">
                                     <option value="" selected>Estado del producto</option>
                                     <option value="Habilitado">Habilitado</option>
-                                    <option value="Deshabilitado">Deshabilitado</option>
+                                    <option value="Deshabilitado">Deshabilitad</option>
                                 </select>
                                 <x-input-error for="estado" />
                             </div>

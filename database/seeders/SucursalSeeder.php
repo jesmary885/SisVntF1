@@ -16,7 +16,7 @@ class SucursalSeeder extends Seeder
     {
         $sucursales = [
             [
-               'nombre' => 'Principal',
+               'nombre' => 'principal_ibiza',
                'direccion' => 'avenida x',
                'telefono' => '555555',
                'estado_id' => '1',
@@ -24,24 +24,7 @@ class SucursalSeeder extends Seeder
                'saldo' => '0',
                'status' => '1',
             ],
-            [
-                'nombre' => 'Tienda 1',
-               'direccion' => 'avenida x',
-               'telefono' => '555555',
-               'estado_id' => '1',
-               'ciudad_id' => '1',
-               'saldo' => '0',
-               'status' => '1',
-             ],
-             [
-                'nombre' => 'Tienda 2',
-               'direccion' => 'avenida x',
-               'telefono' => '555555',
-               'estado_id' => '1',
-               'ciudad_id' => '1',
-               'saldo' => '0',
-               'status' => '1',
-             ],
+
             ];
 
              foreach ($sucursales as $sucursal){

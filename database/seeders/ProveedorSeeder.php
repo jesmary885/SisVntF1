@@ -15,13 +15,13 @@ class ProveedorSeeder extends Seeder
     public function run()
     {
         Proveedor::create([
-            'nombre_encargado' => 'Juan Perez',
-            'nombre_proveedor' => 'vj c.a',
-            'tipo_documento' => 'ci',
-            'nro_documento' => '444444',
-            'email' => 'vj@gmail.com',
-            'telefono' => '555555',
-            'direccion' => 'av. siempre vivas',
+            'nombre_encargado' => 'nombre_prueba',
+            'nombre_proveedor' => 'Proveedor prueba c.a',
+            'tipo_documento' => 'Rif',
+            'nro_documento' => '1111111111',
+            'email' => 'prueba@gmail.com',
+            'telefono' => '1111111111',
+            'direccion' => 'av. prueba',
             'ciudad_id' => '1',
             'estado_id' => '1',
         ]);

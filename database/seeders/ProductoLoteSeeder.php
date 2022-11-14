@@ -16,6 +16,21 @@ class ProductoLoteSeeder extends Seeder
     {
         $productos_lotes=[
             [
+            'lote' => '1',
+            'proveedor_id' => '1',
+            'producto_id' => '21',
+            'precio_entrada' => '200',
+            'precio_letal' => '220',
+            'precio_mayor' => '210',
+            'utilidad_letal' => '20',
+            'utilidad_mayor' => '10',
+            'margen_letal' => '9.10',
+            'margen_mayor' => '4.8',
+            'stock' => '25',
+            'status' => 'activo',
+            'observaciones' => 'sin observaciones',
+            ],
+            [
                 'lote' => '1',
                 'proveedor_id' => '1',
                 'producto_id' => '1',

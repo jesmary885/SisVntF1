@@ -8,7 +8,7 @@
                         <tr>
                             <th class="text-center">VENTAS REALIZADAS</th>
                             <th class="text-center">TOTAL EN VENTAS</th>
-                            <th class="text-center">COSTO DE VENTAS</th>
+                            <th class="text-center">EGRESO POR COMPRAS</th>
                             <th class="text-center">GANANCIAS</th>
                         </tr>
                     </thead>
@@ -148,6 +148,7 @@
                 {
                     name: "Sucursal",
                     colorByPoint: true,
+                  
                     data: <?= $data2 ?>
                 }
                 ],

@@ -26,12 +26,12 @@
                     <div class="w-full mr-2">
                       <select wire:model="tipo_documento" title="Tipo de documento" id="tipo_documento" class="block w-full bg-gray-100 border border-gray-200 text-gray-400 py-1 px-2 pr-8 rounded leading-tight focus:outline-none focus:bg-white focus:border-gray-500" name="tipo_documento">
                              <option value="" selected>Tipo de doc.</option>
-                             <option value="1">DUI</option>
-                             <option value="2">DNI</option>
-                             <option value="3">Cedula</option>
-                             <option value="4">Licencia</option>
-                             <option value="5">Pasaporte</option>
-                             <option value="6">Otro</option>
+                             <option value="1">Cedula</option>
+                            <option value="2">Licencia</option>
+                            <option value="3">Pasaporte</option>
+                            <option value="4">Rif</option>
+                            <option value="5">DNI</option>
+                            <option value="6">Otro</option>
                          </select>
                          <x-input-error for="tipo_documento" />
                     </div>

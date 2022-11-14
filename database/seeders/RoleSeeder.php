@@ -20,6 +20,9 @@ class RoleSeeder extends Seeder
 
         //MODULO ADMINISTRACION
 
+        Permission::create(['name' => 'admin',
+            'description' => 'Ver Menú de administración'])->syncRoles([$role1]);
+
         Permission::create(['name' => 'admin.clientes.index',
                             'description' => 'Administrar clientes'])->syncRoles([$role1]);
 
@@ -55,20 +58,30 @@ class RoleSeeder extends Seeder
 
         //TASA DE CAMBIO
         Permission::create(['name' => 'admin.tasa.index',
-                            'description' => 'Mostrar tasa de cambio'])->syncRoles([$role1,$role2]);
+                            'description' => 'Mostrar tasa de cambio'])->syncRoles([$role1]);
         Permission::create(['name' => 'admin.tasa.edit',
                             'description' => 'Editar tasa de cambio'])->syncRoles([$role1]);
 
         //MODULO VENTAS
 
+        Permission::create(['name' => 'ventas',
+            'description' => 'Ver Menú de ventas'])->syncRoles([$role1]);
+
         Permission::create(['name' => 'ventas.ventas.index',
-                            'description' => 'Registrar ventas'])->syncRoles([$role1,$role2]);
+                            'description' => 'Registrar ventas'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'ventas.mostrar_ventas_contado',
                             'description' => 'Ver y administrar ventas al contado'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'ventas.mostrar_ventas_credito',
                             'description' => 'Ver y administrar ventas a credito'])->syncRoles([$role1]);
+
+
+        Permission::create(['name' => 'ventas.ventas_dashboard',
+                    'description' => 'Ver todas las ventas del día en dashboard'])->syncRoles([$role1]);
+        
+        Permission::create(['name' => 'ventas.ventas_dashboard_count',
+                    'description' => 'Ver total acumulado en ventas del día en dashboard'])->syncRoles([$role1]);
 
 
         //MODULO PROFORMAS
@@ -89,15 +102,21 @@ class RoleSeeder extends Seeder
 
         //MODULO PRODUCTOS
                             
+        Permission::create(['name' => 'productos',
+            'description' => 'Ver Menú de productos'])->syncRoles([$role1]);
+
+        Permission::create(['name' => 'traslados',
+            'description' => 'Ver Menú de traslados'])->syncRoles([$role1]);
+
 
         Permission::create(['name' => 'productos.productos.index',
-            'description' => 'Administrar productos por código de barra'])->syncRoles([$role1,$role2]);
+            'description' => 'Administrar productos por código de barra'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'productos.index_serial',
             'description' => 'Administrar productos por serial'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'productos.productos.delete',
-            'description' => 'Eliminar productos'])->syncRoles([$role1,$role2]);
+            'description' => 'Eliminar productos'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'productos.devolucion',
             'description' => 'Administrar devolución de equipos'])->syncRoles([$role1]);
@@ -111,11 +130,22 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'productos.lotes.delete',
             'description' => 'Eliminar lotes'])->syncRoles([$role1]);
 
+        Permission::create(['name' => 'productos.dashboard',
+            'description' => 'Ver total de productos en dashboard'])->syncRoles([$role1]);
+        
+        Permission::create(['name' => 'productos.dashboard_vencer',
+            'description' => 'Ver productos por vencer en dashboard'])->syncRoles([$role1]);
+
+        Permission::create(['name' => 'productos.dashboard_agotar',
+            'description' => 'Ver total de productos por agotar en dashboard'])->syncRoles([$role1]);
+
         //MODULO REPORTES
                             
+        Permission::create(['name' => 'reportes',
+        'description' => 'Ver Menú de reportes'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'reportes.productos',
-        'description' => 'Generar reportes de productos más vendidos'])->syncRoles([$role1,$role2]);
+        'description' => 'Generar reportes de productos más vendidos'])->syncRoles([$role1]);
 
         Permission::create(['name' => 'reportes.movimientos',
         'description' => 'Generar kardex'])->syncRoles([$role1]);
@@ -123,8 +153,8 @@ class RoleSeeder extends Seeder
         Permission::create(['name' => 'reportes.ventas',
         'description' => 'Generar reportes de ventas'])->syncRoles([$role1]);
 
-        Permission::create(['name' => 'reportes.desactivados',
-        'description' => 'Administrar productos desactivados por traslado'])->syncRoles([$role1]);
+        /*Permission::create(['name' => 'reportes.desactivados',
+        'description' => 'Administrar productos desactivados por traslado'])->syncRoles([$role1]);*/
 
         Permission::create(['name' => 'reportes.movimientos_caja',
         'description' => 'Generar reportes de movimientos en cajas'])->syncRoles([$role1]);
@@ -143,20 +173,22 @@ class RoleSeeder extends Seeder
 
         Permission::create(['name' => 'reportes.producto_vencer',
         'description' => 'Ver productos por vencer'])->syncRoles([$role1]);
+
+        Permission::create(['name' => 'reportes.reportes_seniat',
+        'description' => 'Generar reportes X y Z'])->syncRoles([$role1]);
          
         //MODULO AJUSTES
                             
+        Permission::create(['name' => 'ajustes',
+            'description' => 'Ver Menú de ajustes'])->syncRoles([$role1]);
 
          Permission::create(['name' => 'ajustes.contrasena',
-         'description' => 'Cambiar contraseña'])->syncRoles([$role1,$role2]);
+         'description' => 'Cambiar contraseña'])->syncRoles([$role1]);
  
          Permission::create(['name' => 'ajustes.empresa',
          'description' => 'Administrar datos de empresa'])->syncRoles([$role1]);
 
          Permission::create(['name' => 'apertura-caja.index',
-         'description' => 'Aperturar y cerrar cajas'])->syncRoles([$role1,$role2]);
- 
-
-
+         'description' => 'Aperturar y cerrar cajas'])->syncRoles([$role1]);
     }
 }

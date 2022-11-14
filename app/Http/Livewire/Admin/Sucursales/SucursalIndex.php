@@ -25,7 +25,7 @@ class SucursalIndex extends Component
 
         $sucursales = Sucursal::where('nombre', 'LIKE', '%' . $this->search . '%')
         ->latest('id')
-        ->paginate(5);
+        ->paginate(15);
 
         return view('livewire.admin.sucursales.sucursal-index',compact('sucursales'));
     }

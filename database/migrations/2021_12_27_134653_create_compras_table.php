@@ -19,6 +19,7 @@ class CreateComprasTable extends Migration
             $table->date('fecha');
             $table->float('total');
             $table->integer('cantidad');
+            $table->integer('lote')->nullable();
             $table->float('precio_compra');
             $table->float('deuda_a_proveedor')->default(0);
 

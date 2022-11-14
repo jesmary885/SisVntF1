@@ -18,7 +18,7 @@ class CompraIndex extends Component
 
     protected $listeners = ['render' => 'render','confirmacion' => 'confirmacion'];
 
-    public $search,$compra;
+    public $search,$compra,$buscador=0,$fecha_inicio,$fecha_fin;
 
     public function updatingSearch(){
         $this->resetPage();
@@ -27,12 +27,47 @@ class CompraIndex extends Component
     public function render()
     {
 
-        $compras = Compra::where('fecha', 'LIKE', '%' . $this->search . '%')
+        if($this->search || $this->fecha_fin){
+            if($this->buscador == 0){
+                $compras = Compra::whereHas('proveedor',function(Builder $query){
+                    $query
+                        ->where('nombre_proveedor','LIKE', '%' . $this->search . '%')
+                        ->orwhere('nro_documento','LIKE', '%' . $this->search . '%');
+                })
+                ->latest('id')
+                ->paginate(15);
+            }
+
+            elseif($this->buscador == 1){
+                $compras = Compra::whereHas('producto',function(Builder $query){
+                    $query
+                        ->where('nombre','LIKE', '%' . $this->search . '%')
+                        ->orwhere('cod_barra','LIKE', '%' . $this->search . '%');
+                })
+                ->latest('id')
+                ->paginate(15);
+            }
+
+            else{
+                $fecha_inicio = date("Y-m-d", strtotime($this->fecha_inicio));
+                $fecha_fin = date("Y-m-d", strtotime($this->fecha_fin));
+
+                $compras = Compra::whereBetween('fecha',[$fecha_inicio,$fecha_fin])
+                    ->latest('id')
+                    ->paginate(15);
+            }
+        }
+        else{
+            $compras = 0;
+        }
+
+
+        /*$compras = Compra::where('fecha', 'LIKE', '%' . $this->search . '%')
                                 ->orwhereHas('producto',function(Builder $query){
                                     $query->where('nombre','LIKE', '%' . $this->search . '%');
                                 })
                                 ->latest('id')
-                                ->paginate(5);
+                                ->paginate(5);*/
 
         return view('livewire.admin.compras.compra-index',compact('compras'));
     }

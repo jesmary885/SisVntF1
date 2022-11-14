@@ -1,4 +1,4 @@
-<div x-data="{ change_price: @entangle('change_price') , precios: @entangle('precios')}">
+<div class="w-full" x-data="{ change_price: @entangle('change_price') , precios: @entangle('precios')}">
   
            
                                 <div class="flex justify-between w-full">
@@ -40,11 +40,9 @@
                                                <x-input-error for="precios" />
                                             </div>
                                 
-                                            <div class="w-3/4 mt-2" :class="{'hidden': precios != '3'}">
-                                                <input wire:model="precio_manual" type="number" min="0" class="px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Precio">
-                                                <x-input-error for="precio_manual" />
-                                            </div>
+                                            
                                         </div>
+                                        
 
                                     </div>
                                     <button id="button_addItem" type="submit" class="btn btn-primary btn-sm ml-2" 
@@ -56,10 +54,18 @@
                                         Agregar
                                     </button> 
                                 </div>
+
+                                <div class="w-full mt-2" :class="{'hidden': precios != '3'}">
+                                    <div class="text-right">
+                                    <input wire:model="precio_manual" type="number" min="0" class=" ml-52 w-1/3 px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Precio manual">
+                                        <x-input-error for="precio_manual" />
+                                    </div>
+                                        
+                                </div>
                                 
-    <script>
+    <!-- <script>
         document.getElementById('button_addItem').focus()
-    </script>      
+    </script>       -->
  
 </div>
 

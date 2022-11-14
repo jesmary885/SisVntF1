@@ -38,7 +38,7 @@ class ProductosIndex extends Component
                 ->orwhere('nombre', 'LIKE', '%' . $this->search . '%')
                 ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(10);
+                ->paginate(15);
 
             }
             elseif($this->buscador == 1){
@@ -48,7 +48,7 @@ class ProductosIndex extends Component
                 })
                 ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(10);
+                ->paginate(15);
 
                 $this->item_buscar = "la categoria del producto a buscar";
             }
@@ -59,7 +59,7 @@ class ProductosIndex extends Component
                 })
                 ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(10);
+                ->paginate(15);
 
                 $this->item_buscar = "la marca del producto a buscar";
             }
@@ -70,7 +70,7 @@ class ProductosIndex extends Component
                 })
                 ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(10);
+                ->paginate(15);
             }
         }
         else{

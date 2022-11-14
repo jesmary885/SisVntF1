@@ -3,7 +3,7 @@
 
 <div class="flex justify-between">
     
-    <h1 class="text-lg ml-2"><i class="fas fa-th-list"></i> Listado de modelos</h1>
+    <h1 class="text-lg ml-2"><i class="fas fa-th-list"></i> Listado de presentaciones</h1>
 
     <div class="justify-end">
         @livewire('admin.modelos.modelo-import')

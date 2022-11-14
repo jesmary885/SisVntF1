@@ -25,7 +25,7 @@ class MetodosIndex extends Component
     {
         $metodos = Metodo_pago::where('nombre', 'LIKE', '%' . $this->search . '%')
         ->latest('id')
-        ->paginate(10);
+        ->paginate(15);
 
         return view('livewire.admin.metodos-pago.metodos-index',compact('metodos'));
     }

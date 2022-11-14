@@ -1,4 +1,5 @@
 <?php
+//require_once "vendor/autoload.php";
 
 namespace App\Http\Livewire\Ventas;
 
@@ -19,21 +20,23 @@ use App\Models\Metodo_pago;
 use App\Models\Moneda;
 use App\Models\Pago_venta;
 use App\Models\tasa_dia;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Mail;
 use Mike42\Escpos\PrintConnectors\WindowsPrintConnector;
 use Mike42\Escpos\Printer;
+use GuzzleHttpClient;
 
 class VentasCart extends Component
 {
     use WithPagination;
 
-    public $publico_general = 1, $sucursal,$caja, $caja_detalle, $sucursal_detalle,$producto,$cambio,$moneda_actual,$tasa_dia,$moneda_nombre,$moneda_simbolo;
-    public $cash_received,$tipo_pago = "Contado",$tipo_comprobante,$send_mail,$imprimir,$ticket = 0;
+    public $ocultar_panel,$publico_general = 1, $sucursal,$caja, $caja_detalle, $sucursal_detalle,$producto,$cambio,$moneda_actual,$tasa_dia,$moneda_nombre,$moneda_simbolo;
+    public $cash_received,$tipo_pago = "contado",$tipo_comprobante,$send_mail,$imprimir,$ticket = 0;
     public $metodo_pago, $total, $client, $search;
     public $cliente_select, $total_venta, $pago_cliente, $deuda_cliente, $descuento, $estado_entrega = "Entregado",$subtotal,$proforma;
-    public $siguiente_venta = 0, $monto1, $monto2, $monto3, $monto4, $monto5,$metodo_id_1,$metodo_id_2,$metodo_id_3,$metodo_id_4,$metodo_id_5,$vuelto=0, $monto_vuelto, $metodo_cambio_id;
+    public $siguiente_venta = 0, $monto1, $monto2, $monto3, $monto4, $monto5,$metodo_id_1,$metodo_id_2,$metodo_id_3,$metodo_id_4,$metodo_id_5,$vuelto="no", $monto_vuelto, $metodo_cambio_id;
     public $iva, $carrito,$valor, $iva_empresa,$cant_metodos = 1,$metodos;
-    public $descuento_total = 0,$empresa, $other_method;
+    public $subt_e, $descuento_total = 0,$empresa, $other_method,$mostrar_total_pagado_bs=0,$mostrar_total_pagado_dl=0,$mostrar_total_cambio_bs=0,$mostrar_total_cambio_dl=0,$por_cancelar,$tasa_metodo,$pendiente_pagar_cliente_bs=0,$pendiente_pagar_cliente_dl=0;
 
     protected $listeners = ['render' => 'render'];
 
@@ -60,7 +63,7 @@ class VentasCart extends Component
         'metodo_id_3' => 'required'
     ];
 
-    public $rules_cant_pago_4 = [
+  /*  public $rules_cant_pago_4 = [
         'monto2' => 'required',
         'metodo_id_2' => 'required',
         'monto3' => 'required',
@@ -78,7 +81,7 @@ class VentasCart extends Component
         'metodo_id_4' => 'required',
         'monto5' => 'required',
         'metodo_id_5' => 'required'
-    ];
+    ];*/
 
     public $rule_credito = [
         'pago_cliente' => 'required',
@@ -100,6 +103,17 @@ class VentasCart extends Component
         }
     } 
 
+  /*  public function updatedDescuento($value){
+        if($value){
+            $this->descuento_total = ($this->subtotal  * $this->descuento / 100) + $this->descuento_total;
+            $this->total_venta = ($this->subtotal  - $this->descuento_total) + $this->iva;
+        }
+        else{
+            $this->descuento = 0;
+            $this->total_venta = ($this->subtotal +  $this->iva) - $this->descuento_total;
+        } 
+    } */
+
     public function destroy(){
         Cart::destroy();
         $this->emitTo('ventas-seleccion-productos','render');
@@ -112,6 +126,7 @@ class VentasCart extends Component
 
     public function mount()
     {
+        $this->tasa_metodo = tasa_dia::where('moneda_id',2)->first()->tasa;
         $this->client = Cliente::where('id','1')->first();
         $this->cliente_select = $this->client->nombre." ".$this->client->apellido;
         $this->metodos = Metodo_pago::all();
@@ -128,6 +143,19 @@ class VentasCart extends Component
 
     public function render()
     {
+        $this->descuento_total = 0;
+        $this->mostrar_total_pagado_bs = 0;
+        $this->mostrar_total_pagado_dl = 0;
+        $this->mostrar_total_cambio_bs = 0;
+        $this->mostrar_total_cambio_dl = 0;
+        $this->pendiente_pagar_cliente_bs = 0;
+        $this->pendiente_pagar_cliente_dl = 0;
+        $total_cambio = 0;
+        $moneda_1 = 'bs';
+        $moneda_2 = 'bs';
+        $moneda_3 = 'bs';
+
+
         if($this->publico_general == '1') {
             $this->client = Cliente::where('id','1')->first();
         }
@@ -145,9 +173,9 @@ class VentasCart extends Component
             $this->tasa_dia = 1;
         } 
 
-        $caracter=",";
-        $this->subtotal = (str_replace($caracter,"",Cart::subtotal())) - $this->descuento;
+       
         $subt = 0;
+        $this->subt_e = 0;
 
         foreach (Cart::content() as $item) {
             if($item->options['exento'] == "No"){
@@ -155,6 +183,7 @@ class VentasCart extends Component
             }
             else{
                 $subt = $subt + 0; 
+                $this->subt_e = $this->subt_e + $item->price;
             }
 
             if($item->options['descuento'] != "null"){
@@ -164,15 +193,18 @@ class VentasCart extends Component
         }
 
         $this->iva= ($this->empresa->impuesto / 100) * $subt;
-
-        if($this->descuento != null){
+        $caracter=",";
+        if($this->descuento){
+            $this->subtotal = (str_replace($caracter,"",Cart::subtotal()));
             $this->descuento_total = ($this->subtotal  * $this->descuento / 100) + $this->descuento_total;
-            $this->total_venta = ($this->subtotal  - $this->descuento_total) + $this->iva;
+            $this->total_venta = (($this->subtotal  - $this->descuento_total) + $this->iva);
         }
         else{
+            $this->subtotal = (str_replace($caracter,"",Cart::subtotal()));
             $this->total_venta = ($this->subtotal +  $this->iva) - $this->descuento_total;
         } 
-       
+
+
         if($this->cash_received != null && $this->other_method == null) $this->cambio = $this->cash_received - $this->total_venta;
         elseif($this->cash_received != null && $this->other_method != null) $this->cambio = (($this->cash_received + $this->other_method) - $this->total_venta);
         else $this->cambio = 0;
@@ -189,6 +221,316 @@ class VentasCart extends Component
         else{
             $cliente = Cliente::where('id', '1')
             ->first();
+        }
+
+        if ($this->cant_metodos == '1'){
+            if($this->monto1 != ''){
+                if($this->metodo_id_1 == 1 || $this->metodo_id_1 == 2 || $this->metodo_id_1 == 3 || $this->metodo_id_1 == 5 || $this->metodo_id_1 == 6){
+                    $this->mostrar_total_pagado_bs  = $this->monto1 + $this->mostrar_total_pagado_bs ;
+                    $this->mostrar_total_pagado_dl  = ($this->monto1 / $this->tasa_metodo) + $this->mostrar_total_pagado_dl ;
+                    $total_cambio =  ($this->monto1 - $this->total_venta);
+                   
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0 + $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl =0 + $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = ($this->total_venta - $this->monto1) + $this->pendiente_pagar_cliente_bs ;
+                        $this->pendiente_pagar_cliente_dl = (($this->total_venta - $this->monto1) / $this->tasa_metodo) + $this->pendiente_pagar_cliente_dl;
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = $total_cambio +  $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl = ($total_cambio / $this->tasa_metodo) +  $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0 + $this->pendiente_pagar_cliente_bs ;
+                        $this->pendiente_pagar_cliente_dl = 0 + $this->pendiente_pagar_cliente_dl ;
+                    }
+                } 
+                else{
+                    $this->mostrar_total_pagado_bs  = ($this->monto1 * $this->tasa_metodo) + $this->mostrar_total_pagado_bs;
+                    $this->mostrar_total_pagado_dl  = $this->monto1 + $this->mostrar_total_pagado_dl ;
+                    $total_cambio =  ($this->monto1 - ($this->total_venta / $this->tasa_metodo));
+                 //  dd($total_cambio);
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0 + $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl =0 + $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = ((($this->total_venta/ $this->tasa_metodo) - $this->monto1) * $this->tasa_metodo) + $this->pendiente_pagar_cliente_bs;
+                        $this->pendiente_pagar_cliente_dl = ((($this->total_venta/ $this->tasa_metodo) - $this->monto1)) + $this->pendiente_pagar_cliente_dl;
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = ($total_cambio * $this->tasa_metodo) + $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl = $total_cambio + $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0 + $this->pendiente_pagar_cliente_bs;
+                        $this->pendiente_pagar_cliente_dl = 0 + $this->pendiente_pagar_cliente_bs;
+                    }
+
+                }
+            }
+
+        }
+
+        elseif ($this->cant_metodos == '2'){
+            if($this->monto1 != '' && $this->monto2 == ''){
+                if($this->metodo_id_1 == 1 || $this->metodo_id_1 == 2 || $this->metodo_id_1 == 3 || $this->metodo_id_1 == 5 || $this->metodo_id_1 == 6){
+                    $this->mostrar_total_pagado_bs  = $this->monto1 + $this->mostrar_total_pagado_bs ;
+                    $this->mostrar_total_pagado_dl  = ($this->monto1 / $this->tasa_metodo) + $this->mostrar_total_pagado_dl;
+                    $total_cambio =  ($this->monto1 - $this->total_venta);
+                   
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0 + $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl =0 + $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = ($this->total_venta - $this->monto1) + $this->pendiente_pagar_cliente_bs;
+                        $this->pendiente_pagar_cliente_dl = (($this->total_venta - $this->monto1) / $this->tasa_metodo) + $this->pendiente_pagar_cliente_dl;
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = $total_cambio + $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl = ($total_cambio / $this->tasa_metodo) + $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0 + $this->pendiente_pagar_cliente_bs;
+                        $this->pendiente_pagar_cliente_dl = 0 + $this->pendiente_pagar_cliente_dl;
+                    }
+                } 
+                else{
+                    $this->mostrar_total_pagado_bs  = ($this->monto1 * $this->tasa_metodo) +  $this->mostrar_total_pagado_bs;
+                    $this->mostrar_total_pagado_dl  = $this->monto1 + $this->mostrar_total_pagado_dl;
+                    $total_cambio =  ($this->monto1 - ($this->total_venta / $this->tasa_metodo));
+                 //  dd($total_cambio);
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0 + $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl =0 + $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = ((($this->total_venta/ $this->tasa_metodo) - $this->monto1) * $this->tasa_metodo) + $this->pendiente_pagar_cliente_bs;
+                        $this->pendiente_pagar_cliente_dl = ((($this->total_venta/ $this->tasa_metodo) - $this->monto1)) + $this->pendiente_pagar_cliente_dl;
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = ($total_cambio * $this->tasa_metodo) + $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl = $total_cambio + $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0 + $this->pendiente_pagar_cliente_bs;
+                        $this->pendiente_pagar_cliente_dl = 0 + $this->pendiente_pagar_cliente_dl;
+                    }
+
+                }
+            }
+            if($this->monto1 != '' && $this->monto2 != ''){
+                if($this->metodo_id_1 == 1 || $this->metodo_id_1 == 2 || $this->metodo_id_1 == 3 || $this->metodo_id_1 == 5 || $this->metodo_id_1 == 6) $moneda_1 = 'bs';
+                else $moneda_1 = '$';
+                if($this->metodo_id_2 == 1 || $this->metodo_id_2 == 2 || $this->metodo_id_2 == 3 || $this->metodo_id_2 == 5 || $this->metodo_id_2 == 6) $moneda_2 = 'bs';
+                else $moneda_2 = '$';
+
+                if($moneda_1 == 'bs' && $moneda_2 == 'bs'){
+                    $this->mostrar_total_pagado_bs  = ($this->monto1 + $this->monto2);
+                    $this->mostrar_total_pagado_dl  = (($this->monto1 + $this->monto2) / $this->tasa_metodo);
+                    $total_cambio =  (($this->monto1 + $this->monto2) - $this->total_venta);
+                   
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0 ;
+                        $this->mostrar_total_cambio_dl =0 ;
+                        $this->pendiente_pagar_cliente_bs = ($this->total_venta - ($this->monto1 + $this->monto2));
+                        $this->pendiente_pagar_cliente_dl = (($this->total_venta - ($this->monto1 + $this->monto2)) / $this->tasa_metodo);
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = $total_cambio;
+                        $this->mostrar_total_cambio_dl = ($total_cambio / $this->tasa_metodo);
+                        $this->pendiente_pagar_cliente_bs = 0 ;
+                        $this->pendiente_pagar_cliente_dl = 0 ;
+                    }
+                } 
+                elseif($moneda_1 == 'bs' && $moneda_2 == '$'){
+                    $this->mostrar_total_pagado_bs  = (($this->monto2 * $this->tasa_metodo) + $this->monto1);
+                    $this->mostrar_total_pagado_dl  = ($this->monto2 + ($this->monto1 / $this->tasa_metodo)) ;
+                    $total_cambio =  ($this->monto1 + ($this->monto2 * $this->tasa_metodo)) - $this->total_venta;
+                    $total_cambio_dl =  ($this->monto2 + ($this->monto1 / $this->tasa_metodo)) - ($this->total_venta/ $this->tasa_metodo);
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0;
+                        $this->mostrar_total_cambio_dl =0 ;
+                        $this->pendiente_pagar_cliente_bs = ((($this->total_venta/ $this->tasa_metodo) - ($this->monto1 + ($this->monto2 * $this->tasa_metodo))) * $this->tasa_metodo) ;
+                        $this->pendiente_pagar_cliente_dl = (($this->total_venta/ $this->tasa_metodo) - ($this->monto2 + ($this->monto1 / $this->tasa_metodo)));
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = $total_cambio;
+                        $this->mostrar_total_cambio_dl = $total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0;
+                        $this->pendiente_pagar_cliente_dl = 0;
+                    }
+                }
+                elseif($moneda_1 == '$' && $moneda_2 == 'bs'){
+                    $this->mostrar_total_pagado_bs  = (($this->monto1 * $this->tasa_metodo) + $this->monto2);
+                    $this->mostrar_total_pagado_dl  = ($this->monto1 + ($this->monto2 / $this->tasa_metodo)) ;
+                    $total_cambio =  ($this->monto2 + ($this->monto1 * $this->tasa_metodo)) - $this->total_venta;
+                    $total_cambio_dl =  ($this->monto1 + ($this->monto2 / $this->tasa_metodo)) - ($this->total_venta/ $this->tasa_metodo);
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0;
+                        $this->mostrar_total_cambio_dl =0 ;
+                        $this->pendiente_pagar_cliente_bs = ((($this->total_venta/ $this->tasa_metodo) - ($this->monto2 + ($this->monto1 * $this->tasa_metodo))) * $this->tasa_metodo) ;
+                        $this->pendiente_pagar_cliente_dl = (($this->total_venta/ $this->tasa_metodo) - ($this->monto1 + ($this->monto2 / $this->tasa_metodo)));
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = $total_cambio;
+                        $this->mostrar_total_cambio_dl = $total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0;
+                        $this->pendiente_pagar_cliente_dl = 0;
+                    }
+                }
+                elseif($moneda_1 == '$' && $moneda_2 == '$'){
+                    $this->mostrar_total_pagado_bs  = ($this->monto1 + $this->monto2) * $this->tasa_metodo;
+                    $this->mostrar_total_pagado_dl  = ($this->monto1 + $this->monto2);
+                    $total_cambio =  ((($this->monto1* $this->tasa_metodo) + ($this->monto2* $this->tasa_metodo)) - $this->total_venta);
+                    $total_cambio_dl =  ($this->monto1 + $this->monto2) - ($this->total_venta/ $this->tasa_metodo);
+
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0 ;
+                        $this->mostrar_total_cambio_dl =0 ;
+                        $this->pendiente_pagar_cliente_bs = ($this->total_venta - (($this->monto1* $this->tasa_metodo) + ($this->monto2* $this->tasa_metodo)));
+                        $this->pendiente_pagar_cliente_dl = ($this->total_venta / $this->tasa_metodo)- ($this->monto1 + $this->monto2);
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = $total_cambio;
+                        $this->mostrar_total_cambio_dl = $total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0 ;
+                        $this->pendiente_pagar_cliente_dl = 0 ;
+                    }
+                }
+            }
+        }
+
+        else{
+            if($this->monto1 != '' && $this->monto2 == '' && $this->monto3 == ''){
+                if($this->metodo_id_1 == 1 || $this->metodo_id_1 == 2 || $this->metodo_id_1 == 3 || $this->metodo_id_1 == 5 || $this->metodo_id_1 == 6){
+                    $this->mostrar_total_pagado_bs  = $this->monto1 + $this->mostrar_total_pagado_bs ;
+                    $this->mostrar_total_pagado_dl  = ($this->monto1 / $this->tasa_metodo) + $this->mostrar_total_pagado_dl;
+                    $total_cambio =  ($this->monto1 - $this->total_venta);
+                   
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0 + $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl =0 + $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = ($this->total_venta - $this->monto1) + $this->pendiente_pagar_cliente_bs;
+                        $this->pendiente_pagar_cliente_dl = (($this->total_venta - $this->monto1) / $this->tasa_metodo) + $this->pendiente_pagar_cliente_dl;
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = $total_cambio + $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl = ($total_cambio / $this->tasa_metodo) + $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0 + $this->pendiente_pagar_cliente_bs;
+                        $this->pendiente_pagar_cliente_dl = 0 + $this->pendiente_pagar_cliente_dl;
+                    }
+                } 
+                else{
+                    $this->mostrar_total_pagado_bs  = ($this->monto1 * $this->tasa_metodo) +  $this->mostrar_total_pagado_bs;
+                    $this->mostrar_total_pagado_dl  = $this->monto1 + $this->mostrar_total_pagado_dl;
+                    $total_cambio =  ($this->monto1 - ($this->total_venta / $this->tasa_metodo));
+                 //  dd($total_cambio);
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0 + $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl =0 + $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = ((($this->total_venta/ $this->tasa_metodo) - $this->monto1) * $this->tasa_metodo) + $this->pendiente_pagar_cliente_bs;
+                        $this->pendiente_pagar_cliente_dl = ((($this->total_venta/ $this->tasa_metodo) - $this->monto1)) + $this->pendiente_pagar_cliente_dl;
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = ($total_cambio * $this->tasa_metodo) + $this->mostrar_total_cambio_bs;
+                        $this->mostrar_total_cambio_dl = $total_cambio + $this->mostrar_total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0 + $this->pendiente_pagar_cliente_bs;
+                        $this->pendiente_pagar_cliente_dl = 0 + $this->pendiente_pagar_cliente_dl;
+                    }
+
+                }
+
+            }
+
+            elseif($this->monto1 != '' && $this->monto2 != '' && $this->monto3 == ''){
+                if($this->metodo_id_1 == 1 || $this->metodo_id_1 == 2 || $this->metodo_id_1 == 3 || $this->metodo_id_1 == 5 || $this->metodo_id_1 == 6) $moneda_1 = 'bs';
+                else $moneda_1 = '$';
+                if($this->metodo_id_2 == 1 || $this->metodo_id_2 == 2 || $this->metodo_id_2 == 3 || $this->metodo_id_2 == 5 || $this->metodo_id_2 == 6) $moneda_2 = 'bs';
+                else $moneda_2 = '$';
+
+                if($moneda_1 == 'bs' && $moneda_2 == 'bs'){
+                    $this->mostrar_total_pagado_bs  = ($this->monto1 + $this->monto2);
+                    $this->mostrar_total_pagado_dl  = (($this->monto1 + $this->monto2) / $this->tasa_metodo);
+                    $total_cambio =  (($this->monto1 + $this->monto2) - $this->total_venta);
+                   
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0 ;
+                        $this->mostrar_total_cambio_dl =0 ;
+                        $this->pendiente_pagar_cliente_bs = ($this->total_venta - ($this->monto1 + $this->monto2));
+                        $this->pendiente_pagar_cliente_dl = (($this->total_venta - ($this->monto1 + $this->monto2)) / $this->tasa_metodo);
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = $total_cambio;
+                        $this->mostrar_total_cambio_dl = ($total_cambio / $this->tasa_metodo);
+                        $this->pendiente_pagar_cliente_bs = 0 ;
+                        $this->pendiente_pagar_cliente_dl = 0 ;
+                    }
+                } 
+                elseif($moneda_1 == 'bs' && $moneda_2 == '$'){
+                    $this->mostrar_total_pagado_bs  = (($this->monto2 * $this->tasa_metodo) + $this->monto1);
+                    $this->mostrar_total_pagado_dl  = ($this->monto2 + ($this->monto1 / $this->tasa_metodo)) ;
+                    $total_cambio =  ($this->monto1 + ($this->monto2 * $this->tasa_metodo)) - $this->total_venta;
+                    $total_cambio_dl =  ($this->monto2 + ($this->monto1 / $this->tasa_metodo)) - ($this->total_venta/ $this->tasa_metodo);
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0;
+                        $this->mostrar_total_cambio_dl =0 ;
+                        $this->pendiente_pagar_cliente_bs = ((($this->total_venta/ $this->tasa_metodo) - ($this->monto1 + ($this->monto2 * $this->tasa_metodo))) * $this->tasa_metodo) ;
+                        $this->pendiente_pagar_cliente_dl = (($this->total_venta/ $this->tasa_metodo) - ($this->monto2 + ($this->monto1 / $this->tasa_metodo)));
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = $total_cambio;
+                        $this->mostrar_total_cambio_dl = $total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0;
+                        $this->pendiente_pagar_cliente_dl = 0;
+                    }
+                }
+                elseif($moneda_1 == '$' && $moneda_2 == 'bs'){
+                    $this->mostrar_total_pagado_bs  = (($this->monto1 * $this->tasa_metodo) + $this->monto2);
+                    $this->mostrar_total_pagado_dl  = ($this->monto1 + ($this->monto2 / $this->tasa_metodo)) ;
+                    $total_cambio =  ($this->monto2 + ($this->monto1 * $this->tasa_metodo)) - $this->total_venta;
+                    $total_cambio_dl =  ($this->monto1 + ($this->monto2 / $this->tasa_metodo)) - ($this->total_venta/ $this->tasa_metodo);
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0;
+                        $this->mostrar_total_cambio_dl =0 ;
+                        $this->pendiente_pagar_cliente_bs = ((($this->total_venta/ $this->tasa_metodo) - ($this->monto2 + ($this->monto1 * $this->tasa_metodo))) * $this->tasa_metodo) ;
+                        $this->pendiente_pagar_cliente_dl = (($this->total_venta/ $this->tasa_metodo) - ($this->monto1 + ($this->monto2 / $this->tasa_metodo)));
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = $total_cambio;
+                        $this->mostrar_total_cambio_dl = $total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0;
+                        $this->pendiente_pagar_cliente_dl = 0;
+                    }
+                }
+                elseif($moneda_1 == '$' && $moneda_2 == '$'){
+                    $this->mostrar_total_pagado_bs  = ($this->monto1 + $this->monto2) * $this->tasa_metodo;
+                    $this->mostrar_total_pagado_dl  = ($this->monto1 + $this->monto2);
+                    $total_cambio =  ((($this->monto1* $this->tasa_metodo) + ($this->monto2* $this->tasa_metodo)) - $this->total_venta);
+                    $total_cambio_dl =  ($this->monto1 + $this->monto2) - ($this->total_venta/ $this->tasa_metodo);
+
+                    if($total_cambio<0){
+                        $this->mostrar_total_cambio_bs =0 ;
+                        $this->mostrar_total_cambio_dl =0 ;
+                        $this->pendiente_pagar_cliente_bs = ($this->total_venta - (($this->monto1* $this->tasa_metodo) + ($this->monto2* $this->tasa_metodo)));
+                        $this->pendiente_pagar_cliente_dl = ($this->total_venta / $this->tasa_metodo)- ($this->monto1 + $this->monto2);
+                    } 
+                    else {
+                        $this->mostrar_total_cambio_bs = $total_cambio;
+                        $this->mostrar_total_cambio_dl = $total_cambio_dl;
+                        $this->pendiente_pagar_cliente_bs = 0 ;
+                        $this->pendiente_pagar_cliente_dl = 0 ;
+                    }
+                }
+
+            }
+            /*elseif($this->monto1 != '' && $this->monto2 != '' && $this->monto3 != ''){
+                if($this->metodo_id_1 == 1 || $this->metodo_id_1 == 2 || $this->metodo_id_1 == 3 || $this->metodo_id_1 == 5 || $this->metodo_id_1 == 6) $moneda_1 = 'bs';
+                else $moneda_1 = '$';
+                if($this->metodo_id_2 == 1 || $this->metodo_id_2 == 2 || $this->metodo_id_2 == 3 || $this->metodo_id_2 == 5 || $this->metodo_id_2 == 6) $moneda_2 = 'bs';
+                else $moneda_2 = '$';
+                if($this->metodo_id_3 == 1 || $this->metodo_id_3 == 2 || $this->metodo_id_3 == 3 || $this->metodo_id_3 == 5 || $this->metodo_id_3 == 6) $moneda_3 = 'bs';
+                else $moneda_3 = '$';
+
+                if($moneda_1 == 'bs' && $moneda_2 == 'bs' && $moneda_3 == 'bs'){
+
+                }
+                elseif($moneda_1 == '$' && $moneda_2 == '$' && $moneda_3 == '$'){
+                    
+                }
+
+
+
+            }*/
+
+
         }
 
         return view('livewire.ventas.ventas-cart',compact('cliente'));
@@ -215,7 +557,7 @@ class VentasCart extends Component
             $this->validate($rules_cant_pago_3);   
         }
 
-        if($this->cant_metodos == "4"){
+        /*if($this->cant_metodos == "4"){
             $rules_cant_pago_4 = $this->rules_cant_pago_4;
             $this->validate($rules_cant_pago_4);   
         }
@@ -223,7 +565,7 @@ class VentasCart extends Component
         if($this->cant_metodos == "5"){
             $rules_cant_pago_5 = $this->rules_cant_pago_5;
             $this->validate($rules_cant_pago_5);   
-        }
+        }*/
 
         if ($this->imprimir == "1"){
             $rule_imprimir = $this->rule_imprimir;
@@ -291,7 +633,7 @@ class VentasCart extends Component
                 $venta->total_pagado_cliente = $this->total_venta;
                 $venta->deuda_cliente = "0";
             }
-            if($this->vuelto == 1){
+            if($this->vuelto == 'si'){
                 $venta->vuelto =  $this->monto_vuelto;
                 $venta->metodo_pago_vuelto_id =  $this->metodo_cambio_id;
                 if($this->metodo_cambio_id == 3) $efectivo_bs_decrec = $this->monto_vuelto;
@@ -305,6 +647,7 @@ class VentasCart extends Component
             $venta->descuento = $this->descuento_total;
             $venta->impuesto=$this->iva;
             $venta->estado='activa';
+            $venta->exento = $this->subt_e;
             $venta->save();
 
             //REGISTRO EN PAGO_VENTAS
@@ -318,13 +661,13 @@ class VentasCart extends Component
 
                 if($this->metodo_id_1 == 3){
                     $this->caja_detalle->update([
-                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto1) - $efectivo_bs_decrec,
+                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto1),
                     ]);
                 }
 
                 if($this->metodo_id_1 == 4){
                     $this->caja_detalle->update([
-                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto1) - $efectivo_dls_decrec,
+                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto1),
                     ]);
                 }
             }
@@ -343,13 +686,13 @@ class VentasCart extends Component
 
                 if($this->metodo_id_2 == 3){
                     $this->caja_detalle->update([
-                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto2) - $efectivo_bs_decrec,
+                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto2),
                     ]);
                 }
 
                 if($this->metodo_id_2 == 4){
                     $this->caja_detalle->update([
-                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto2) - $efectivo_dls_decrec,
+                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto2),
                     ]);
                 }
             }
@@ -374,17 +717,17 @@ class VentasCart extends Component
 
                 if($this->metodo_id_3 == 3){
                     $this->caja_detalle->update([
-                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto3) - $efectivo_bs_decrec,
+                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto3),
                     ]);
                 }
 
                 if($this->metodo_id_3 == 4){
                     $this->caja_detalle->update([
-                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto3) - $efectivo_dls_decrec,
+                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto3),
                     ]);
                 }
             }
-            elseif($this->cant_metodos == 4) {
+           /* elseif($this->cant_metodos == 4) {
                 $pago_venta = new Pago_venta();
                 $pago_venta->monto = $this->monto1;
                 $pago_venta->metodo_pago_id = $this->metodo_id_1;
@@ -411,13 +754,13 @@ class VentasCart extends Component
 
                 if($this->metodo_id_4 == 3){
                     $this->caja_detalle->update([
-                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto4) - $efectivo_bs_decrec,
+                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto4),
                     ]);
                 }
 
                 if($this->metodo_id_4 == 4){
                     $this->caja_detalle->update([
-                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto4) - $efectivo_dls_decrec,
+                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto4),
                     ]);
                 }
             }
@@ -454,16 +797,24 @@ class VentasCart extends Component
 
                 if($this->metodo_id_5 == 3){
                     $this->caja_detalle->update([
-                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto5) - $efectivo_bs_decrec,
+                        'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares + $this->monto5),
                     ]);
                 }
 
                 if($this->metodo_id_5 == 4){
                     $this->caja_detalle->update([
-                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto5) - $efectivo_dls_decrec,
+                        'saldo_dolares' => ($this->caja_detalle->saldo_dolares + $this->monto5),
                     ]);
                 }
-            }
+            }*/
+
+            $this->caja_detalle->update([
+                'saldo_bolivares' => ($this->caja_detalle->saldo_bolivares) - $efectivo_bs_decrec,
+            ]);
+
+            $this->caja_detalle->update([
+                'saldo_dolares' => ($this->caja_detalle->saldo_dolares) - $efectivo_dls_decrec,
+            ]);
 
             //REGISTRO DE VENTA EN CAJA
             $movimiento = new MovimientoCaja();
@@ -522,131 +873,123 @@ class VentasCart extends Component
         //GENERANDO COMPROBANTE
         if($this->proforma == 'proforma') $venta_nro_p = '1';
         else $venta_nro_p = $venta->id;
+        if($this->imprimir == '1'){
+            $data2 = [
+                'empresa_nombre' => $this->empresa->nombre,
+                'empresa_tipo_documento' => $this->empresa->tipo_documento,
+                'empresa_documento' => $this->empresa->nro_documento,
+                'empresa_direccion' => $this->empresa->direccion,
+                'empresa_telefono' => $this->empresa->telefono,
+                'empresa_email' => $this->empresa->email,
+               'cliente_nombre' => $this->client->nombre,
+                'cliente_apellido' => $this->client->apellido,
+                'cliente_documento' =>$this->client->nro_documento,
+                'cliente_tipo_documento' =>$this->client->tipo_documento,
+                'cliente_nro_documento' =>$this->client->nro_documento,
+                'cajero_nombre' => auth()->user()->name,
+                'cajero_apellido' => auth()->user()->apellido,
+                'nro_venta' => $venta_nro_p,
+                'caja_nombre' => $this->caja_detalle->nombre,
+                'iva_empresa' => $this->empresa->impuesto,
+                'productos' => Cart::content(),
+                'descuento' => $this->descuento_total,
+                'subtotal' =>  $this->subtotal,
+                'total' => $this->total_venta,
+                'tipo_pago' => $this->total_venta,
+                'pago_cliente' => $this->tipo_pago,
+                'iva' => $this->iva,
+            ];
     
-        $data = [
-            'cliente_nombre' => $this->client->nombre." ".$this->client->apellido,
-            'cliente_documento' =>$this->client->nro_documento,
-            'cliente_telefono' =>$this->client->telefono,
-            'usuario' => auth()->user()->name." ".auth()->user()->apellido,
-            'fecha_actual' => date('Y-m-d'),
-            'venta_nro' => $venta_nro_p,
-            'sucursal' => $this->sucursal_detalle->nombre,
-            'caja' => $this->caja_detalle->nombre,
-            'empresa' => $this->empresa,
-            'collection' => Cart::content(),
-            'estado_entrega' => $entrega,
-            'descuento' => $this->descuento_total,
-            'subtotal' =>  $this->subtotal,
-            'subtotal_menos_descuento' =>  $this->subtotal - ($this->descuento_total),
-            'total' => $this->total_venta,
-            'proforma' =>$this->proforma,
-            'iva_empresa' => $this->iva_empresa,
-            'pagado' => $this->pago_cliente,
-            'deuda' => $this->total_venta - $this->pago_cliente,
-            'iva' => $this->iva,];
-
-        //factura
-        if($this->tipo_comprobante == "1"){ 
-            if ($this->tipo_pago == "Contado") $pdf = PDF::loadView('ventas.FacturaContado',$data)->output();
-            else $pdf = PDF::loadView('ventas.FacturaCredito',$data)->output();
-
-            if($this->send_mail=="1"){
-                if( $this->client->email != null){
-                    $data_m["email"] = $this->client->email;
-                    $data_m["title"] = "Comprobante de pago";
-                    $data_m["body"] = "Anexo se encuentra el comprobante de pago de su compra realizada hoy.";
-                    Mail::send('ventas.FacturaContado', $data, function ($message) use ($data_m, $pdf) {
-                    $message->to($data_m["email"], $data_m["email"])
-                        ->subject($data_m["title"])
-                        ->attachData($pdf, "Comprobante.pdf");
-                    });
-                }
-            }
-        }
-        //ticket 
-        elseif($this->tipo_comprobante == "2"){ 
-            $nombreImpresora = "POS-58";
-            $connector = new WindowsPrintConnector($nombreImpresora);
-            $impresora = new Printer($connector);
-            $impresora->setJustification(Printer::JUSTIFY_CENTER);
-            $impresora->setTextSize(2, 2);
-            $impresora->text($this->empresa->nombre ."\n");
-            $impresora->text("\n");
-            $impresora->setTextSize(1, 1);
-            $impresora->text($this->empresa->nro_documento ."\n");
-            $impresora->text($this->empresa->direccion ."\n");
-            $impresora->text("Tlf.".$this->empresa->telefono ."\n");
-            $impresora->text("Email: ".$this->empresa->email ."\n");
-            $impresora->text("--------------------------------\n");
-            $impresora->text("Factura Nro. ".$venta_nro_p ."\n");
-            $impresora->text("Fecha: ".date('d-m-Y') ."\n");
-            $impresora->text("Cajero: ".auth()->user()->name." ".auth()->user()->apellido ."\n");
-            $impresora->text("Caja: ".$this->caja_detalle->nombre ."\n");
-            $impresora->text("--------------------------------\n");
-            $impresora->text("Cliente: ".$this->client->nombre." ".$this->client->apellido ."\n");
-            $impresora->text("Documento Nro.: ".$this->client->nro_documento ."\n");
-            $impresora->setJustification(Printer::JUSTIFY_LEFT);
-            $impresora->text("________________________________\n");
-            $impresora->text(" Cant.   Descripción   Subtotal\n");
-            $impresora->text("--------------------------------\n");
-            $impresora->setJustification(Printer::JUSTIFY_LEFT);
-            foreach (Cart::content() as $item) {
-                if($item->options['exento'] == "Si") $impresora->text(str_pad($item->qty,7).str_pad(substr($item->name,0,12), 10)."(E) ".str_pad($item->price,10)."\n"); 
-                else $impresora->text(str_pad($item->qty,7).str_pad(substr($item->name,0,12), 14)." ".str_pad($item->price,10)."\n");
-            } 
-            $impresora->text("\n");
-            $impresora->setJustification(Printer::JUSTIFY_RIGHT);
-            $impresora->text('SUBTOTAL: Bs ' . $this->subtotal - ($this->descuento_total) . "\n");
-            $impresora->text('DESCUENTO: Bs ' . $this->descuento_total . "\n");
-            $impresora->text('IVA('. $this->iva_empresa. '%): Bs '. $this->iva . "\n");
-            $impresora->text('TOTAL: Bs ' .$this->total_venta. "\n");
-            if ($this->tipo_pago == "Credito"){
-                $impresora->text('PAGADO: Bs ' .$this->pago_cliente. "\n");
-                $impresora->text('PENDIENTE: Bs ' .$this->total_venta - $this->pago_cliente. "\n");  
-            }
-            $impresora->text("\n");
-            $impresora->setJustification(Printer::JUSTIFY_CENTER);
-            $impresora->text("¡GRACIAS POR SU COMPRA!\n");
-            $impresora->feed(3);
-            $impresora->close();
-        }
-        //nota de entrega
-        else{ 
-            if ($this->tipo_pago == "Contado") $pdf = PDF::loadView('ventas.NotaEntregaContado',$data)->output();
-            else  $pdf = PDF::loadView('ventas.NotaEntregaCredito',$data)->output();
-                    
-            if($this->send_mail=="1"){
-                if( $this->client->email != null){
-                    $data_m["email"] = $this->client->email;
-                    $data_m["title"] = "Comprobante de pago";
-                    $data_m["body"] = "Anexo se encuentra el comprobante de pago de su compra realizada hoy.";
-                    Mail::send('ventas.NotaEntregaContado', $data, function ($message) use ($data_m, $pdf) {
+          /*  $data = [
+                'cliente_nombre' => $this->client->nombre." ".$this->client->apellido,
+                'cliente_documento' =>$this->client->nro_documento,
+                'cliente_telefono' =>$this->client->telefono,
+                'usuario' => auth()->user()->name." ".auth()->user()->apellido,
+                'fecha_actual' => date('Y-m-d'),
+                'venta_nro' => $venta_nro_p,
+                'sucursal' => $this->sucursal_detalle->nombre,
+                'caja' => $this->caja_detalle->nombre,
+                'empresa' => $this->empresa,
+                'collection' => Cart::content(),
+                'estado_entrega' => $entrega,
+                'descuento' => $this->descuento_total,
+                'subtotal' =>  $this->subtotal,
+                'subtotal_menos_descuento' =>  $this->subtotal - ($this->descuento_total),
+                'total' => $this->total_venta,
+                'proforma' =>$this->proforma,
+                'iva_empresa' => $this->iva_empresa,
+                'pagado' => $this->pago_cliente,
+                'deuda' => $this->total_venta - $this->pago_cliente,
+                'iva' => $this->iva,];*/
+    
+            //factura
+          /*  if($this->tipo_comprobante == "1"){ 
+                if ($this->tipo_pago == "Contado") $pdf = PDF::loadView('ventas.FacturaContado',$data)->output();
+                else $pdf = PDF::loadView('ventas.FacturaCredito',$data)->output();
+    
+                if($this->send_mail=="1"){
+                    if( $this->client->email != null){
+                        $data_m["email"] = $this->client->email;
+                        $data_m["title"] = "Comprobante de pago";
+                        $data_m["body"] = "Anexo se encuentra el comprobante de pago de su compra realizada hoy.";
+                        Mail::send('ventas.FacturaContado', $data, function ($message) use ($data_m, $pdf) {
                         $message->to($data_m["email"], $data_m["email"])
                             ->subject($data_m["title"])
                             ->attachData($pdf, "Comprobante.pdf");
-                    });
+                        });
+                    }
                 }
+            }*/
+            //ticket 
+    
+            if($this->tipo_comprobante == "1"){ 
+               
+               $json = json_encode($data2);
+    
+    
+               $client = new Client([
+                    'base_uri' => 'http://apiprint.test',
+                ]);
+    
+                $client->request('GET', '/api/print_ticket/'.$json);
+    
             }
+            //nota de entrega
+            else{ 
+                $json = json_encode($data2);
+               
+    
+                $client = new Client([
+                    'base_uri' => 'http://apiprint.test',
+                ]);
+    
+                $client->request('GET', '/api/print_nota/'.$json);
+            }
+
+
         }
+
+        
+        
         cart::destroy();
 
         $this->client = Cliente::where('id','1')->first();
         $this->cliente_select = $this->client->nombre." ".$this->client->apellido;
 
-        $this->reset(['monto1','monto2','monto3','monto4','monto5','metodo_id_1','metodo_id_2','metodo_id_3','metodo_id_4','metodo_id_5','send_mail','cash_received','total_venta','pago_cliente','descuento','descuento_total','metodo_pago','tipo_pago','estado_entrega','subtotal']);
+        $this->reset(['monto1','monto2','monto3','monto4','monto5','metodo_id_1','metodo_id_2','metodo_id_3','metodo_id_4','metodo_id_5','send_mail','cash_received','total_venta','pago_cliente','descuento','descuento_total','metodo_pago','tipo_pago','estado_entrega','subtotal','vuelto','metodo_cambio_id','monto_vuelto']);
        
         if($this->imprimir == 1){
-            $this->reset(['imprimir']);
+            $this->reset(['imprimir','tipo_comprobante']);
             $this->emitTo('ventas.ventas-seleccion-productos','render');
             $this->emitTo('ventas.ventas-cart','render');
     
             //GENERANDO PDF
-           if($this->tipo_comprobante == 1 || $this->tipo_comprobante == 3){
+           /*if($this->tipo_comprobante == 1){
                 return response()->streamDownload(
                     fn () => print($pdf),
                 "Comprobante.pdf"
                 );
-            }
+            }*/
          }
          else {
             $this->emitTo('ventas.ventas-seleccion-productos','render');

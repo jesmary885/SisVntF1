@@ -145,8 +145,6 @@ class ClientesCreate extends Component
                 if($this->ciudad_id) $cliente->ciudad_id = $this->ciudad_id;
                 if($this->estado_id) $cliente->estado_id = $this->estado_id;
                 $cliente->user_id = $usuario_auth;
-                $cliente->puntos = '0';
-
                 $cliente->save();
 
                 $this->reset(['nombre','apellido','email','telefono','nro_documento','tipo_documento','direccion','ciudad_id','estado_id','isopen']);

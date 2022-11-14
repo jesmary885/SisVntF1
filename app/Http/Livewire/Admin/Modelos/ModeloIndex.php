@@ -24,7 +24,7 @@ class ModeloIndex extends Component
     {
         $modelos = Modelo::where('nombre', 'LIKE', '%' . $this->search . '%')
         ->latest('id')
-        ->paginate(5);
+        ->paginate(15);
 
         return view('livewire.admin.modelos.modelo-index',compact('modelos'));
     }

@@ -26,7 +26,6 @@
                             <th class="text-center">Sucursal</th>
                             <th class="text-center">Dirección</th>
                             <th class="text-center">Teléfono</th>
-                            <th class="text-center">Dinero en caja</th>
                             <th class="text-center">Estado</th>
                             <th colspan="2"></th>
                         </tr>
@@ -37,7 +36,6 @@
                                 <td class="text-center">{{$sucursal->nombre}}</td>
                                 <td class="text-center">{{$sucursal->direccion}}</td>
                                 <td class="text-center">{{$sucursal->telefono}}</td>
-                                <td class="text-center">{{$sucursal->saldo}}</td>
                                 <?php
                                 if($sucursal->status == '1') $estado = 'Activa';
                                 else $estado= 'Inactiva';

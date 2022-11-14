@@ -4,7 +4,7 @@
 
         <div class="card-header flex items-center justify-between">
             <div class="flex-1">
-                <input wire:model="search" placeholder="Ingrese el nombre del modelo a buscar" class="form-control">
+                <input wire:model="search" placeholder="Ingrese el nombre de la presentación a buscar" class="form-control">
             </div>
             <div class="ml-2">
                 <button
@@ -25,7 +25,7 @@
                     <thead class="thead-dark">
                         <tr>
            
-                            <th class="text-center">Modelo</th>
+                            <th class="text-center">Presentación</th>
                             <th class="text-center">Marca</th>
                             <th colspan="2"></th>
                         </tr>

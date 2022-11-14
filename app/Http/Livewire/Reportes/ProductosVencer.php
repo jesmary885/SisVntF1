@@ -28,6 +28,7 @@ class ProductosVencer extends Component
             ->join("modelos", "modelos.id", "=", "productos.modelo_id")
             ->join("marcas", "marcas.id", "=", "productos.marca_id")
             ->join("producto_lotes", "producto_lotes.producto_id","=","productos.id")
+            ->where("vencimiento", "=", "Si")
             ->where("producto_lotes.fecha_vencimiento", "<=", $fecha_add_mes)
             ->paginate(10);
 
@@ -46,7 +47,9 @@ class ProductosVencer extends Component
             ->join("modelos", "modelos.id", "=", "productos.modelo_id")
             ->join("marcas", "marcas.id", "=", "productos.marca_id")
             ->join("producto_lotes", "producto_lotes.producto_id","=","productos.id")
+            ->where("vencimiento", "=", "Si")
             ->where("producto_lotes.fecha_vencimiento", "<=", $fecha_add_mes)
+
             ->get();
 
         $data = [

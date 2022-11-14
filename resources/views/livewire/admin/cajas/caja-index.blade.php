@@ -25,19 +25,20 @@
            
                             <th class="text-center">Nombre</th>
                             <th class="text-center">Sucursal</th>
-                            <th class="text-center">Saldo</th>
                             <th class="text-center">Status</th>
+                            <th class="text-center">Saldo en bolivares</th>
+                            <th class="text-center">Saldo en dólares</th>
                             <th colspan="2"></th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($cajas as $caja)
                             <tr>
-                            
                                 <td class="text-center">{{$caja->nombre}}</td>
                                 <td class="text-center">{{$caja->sucursal->nombre}}</td>
-                                <td class="text-center">{{$caja->saldo}}</td>
                                 <td class="text-center">{{$caja->status}}</td>
+                                <td class="text-center">{{$caja->saldo_bolivares}}</td>
+                                <td class="text-center">{{$caja->saldo_dolares}}</td>
                                 <td width="10px">
                                     @livewire('admin.cajas.caja-create',['accion' => 'edit', 'caja' => $caja->id],key($caja->id))
                                 </td>

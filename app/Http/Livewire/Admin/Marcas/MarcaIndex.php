@@ -25,7 +25,7 @@ class MarcaIndex extends Component
     {
         $marcas = Marca::where('nombre', 'LIKE', '%' . $this->search . '%')
         ->latest('id')
-        ->paginate(5);
+        ->paginate(15);
 
         return view('livewire.admin.marcas.marca-index',compact('marcas'));
     }

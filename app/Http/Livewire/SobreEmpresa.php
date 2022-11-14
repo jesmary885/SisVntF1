@@ -60,8 +60,7 @@ class SobreEmpresa extends Component
         //dd($this->logo);
 
         
-
-        $this->logo->storeAs('public/logo',$nombre_imagen);
+        if($this->logo) $this->logo->storeAs('public/logo',$nombre_imagen);
 
         $this->empresa->update([
                 'nombre' => $this->nombre,
@@ -75,11 +74,7 @@ class SobreEmpresa extends Component
                 //'porcentaje_puntos' => $this->porcentaje_puntos,
                 'logo' => $imagen
         ]);
-   
+            $this->emitTo('sobre-empresa','render');
             $this->emit('alert','Los datos han sido modificados correctamente'); 
-            return redirect()->route('home');
-           // $this->resetPage();
-
-       
     }
 }

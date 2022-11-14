@@ -1,6 +1,6 @@
 <div>
     <div class="card">
-        <h1 class="py-0 text-lg text-gray-500 ml-4 mt-1"> <i class="fas fa-lock"></i> Productos por agotarse su existencia</h1>
+        <h1 class="py-0 text-lg text-gray-500 ml-4 mt-1"> <i class="fas fa-lock"></i> Productos por vencer</h1>
     </div>
 
     <div class="card mb-1">

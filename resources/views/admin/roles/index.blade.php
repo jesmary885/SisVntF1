@@ -31,16 +31,16 @@
         <table class="table table-striped">
             <thead class="thead-dark">
                 <tr>
-                    <th>ID</th>
-                    <th>Rol</th>
+             
+                    <th class="text-center" >Nombre</th>
                     <th colspan="2"></th>     
                 </tr>
             </thead>
             <tbody>
                 @foreach ($roles as $role)
                     <tr>
-                        <td>{{$role->id}}</td>
-                        <td>{{$role->name}}</td>
+                     
+                        <td class="text-center">{{$role->name}}</td>
                         <td width="10px">
                              <a href="{{route('admin.roles.edit', $role)}}" class="btn btn-primary btn-sm"><i class="fas fa-edit"></i></a>
                         </td>

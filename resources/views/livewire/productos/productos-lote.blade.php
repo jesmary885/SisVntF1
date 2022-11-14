@@ -26,6 +26,7 @@
                                 <th class="text-center">Precio compra</th>
                                 <th class="text-center">Precio unitario</th>
                                 <th class="text-center">Precio mayor</th>
+                                <th class="text-center">Estado</th>
                                
                            
                                 <th colspan="4"></th>
@@ -42,7 +43,7 @@
                                     <td class="text-justify">{{round(($lote->precio_entrada / $tasa_dia),2)}} {{$moneda_simbolo}}</td>
                                     <td class="text-justify">{{round(($lote->precio_letal / $tasa_dia),2)}} {{$moneda_simbolo}}</td>
                                     <td class="text-justify">{{round(($lote->precio_mayor / $tasa_dia),2)}} {{$moneda_simbolo}}</td>
-                                    
+                                    <td class="text-justify">{{$lote->status}}</td>
                                     
                                     <td width="10px">
                                          @livewire('productos.productos-lote-edit', ['lote' => $lote],key(01.,'$lote->id'))
