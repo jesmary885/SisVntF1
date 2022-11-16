@@ -35,6 +35,7 @@ class ReporteIndex extends Component
         $fecha_inicio = Carbon::parse($this->fecha_inicio)->format('d-m-Y');
         $fecha_fin = Carbon::parse($this->fecha_fin)->format('d-m-Y');
 
+        if($this->vista == 'iva') return redirect()->route('reportes.iva_index',compact('sucursal_id','fecha_inicio','fecha_fin'));
         if($this->vista == 'productos') return redirect()->route('productos.reportes',compact('sucursal_id','fecha_inicio','fecha_fin'));
         if($this->vista == 'cajas') return redirect()->route('cajas.reportes',compact('sucursal_id','fecha_inicio','fecha_fin'));
         else return redirect()->route('ventas.reportes',compact('sucursal_id','fecha_inicio','fecha_fin'));

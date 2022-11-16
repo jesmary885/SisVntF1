@@ -121,7 +121,7 @@ class UsuariosEdit extends Component
                 'estado' => $this->estado,
                 'telefono' => $this->telefono,
                 'password' => Hash::make($this->password),
-                'password_encriptada' => Crypt::encryptString($this->password),
+              //  'password_encriptada' => Crypt::encryptString($this->password),
                 'ciudad_id' => $this->ciudad_id,
                 'estado_id' => $this->estado_id,
                 'sucursal_id' => $this->sucursales_id,

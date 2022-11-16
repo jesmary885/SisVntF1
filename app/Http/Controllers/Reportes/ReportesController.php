@@ -74,4 +74,13 @@ class ReportesController extends Controller
         return view('reportes.productos_vencer');
     }
 
+    public function iva_index(){
+        $vista='iva';
+        return view('reportes.index',compact('vista'));
+    }
+
+    public function iva($sucursal_id,$fecha_inicio,$fecha_fin){
+        return view('reportes.iva',compact('sucursal_id','fecha_inicio','fecha_fin'));
+    }
+
 }

@@ -41,6 +41,7 @@ Auth::routes();
 //Gestion administrativa
 Route::middleware(['auth'])->group(function()
 {
+    Route::resource('usuarios', UsuarioController::class)->only('index','create')->names('admin.usuarios')->middleware('permission:admin.usuarios.index');
     Route::resource('roles', RoleController::class)->only('index','edit','update','destroy','create','store')->names('admin.roles')->middleware('permission:productos');
     Route::resource('clientes', ClientesController::class)->only('index')->names('admin.clientes')->middleware('permission:admin.clientes.index');
     Route::resource('proveedores', ProveedoresController::class)->only('index')->names('admin.proveedores')->middleware('permission:admin.proveedores.index');
@@ -130,6 +131,10 @@ Route::middleware(['auth'])->group(function()
     //Productos por vencer
     Route::get('productos_por_vencer',[ReportesController::class,'producto_vencer'])->name('reportes.producto_vencer')->middleware('permission:reportes.producto_vencer');
 
+    //Reporte de iva,exento,total
+    Route::get('iva',[ReportesController::class,'iva_index'])->name('reportes.iva')->middleware('permission:reportes.producto_vencer');
+    Route::get('reporte_iva/{sucursal_id}/{fecha_inicio}/{fecha_fin}',[ReportesController::class,'iva'])->name('reportes.iva_index')->middleware('permission:reportes.ventas');
+   
     //Cargar imagen de producto
     Route::post('productos/{product}/files', [FilesController::class, 'files'])->name('productos.files');
 

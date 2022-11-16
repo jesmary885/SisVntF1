@@ -425,7 +425,7 @@ return [
                 ],
                 [
                     'text'    => 'IVA',
-                    'route'     => 'reportes.producto_agotar',
+                    'route'     => 'reportes.iva',
                     'can' => 'reportes.producto_agotar'
                 ],
                 // [

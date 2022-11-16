@@ -48,6 +48,8 @@ class ReportesSeniatController extends Controller
         ]);
 
         $client->request('GET', '/api/print_reportex/'.$json."/".$json2."/".$json4."/".$json3);
+
+        return redirect(request()->header('Referer'));
     }
     
 }
