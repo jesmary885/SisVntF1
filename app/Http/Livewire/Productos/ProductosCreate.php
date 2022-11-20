@@ -37,7 +37,7 @@ class ProductosCreate extends Component
     public $total_pagar,$nombre,$tipo_pago=0, $monedas, $moneda_id= 1, $puntos, $generar_serial, $fecha_actual, $sucursal_nombre, $cantidad, $observaciones, $inv_min, $cod_barra, $inventario_min, $presentacion, $precio_entrada, $precio_letal, $precio_mayor, $tipo_garantia, $garantia, $estado, $file, $marcas, $categorias, $proveedores, $sucursales;
     public $modelos = [],$tasa_dia,$moneda_nombre,$moneda_simbolo, $metodos, $metodo_id, $saldado_proveedor = 1, $pago;
     public $marca_id = "", $sucursal_id = "" ,$modelo_id = "", $categoria_id = "", $proveedor_id ="",$cajas = [], $caja_id="";
-    public $limitacion_sucursal = true;
+    public $limitacion_sucursal = true,$precio_combo,$utilidad_combo,$margen_combo;
     public $ff, $fecha_vencimiento, $descuento, $stock_minimo, $vencimiento = "no", $unidad_tiempo_garantia;
     public $moneda_select,$utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $act_utilidades="1", $act_margenes, $exento;
 
@@ -156,7 +156,7 @@ class ProductosCreate extends Component
         
         if($this->observaciones == '') $this->observaciones = 'Sin observaciones';
 
-        if($this->precio_entrada < 0 || $this->precio_letal < 0 || $this->precio_mayor < 0 || $this->cantidad < 0 || $this->puntos < 0){
+        if($this->precio_entrada < 0 || $this->precio_letal < 0 || $this->precio_mayor < 0 || $this->cantidad < 0 || $this->puntos < 0 || $this->utilidad_combo < 0 || $this->margen_combo < 0 || $this->precio_combo < 0){
             $this->emit('errorSize','Ha ingresado un valor negativo, intentelo de nuevo');
         }
         else{
@@ -228,6 +228,9 @@ class ProductosCreate extends Component
             $lote->precio_mayor = $this->precio_mayor*$tasa_dia;
             $lote->utilidad_letal = $this->utilidad_letal*$tasa_dia;
             $lote->utilidad_mayor = $this->utilidad_mayor*$tasa_dia;
+            if($this->utilidad_combo) $this->utilidad_combo*$tasa_dia;
+            if($this->precio_combo) $this->precio_combo*$tasa_dia;
+            if($this->margen_combo) $this->margen_combo*$tasa_dia;
             $lote->margen_letal = $this->margen_letal;
             $lote->margen_mayor = $this->margen_mayor;
             $lote->status = 'activo';
@@ -328,6 +331,11 @@ class ProductosCreate extends Component
                     $this->precio_mayor = round(($this->precio_entrada / (1- ($this->margen_mayor / 100))),2);
                     $this->utilidad_mayor = round(($this->precio_mayor - $this->precio_entrada),2);
                 }
+                if($this->margen_combo != ''){
+                    $this->reset(['precio_combo','utilidad_combo']);
+                    $this->precio_combo = round(($this->precio_entrada / (1- ($this->margen_combo / 100))),2);
+                    $this->utilidad_combo = round(($this->precio_combo - $this->precio_entrada),2);
+                }
             }
 
             elseif($this->act_utilidades == 2){
@@ -340,6 +348,11 @@ class ProductosCreate extends Component
                     $this->reset(['precio_mayor','margen_mayor']);
                     $this->precio_mayor = round(($this->precio_entrada + $this->utilidad_mayor),2);
                     $this->margen_mayor = round((($this->utilidad_mayor / $this->precio_mayor) * 100),2);
+                }
+                if($this->utilidad_combo != ''){
+                    $this->reset(['precio_combo','margen_combo']);
+                    $this->precio_combo = round(($this->precio_entrada + $this->utilidad_combo),2);
+                    $this->margen_combo = round((($this->utilidad_combo / $this->precio_combo) * 100),2);
                 }
             }
         }

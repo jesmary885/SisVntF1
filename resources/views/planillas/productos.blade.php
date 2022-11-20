@@ -20,10 +20,13 @@
             <th>PRECIO DE COMPRA</th>
             <th>PRECIO VENTA DETAL</th>
             <th>PRECIO VENTA MAYOR</th>
+            <th>PRECIO VENTA COMBO</th>
             <th>UTILIDAD AL DETAL</th>
             <th>UTILIDAD AL MAYOR</th>
+            <th>UTILIDAD POR COMBO</th>
             <th>MARGEN AL DETAL</th>
             <th>MARGEN AL MAYOR</th>
+            <th>MARGEN POR COMBO</th>
             <th>PAGO A PROVEEDOR</th>
         </tr>
     </thead>

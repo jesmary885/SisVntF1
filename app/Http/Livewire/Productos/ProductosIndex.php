@@ -38,7 +38,7 @@ class ProductosIndex extends Component
                 ->orwhere('nombre', 'LIKE', '%' . $this->search . '%')
                 ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(15);
+                ->paginate(20);
 
             }
             elseif($this->buscador == 1){
@@ -48,7 +48,7 @@ class ProductosIndex extends Component
                 })
                 ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(15);
+                ->paginate(20);
 
                 $this->item_buscar = "la categoria del producto a buscar";
             }
@@ -59,18 +59,26 @@ class ProductosIndex extends Component
                 })
                 ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(15);
+                ->paginate(20);
 
                 $this->item_buscar = "la marca del producto a buscar";
             }
 
-            else{
+
+            elseif($this->buscador == 3){
                 $productos = Producto::whereHas('modelo',function(Builder $query){
                     $query->where('nombre','LIKE', '%' . $this->search . '%');
                 })
                 ->where('estado','Habilitado')
                 ->latest('id')
-                ->paginate(15);
+                ->paginate(20);
+            }
+
+            elseif($this->buscador == 4){
+                $productos = Producto::where('nombre', 'LIKE', '%' . $this->search . '%')
+                ->where('estado','Habilitado')
+                ->latest('id')
+                ->paginate(20);
             }
         }
         else{

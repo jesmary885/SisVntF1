@@ -35,6 +35,7 @@
                                                     {{-- <option value="" selected>Precio de venta</option> --}}
                                                    <option value="1" selected>Precio unitario</option>
                                                    <option value="2">Precio al mayor</option>
+                                                   <option value="4">Precio por combo</option>
                                                    <option value="3">Precio manual</option>
                                                </select>
                                                <x-input-error for="precios" />

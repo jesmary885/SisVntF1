@@ -19,7 +19,7 @@ class ProductosLote extends Component
     protected $listeners = ['render' => 'render','confirmacion' => 'confirmacion'];
 
 
-    public $search, $producto,$item_buscar,$tasa_dia,$moneda_nombre,$moneda_simbolo,$producto_lote;
+    public $buscador="0",$search, $producto,$item_buscar,$tasa_dia,$moneda_nombre,$moneda_simbolo,$producto_lote;
 
     public function updatingSearch(){
         $this->resetPage();
@@ -29,13 +29,53 @@ class ProductosLote extends Component
     {
 
         if($this->search){
-            $lotes = Producto_lote::whereHas('producto',function(Builder $query){
-                $query->where('cod_barra', 'LIKE', '%' . $this->search . '%')
-                ->where('estado','Habilitado');
-            })
-               // ->where('status','activo')
-                ->latest('id')
-                ->paginate(5);
+            if ($this->buscador == "0"){
+                $lotes = Producto_lote::whereHas('producto',function(Builder $query){
+                    $query->where('cod_barra', 'LIKE', '%' . $this->search . '%')
+                    ->where('estado','Habilitado');
+                })
+                    ->where('status','activo')
+                    ->latest('id')
+                    ->paginate(20);
+            }
+            elseif($this->buscador == '1'){
+                $lotes = Producto_lote::whereHas('producto.categoria',function(Builder $query){
+                    $query->where('nombre', 'LIKE', '%' . $this->search . '%')
+                    ->where('estado','Habilitado');
+                })
+                    ->where('status','activo')
+                    ->latest('id')
+                    ->paginate(20);
+            }
+            elseif($this->buscador == '2'){
+                $lotes = Producto_lote::whereHas('producto.marca',function(Builder $query){
+                    $query->where('nombre', 'LIKE', '%' . $this->search . '%')
+                    ->where('estado','Habilitado');
+                })
+                    ->where('status','activo')
+                    ->latest('id')
+                    ->paginate(20);
+            }
+            elseif($this->buscador == '3'){
+                $lotes = Producto_lote::whereHas('producto.modelo',function(Builder $query){
+                    $query->where('nombre', 'LIKE', '%' . $this->search . '%')
+                    ->where('estado','Habilitado');
+                })
+                    ->where('status','activo')
+                    ->latest('id')
+                    ->paginate(20);
+            }
+            if ($this->buscador == "4"){
+                $lotes = Producto_lote::whereHas('producto',function(Builder $query){
+                    $query->where('nombre', 'LIKE', '%' . $this->search . '%')
+                    ->where('estado','Habilitado');
+                })
+                    ->where('status','activo')
+                    ->latest('id')
+                    ->paginate(20);
+            }
+
+
         }
         else{
             $lotes = 0;

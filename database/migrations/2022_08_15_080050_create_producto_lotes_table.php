@@ -26,10 +26,13 @@ class CreateProductoLotesTable extends Migration
             $table->float('precio_entrada')->nullable();
             $table->float('precio_letal')->nullable();
             $table->float('precio_mayor')->nullable();
+            $table->float('precio_combo')->nullable();
             $table->float('utilidad_letal')->nullable();
             $table->float('utilidad_mayor')->nullable();
+            $table->float('utilidad_combo')->nullable();
             $table->float('margen_letal')->nullable();
             $table->float('margen_mayor')->nullable();
+            $table->float('margen_combo')->nullable();
             $table->integer('stock');
             $table->string('status');
             $table->string('observaciones')->nullable();

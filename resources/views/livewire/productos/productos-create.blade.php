@@ -21,6 +21,10 @@
                         <div class="bg-yellow-200 w-6 h-6"></div>
                         <p class="text-gray-500 ml-2 font-semibold">Precios al mayor</p>
                     </div>
+                    <div class="flex">
+                        <div class="bg-green-200 w-6 h-6"></div>
+                        <p class="text-gray-500 ml-2 font-semibold">Precios por combo</p>
+                    </div>
                     
                
                 </div>
@@ -189,6 +193,16 @@
                             
                             <x-input-error for="precio_mayor" />
                         </div>
+                        <div class="w-full mr-2 mt-4 bg-green-200">
+                            <div class="flex">
+                                <div class="flex-1">
+                                    <input wire:model="precio_combo" title="Precio al mayor" readonly type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Combo">
+                                </div>
+                                <p class="p-0 my-0 text-gray-800 mr-2">{{$moneda_select}}</p>
+                            </div>
+                            
+                            <x-input-error for="precio_combo" />
+                        </div>
                     </div>
                 </div>
 
@@ -223,6 +237,19 @@
                             
                             <x-input-error for="utilidad_mayor" />
                         </div>
+                        <div class="w-full bg-green-200 mr-2 mt-4">
+                            <div class="flex">
+                                <div class="flex-1" :class="{'hidden' : act_utilidades != '1'}">
+                                    <input wire:model="utilidad_combo" readonly title="Utilidad por combo" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Combo">
+                                </div>
+                                <div class="flex-1" :class="{'hidden' : act_utilidades == '1'}">
+                                    <input wire:model="utilidad_combo" title="Utilidad por combo" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Combo">
+                                </div>
+                                <p class="p-0 my-0 text-gray-800 mr-2">{{$moneda_select}}</p>
+                            </div>
+                            
+                            <x-input-error for="utilidad_combo" />
+                        </div>
                     </div>
                 </div>
 
@@ -256,6 +283,18 @@
                                 <p class="p-0 my-0 text-gray-800 font-semibold mr-2">%</p>
                             </div>
                             <x-input-error for="margen_mayor" />
+                        </div>
+                        <div class="w-full mt-4 bg-green-200">
+                            <div class="flex">
+                                <div class="flex-1" :class="{'hidden' : act_utilidades != '2'}">
+                                    <input wire:model="margen_combo" readonly title="Margen de ganancia por combo" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Combo">
+                                </div>
+                                <div class="flex-1" :class="{'hidden' : act_utilidades == '2'}">
+                                    <input wire:model="margen_combo" title="Margen de ganancia por combo" type="number" min="0" class="w-5/6 px-2 appearance-none block bg-gray-50 text-gray-700 border border-gray-200 py-1 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Combo">
+                                </div>
+                                <p class="p-0 my-0 text-gray-800 font-semibold mr-2">%</p>
+                            </div>
+                            <x-input-error for="margen_combo" />
                         </div>
                     </div>
                 </div>

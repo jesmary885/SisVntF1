@@ -27,7 +27,7 @@ class ProductosAdd extends Component
     public $total_pagar, $isopen = false,$tasa_dia,$moneda_nombre,$moneda_simbolo, $monedas, $moneda_id= 1, $metodos, $metodo_id, $saldado_proveedor = 1, $pago;
     public $moneda_select,$producto, $lotes, $generar_serial, $pivot, $precio_compra, $proveedores, $cantidad, $sucursal_nombre, $sucursal_id = "", $lote_id = "",$sucursales, $proveedor_id = "";
     public $limitacion_sucursal = true, $cajas = [], $caja_id="";
-    public $fecha_vencimiento,$vencimiento,$observaciones;
+    public $fecha_vencimiento,$vencimiento,$observaciones,$precio_combo,$utilidad_combo,$margen_combo;
     public $tipo_pago = 0, $utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $precio_entrada, $precio_letal, $precio_mayor,$act_utilidades="1", $act_old_rol=0;
 
     protected $listeners = ['render' => 'render'];
@@ -118,7 +118,7 @@ class ProductosAdd extends Component
                 if($this->precio_entrada != ''){
                     if($this->act_old_rol == '1'){
                         $this->act_old_rol = 0;
-                        $this->reset(['precio_letal','margen_letal','precio_mayor','margen_mayor','precio_entrada','utilidad_letal','utilidad_mayor','fecha_vencimiento']);
+                        $this->reset(['precio_letal','margen_letal','precio_mayor','margen_mayor','precio_entrada','utilidad_letal','utilidad_mayor','fecha_vencimiento','utilidad_combo','margen_combo','precio_combo']);
                     }
 
                     if($this->cantidad != ''){
@@ -135,6 +135,11 @@ class ProductosAdd extends Component
                             $this->precio_mayor = round(($this->precio_entrada / (1- ($this->margen_mayor / 100))),2);
                             $this->utilidad_mayor = round(($this->precio_mayor - $this->precio_entrada),2);
                         }
+                        if($this->margen_combo != ''){
+                            $this->reset(['precio_combo','utilidad_combo']);
+                            $this->precio_combo = round(($this->precio_entrada / (1- ($this->margen_combo / 100))),2);
+                            $this->utilidad_combo = round(($this->precio_combo - $this->precio_entrada),2);
+                        }
                     }
         
                     elseif($this->act_utilidades == 2){
@@ -147,6 +152,11 @@ class ProductosAdd extends Component
                             $this->reset(['precio_mayor','margen_mayor']);
                             $this->precio_mayor = round(($this->precio_entrada + $this->utilidad_mayor),2);
                             $this->margen_mayor = round((($this->utilidad_mayor / $this->precio_mayor) * 100),2);
+                        }
+                        if($this->utilidad_combo != ''){
+                            $this->reset(['precio_combo','margen_combo']);
+                            $this->precio_combo = round(($this->precio_entrada + $this->utilidad_combo),2);
+                            $this->margen_combo = round((($this->utilidad_combo / $this->precio_combo) * 100),2);
                         }
                     }
                 }
@@ -161,9 +171,12 @@ class ProductosAdd extends Component
                 $this->utilidad_letal = $producto_lote_select->utilidad_letal;
                 $this->precio_entrada = $producto_lote_select->precio_entrada;
                 $this->precio_mayor = $producto_lote_select->precio_mayor;
+                $this->precio_combo = $producto_lote_select->precio_combo;
                 $this->margen_mayor = $producto_lote_select->utilidad_mayor;
                 $this->margen_letal = $producto_lote_select->margen_letal;
+                $this->margen_combo = $producto_lote_select->margen_combo;
                 $this->utilidad_mayor = $producto_lote_select->utilidad_mayor;
+                $this->utilidad_combo = $producto_lote_select->utilidad_combo;
 
                 if($this->vencimiento == 'Si') $this->fecha_vencimiento = date("d-m-Y",strtotime($producto_lote_select->fecha_vencimiento));
             
@@ -192,12 +205,12 @@ class ProductosAdd extends Component
     {
         $this->isopen = false;  
 
-        $this->reset(['precio_entrada','sucursal_id','proveedor_id','cantidad','precio_letal','precio_mayor','utilidad_letal','utilidad_mayor','margen_letal','margen_mayor','lote_id']);
+        $this->reset(['precio_entrada','sucursal_id','proveedor_id','cantidad','precio_letal','precio_mayor','utilidad_letal','utilidad_mayor','margen_letal','margen_mayor','lote_id','margen_combo','precio_combo','utilidad_combo']);
     }
 
     public function save(){
         
-        if($this->cantidad < 0 || $this->precio_entrada < 0 || $this->precio_letal < 0 || $this->precio_mayor < 0 || $this->utilidad_letal < 0 || $this->utilidad_mayor < 0 || $this->margen_letal < 0 || $this->margen_mayor < 0){
+        if($this->cantidad < 0 || $this->precio_entrada < 0 || $this->precio_letal < 0 || $this->precio_mayor < 0 || $this->utilidad_letal < 0 || $this->utilidad_mayor < 0 || $this->margen_letal < 0 || $this->margen_mayor < 0 || $this->utilidad_combo < 0 || $this->margen_combo < 0 || $this->precio_combo < 0){
             $this->emit('errorSize','Ha ingresado un valor negativo, intentelo de nuevo');
            // $this->reset(['precio_compra','cantidad']);
         }else{
@@ -267,6 +280,9 @@ class ProductosAdd extends Component
                 $nuevo_lote_producto->margen_letal = $this->margen_letal;
                 $nuevo_lote_producto->utilidad_mayor = $this->utilidad_mayor*$tasa_dia;
                 $nuevo_lote_producto->margen_mayor = $this->margen_mayor;
+                if($this->utilidad_combo) $this->utilidad_combo*$tasa_dia;
+                if($this->precio_combo) $this->precio_combo*$tasa_dia;
+                if($this->margen_combo) $this->margen_combo*$tasa_dia;
                 $nuevo_lote_producto->stock = $this->cantidad;
                 $nuevo_lote_producto->status = 'activo';
                 $nuevo_lote_producto->observaciones = $this->observaciones;

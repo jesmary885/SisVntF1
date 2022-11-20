@@ -14,7 +14,7 @@ use Livewire\Component;
 
 class ProductosLoteEdit extends Component
 {
-    public $isopen = false,$lote,$tasa_dia,$moneda_nombre,$moneda_simbolo,$monedas, $moneda_id= "";
+    public $isopen = false,$lote,$tasa_dia,$moneda_nombre,$moneda_simbolo,$monedas, $moneda_id= "",$precio_combo,$utilidad_combo,$margen_combo;
 
     public $proveedor_id ="", $proveedores, $nombre, $cod_barra,$nro_lote, $fecha_vencimiento,$observaciones,$status,$vencimiento = "No",$sucursal_lote_productos, $sucursal_lote_product=[];
     public $moneda_select,$utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $precio_entrada, $precio_letal, $precio_mayor,$act_utilidades="1", $act_old_rol=0;
@@ -52,6 +52,10 @@ class ProductosLoteEdit extends Component
         $this->margen_mayor = $this->lote->margen_mayor;
         $this->margen_letal = $this->lote->margen_letal;
         $this->utilidad_mayor = $this->lote->utilidad_mayor;
+        $this->precio_combo = $this->lote->precio_combo;
+        $this->margen_combo = $this->lote->margen_combo;
+        $this->utilidad_combo = $this->lote->utilidad_combo;
+
         $this->observaciones = $this->lote->observaciones;
         $this->status = $this->lote->status;
         $this->otro = $this->lote->producto;
@@ -87,6 +91,11 @@ class ProductosLoteEdit extends Component
                     $this->precio_mayor = round(($this->precio_entrada / (1- ($this->margen_mayor / 100))),2);
                     $this->utilidad_mayor = round(($this->precio_mayor - $this->precio_entrada),2);
                 }
+                if($this->margen_combo != ''){
+                    $this->reset(['precio_combo','utilidad_combo']);
+                    $this->precio_combo = round(($this->precio_entrada / (1- ($this->margen_combo / 100))),2);
+                    $this->utilidad_combo = round(($this->precio_combo - $this->precio_entrada),2);
+                }
             }
         
             elseif($this->act_utilidades == 2){
@@ -99,6 +108,11 @@ class ProductosLoteEdit extends Component
                     $this->reset(['precio_mayor','margen_mayor']);
                     $this->precio_mayor = round(($this->precio_entrada + $this->utilidad_mayor),2);
                     $this->margen_mayor = round((($this->utilidad_mayor / $this->precio_mayor) * 100),2);
+                }
+                if($this->utilidad_combo != ''){
+                    $this->reset(['precio_combo','margen_combo']);
+                    $this->precio_combo = round(($this->precio_entrada + $this->utilidad_combo),2);
+                    $this->margen_combo = round((($this->utilidad_combo / $this->precio_combo) * 100),2);
                 }
             }
         }
@@ -130,7 +144,7 @@ class ProductosLoteEdit extends Component
 
     public function update(){
 
-        if($this->precio_entrada < 0 || $this->precio_letal < 0 || $this->precio_mayor < 0 || $this->utilidad_letal < 0 || $this->utilidad_mayor < 0 || $this->margen_letal < 0 || $this->margen_mayor < 0){
+        if($this->precio_entrada < 0 || $this->precio_letal < 0 || $this->precio_mayor < 0 || $this->utilidad_letal < 0 || $this->utilidad_mayor < 0 || $this->margen_letal < 0 || $this->margen_mayor < 0 || $this->utilidad_combo < 0 || $this->margen_combo < 0 || $this->precio_combo < 0){
             $this->emit('errorSize','Ha ingresado un valor incorrecto, intentelo de nuevo');
            // $this->reset(['precio_compra','cantidad']);
         }else{
@@ -158,6 +172,9 @@ class ProductosLoteEdit extends Component
                 "margen_mayor"      => $this->margen_mayor,
                 "observaciones"     => $this->observaciones,
                 "status"            => $this->status,
+                "precio_combo"      => $this->precio_combo*$tasa_dia,
+                "utilidad_combo"    => $this->utilidad_combo*$tasa_dia,
+                "margen_combo"      => $this->margen_combo,
             ]);
             
 

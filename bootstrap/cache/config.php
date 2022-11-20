@@ -468,16 +468,16 @@
   ),
   'app' => 
   array (
-    'name' => 'sisvnt',
+    'name' => 'Laravel',
     'env' => 'local',
     'debug' => true,
-    'url' => 'http://sistvnt.test/',
+    'url' => 'http://sistvnt.test',
     'asset_url' => NULL,
     'timezone' => 'America/Caracas',
     'locale' => 'es',
     'fallback_locale' => 'es',
     'faker_locale' => 'en_US',
-    'key' => 'base64:zV0cZyT/TLTRHaYwgDr7uFZjPXpQmuQH1OLDVmQl5TY=',
+    'key' => 'base64:uuqo9jidN/Pd9eEFHQkUr4IeYjRGo2XSYUNNqcflgjY=',
     'cipher' => 'AES-256-CBC',
     'providers' => 
     array (
@@ -658,7 +658,7 @@
       'file' => 
       array (
         'driver' => 'file',
-        'path' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\framework/cache/data',
+        'path' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\framework/cache/data',
       ),
       'memcached' => 
       array (
@@ -702,7 +702,7 @@
         'driver' => 'octane',
       ),
     ),
-    'prefix' => 'sisvnt_cache',
+    'prefix' => 'laravel_cache',
   ),
   'cart' => 
   array (
@@ -763,7 +763,7 @@
       array (
         'driver' => 'sqlite',
         'url' => NULL,
-        'database' => 'sis_vnt',
+        'database' => 'sisvnt',
         'prefix' => '',
         'foreign_key_constraints' => true,
       ),
@@ -773,9 +773,9 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'sis_vnt',
+        'database' => 'sisvnt',
         'username' => 'root',
-        'password' => '12345678',
+        'password' => '',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -793,9 +793,9 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'sis_vnt',
+        'database' => 'sisvnt',
         'username' => 'root',
-        'password' => '12345678',
+        'password' => '',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -808,9 +808,9 @@
         'url' => NULL,
         'host' => '127.0.0.1',
         'port' => '3306',
-        'database' => 'sis_vnt',
+        'database' => 'sisvnt',
         'username' => 'root',
-        'password' => '12345678',
+        'password' => '',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -823,7 +823,7 @@
       'options' => 
       array (
         'cluster' => 'redis',
-        'prefix' => 'sisvnt_database_',
+        'prefix' => 'laravel_database_',
       ),
       'default' => 
       array (
@@ -849,10 +849,10 @@
     'orientation' => 'portrait',
     'defines' => 
     array (
-      'font_dir' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\fonts/',
-      'font_cache' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\fonts/',
+      'font_dir' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\fonts/',
+      'font_cache' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\fonts/',
       'temp_dir' => 'C:\\Users\\Erik\\AppData\\Local\\Temp',
-      'chroot' => 'C:\\xampp\\htdocs\\sist_vnt',
+      'chroot' => 'C:\\xampp\\htdocs\\SisVntF1',
       'enable_font_subsetting' => false,
       'pdf_backend' => 'CPDF',
       'default_media_type' => 'screen',
@@ -874,13 +874,13 @@
       'local' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\app',
+        'root' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\app',
       ),
       'public' => 
       array (
         'driver' => 'local',
-        'root' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\app/public',
-        'url' => 'http://sistvnt.test//storage',
+        'root' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\app/public',
+        'url' => 'http://sistvnt.test/storage',
         'visibility' => 'public',
       ),
       's3' => 
@@ -897,7 +897,7 @@
     ),
     'links' => 
     array (
-      'C:\\xampp\\htdocs\\sist_vnt\\public\\storage' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\app/public',
+      'C:\\xampp\\htdocs\\SisVntF1\\public\\storage' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\app/public',
     ),
   ),
   'hashing' => 
@@ -932,13 +932,13 @@
       'single' => 
       array (
         'driver' => 'single',
-        'path' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\logs/laravel.log',
         'level' => 'debug',
       ),
       'daily' => 
       array (
         'driver' => 'daily',
-        'path' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
       ),
@@ -989,7 +989,7 @@
       ),
       'emergency' => 
       array (
-        'path' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\logs/laravel.log',
+        'path' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\logs/laravel.log',
       ),
     ),
   ),
@@ -1001,11 +1001,11 @@
       'smtp' => 
       array (
         'transport' => 'smtp',
-        'host' => 'smtp.gmail.com',
-        'port' => '587',
-        'encryption' => 'tls',
-        'username' => 'jesmary885@gmail.com',
-        'password' => 'jszmatlofpoksrgs',
+        'host' => 'mailhog',
+        'port' => '1025',
+        'encryption' => NULL,
+        'username' => NULL,
+        'password' => NULL,
         'timeout' => NULL,
         'auth_mode' => NULL,
       ),
@@ -1047,15 +1047,15 @@
     ),
     'from' => 
     array (
-      'address' => 'jesmary885@gmail.com',
-      'name' => 'sisvnt',
+      'address' => NULL,
+      'name' => 'Laravel',
     ),
     'markdown' => 
     array (
       'theme' => 'default',
       'paths' => 
       array (
-        0 => 'C:\\xampp\\htdocs\\sist_vnt\\resources\\views/vendor/mail',
+        0 => 'C:\\xampp\\htdocs\\SisVntF1\\resources\\views/vendor/mail',
       ),
     ),
   ),
@@ -1212,7 +1212,7 @@
     'lifetime' => '120',
     'expire_on_close' => true,
     'encrypt' => false,
-    'files' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\framework/sessions',
+    'files' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -1221,7 +1221,7 @@
       0 => 2,
       1 => 100,
     ),
-    'cookie' => 'sisvnt_session',
+    'cookie' => 'laravel_session',
     'path' => '/',
     'domain' => NULL,
     'secure' => NULL,
@@ -1232,9 +1232,9 @@
   array (
     'paths' => 
     array (
-      0 => 'C:\\xampp\\htdocs\\sist_vnt\\resources\\views',
+      0 => 'C:\\xampp\\htdocs\\SisVntF1\\resources\\views',
     ),
-    'compiled' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\framework\\views',
+    'compiled' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\framework\\views',
   ),
   'flare' => 
   array (
@@ -1279,7 +1279,7 @@
   'livewire' => 
   array (
     'class_namespace' => 'App\\Http\\Livewire',
-    'view_path' => 'C:\\xampp\\htdocs\\sist_vnt\\resources\\views/livewire',
+    'view_path' => 'C:\\xampp\\htdocs\\SisVntF1\\resources\\views/livewire',
     'layout' => 'layouts.app',
     'asset_url' => NULL,
     'app_url' => NULL,
@@ -1420,7 +1420,7 @@
     ),
     'temporary_files' => 
     array (
-      'local_path' => 'C:\\xampp\\htdocs\\sist_vnt\\storage\\framework/cache/laravel-excel',
+      'local_path' => 'C:\\xampp\\htdocs\\SisVntF1\\storage\\framework/cache/laravel-excel',
       'remote_disk' => NULL,
       'remote_prefix' => NULL,
       'force_resync_remote' => NULL,

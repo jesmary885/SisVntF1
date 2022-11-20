@@ -48,6 +48,7 @@ class VentasSeleccionCantidades extends Component
         if($this->precios == 1) $precio_venta = $producto_lote->precio_letal;
         elseif($this->precios == 2) $precio_venta = $producto_lote->precio_mayor;
         elseif($this->precios == 3) $precio_venta = $this->precio_manual;
+        elseif($this->precios == 4) $precio_venta = $producto_lote->precio_combo;
             
         $this->options['exento'] = $this->producto->producto->exento;
         $this->options['descuento'] = $this->producto->producto->descuento;

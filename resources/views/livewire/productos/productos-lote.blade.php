@@ -2,8 +2,25 @@
     <div>
         <div class="card">
             <div class="card-header flex items-center justify-between">
-                <div class="flex-1 mr-2">
-                    <input wire:model="search" placeholder="Ingrese el código de barra del producto" class="form-control">
+            <div class="flex-1">
+                    <div class="flex">
+                        <div class="w-1/4">
+                   
+                            <select wire:model="buscador" id="buscador" class="form-control text-m" name="buscador">
+                                <option value="0">Código de barra</option>
+                                <option value="1">Categoria</option>
+                                <option value="2">Marca</option>
+                                <option value="3">Presentación</option>
+                                <option value="4">Nombre</option>
+                            </select>
+        
+                            <x-input-error for="buscador" />
+    
+                        </div>
+                        <input wire:model="search" placeholder="Ingrese el producto a buscar" class="form-control ml-2">
+                            
+                    </div>
+                    
                 </div>
                 <div class="ml-2">
                     <button
@@ -26,6 +43,7 @@
                                 <th class="text-center">Precio compra</th>
                                 <th class="text-center">Precio unitario</th>
                                 <th class="text-center">Precio mayor</th>
+                                <th class="text-center">Precio por combo</th>
                                 <th class="text-center">Estado</th>
                                
                            
@@ -43,6 +61,7 @@
                                     <td class="text-justify">{{round(($lote->precio_entrada / $tasa_dia),2)}} {{$moneda_simbolo}}</td>
                                     <td class="text-justify">{{round(($lote->precio_letal / $tasa_dia),2)}} {{$moneda_simbolo}}</td>
                                     <td class="text-justify">{{round(($lote->precio_mayor / $tasa_dia),2)}} {{$moneda_simbolo}}</td>
+                                    <td class="text-justify">{{round(($lote->precio_combo / $tasa_dia),2)}} {{$moneda_simbolo}}</td>
                                     <td class="text-justify">{{$lote->status}}</td>
                                     
                                     <td width="10px">

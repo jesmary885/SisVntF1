@@ -639,13 +639,19 @@ class VentasCart extends Component
                 if($this->metodo_cambio_id == 3) $efectivo_bs_decrec = $this->monto_vuelto;
                 if($this->metodo_cambio_id == 4) $efectivo_dls_decrec = $this->monto_vuelto;
             }
+            if($this->imprimir == '1' && $this->tipo_comprobante == "2"){
+                $venta->impuesto=0;
+                $venta->total = $this->total_venta - $this->iva;
+            }
+            else{
+                $venta->impuesto=$this->iva;
+                $venta->total = $this->total_venta;
+            }
             $venta->subtotal =  $this->subtotal;
-            $venta->total = $this->total_venta;
             $venta->sucursal_id = $this->sucursal;
             $venta->caja_id = $this->caja;
             $venta->estado_entrega = $this->estado_entrega;
             $venta->descuento = $this->descuento_total;
-            $venta->impuesto=$this->iva;
             $venta->estado='activa';
             $venta->exento = $this->subt_e;
             $venta->save();
