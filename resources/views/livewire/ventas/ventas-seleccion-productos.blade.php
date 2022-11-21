@@ -34,7 +34,7 @@
                     @foreach ($productos as $producto)
                         <div class="flex justify-between">
                             <div class="w-full">
-                                <h4 class="text-gray-600 font-semibold">
+                                <h4 class="text-gray-600 font-semibold text-md">
                                 {{$producto->nombre}} {{$producto->categoria->nombre}} {{$producto->modelo->nombre}} / {{$producto->marca->nombre}}
                                 </h4>
                             </div>

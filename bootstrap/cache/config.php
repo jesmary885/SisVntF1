@@ -468,7 +468,7 @@
   ),
   'app' => 
   array (
-    'name' => 'Laravel',
+    'name' => 'Ibiza',
     'env' => 'local',
     'debug' => true,
     'url' => 'http://sistvnt.test',
@@ -702,7 +702,7 @@
         'driver' => 'octane',
       ),
     ),
-    'prefix' => 'laravel_cache',
+    'prefix' => 'ibiza_cache',
   ),
   'cart' => 
   array (
@@ -823,7 +823,7 @@
       'options' => 
       array (
         'cluster' => 'redis',
-        'prefix' => 'laravel_database_',
+        'prefix' => 'ibiza_database_',
       ),
       'default' => 
       array (
@@ -1048,7 +1048,7 @@
     'from' => 
     array (
       'address' => NULL,
-      'name' => 'Laravel',
+      'name' => 'Ibiza',
     ),
     'markdown' => 
     array (
@@ -1221,7 +1221,7 @@
       0 => 2,
       1 => 100,
     ),
-    'cookie' => 'laravel_session',
+    'cookie' => 'ibiza_session',
     'path' => '/',
     'domain' => NULL,
     'secure' => NULL,

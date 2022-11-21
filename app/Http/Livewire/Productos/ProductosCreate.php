@@ -45,10 +45,14 @@ class ProductosCreate extends Component
 
     protected $rules = [
          'nombre' => 'required|unique:productos',
-         'cod_barra'=>'required|unique:productos|min:5|max:25',
-         'precio_entrada' => 'required|numeric',
+         'cod_barra'=>'unique:productos|max:25',
+         /*'precio_entrada' => 'required|numeric',
          'precio_letal' => 'required|numeric',
          'precio_mayor' => 'required|numeric',
+         'utilidad_letal' => 'required|numeric',
+         'margen_letal' => 'required|numeric',
+         'utilidad_mayor' => 'required|numeric',
+         'margen_mayor' => 'required|numeric',*/
          'cantidad' => 'required|numeric',
          'categoria_id' => 'required',
          'marca_id' => 'required',
@@ -60,15 +64,11 @@ class ProductosCreate extends Component
          'stock_minimo' => 'required|numeric',
          'vencimiento' => 'required',
          'tipo_garantia' => 'required',
-         'utilidad_letal' => 'required|numeric',
-         'margen_letal' => 'required|numeric',
-         'utilidad_mayor' => 'required|numeric',
-         'margen_mayor' => 'required|numeric',
          'file' => 'max:1024',
          'tipo_pago' => 'required'
       ];
 
-      protected $rules_pago = [
+      protected $rule_pago = [
         'pago' => 'required',
         'metodo_id' => 'required',
         'caja_id' => 'required',
@@ -205,7 +205,7 @@ class ProductosCreate extends Component
             $compra->fecha = $this->fecha_actual;
             $compra->total = $total_compra;
             $compra->cantidad = $this->cantidad;
-            $compra->precio_compra = $this->precio_entrada*$tasa_dia;
+            if($this->precio_entrada) $compra->precio_compra = $this->precio_entrada*$tasa_dia; else $compra->precio_compra = 0;
             $compra->proveedor_id = $this->proveedor_id;
             $compra->user_id = $usuario_auth;
             $compra->sucursal_id = $this->sucursal_id;
@@ -223,16 +223,16 @@ class ProductosCreate extends Component
             $lote->proveedor_id = $this->proveedor_id;
             $lote->producto_id = $producto->id;
             $lote->fecha_vencimiento = Carbon::parse($this->fecha_vencimiento);
-            $lote->precio_entrada = $this->precio_entrada*$tasa_dia;
-            $lote->precio_letal = $this->precio_letal*$tasa_dia;
-            $lote->precio_mayor = $this->precio_mayor*$tasa_dia;
-            $lote->utilidad_letal = $this->utilidad_letal*$tasa_dia;
-            $lote->utilidad_mayor = $this->utilidad_mayor*$tasa_dia;
-            if($this->utilidad_combo) $this->utilidad_combo*$tasa_dia;
-            if($this->precio_combo) $this->precio_combo*$tasa_dia;
-            if($this->margen_combo) $this->margen_combo*$tasa_dia;
-            $lote->margen_letal = $this->margen_letal;
-            $lote->margen_mayor = $this->margen_mayor;
+            if($this->precio_entrada) $lote->precio_entrada = $this->precio_entrada*$tasa_dia; else $lote->precio_entrada = 0;
+            if($this->precio_letal) $lote->precio_letal = $this->precio_letal*$tasa_dia; else $lote->precio_letal = 0;
+            if($this->precio_mayor) $lote->precio_mayor = $this->precio_mayor*$tasa_dia; else $lote->precio_mayor = 0;
+            if($this->utilidad_letal) $lote->utilidad_letal = $this->utilidad_letal*$tasa_dia; else $lote->utilidad_letal = 0;
+            if($this->utilidad_mayor) $lote->utilidad_mayor = $this->utilidad_mayor*$tasa_dia; else $lote->utilidad_mayor = 0;
+            if($this->utilidad_combo) $lote->utilidad_combo = $this->utilidad_combo*$tasa_dia; else $lote->utilidad_combo = 0;
+            if($this->precio_combo) $lote->precio_combo= $this->precio_combo*$tasa_dia; else $lote->precio_combo= 0;
+            if($this->margen_combo) $lote->margen_combo = $this->margen_combo*$tasa_dia; else $lote->margen_combo = 0;
+            if($this->margen_letal) $lote->margen_letal = $this->margen_letal*$tasa_dia; else $lote->margen_letal = 0;
+            if($this->margen_mayor) $lote->margen_mayor = $this->margen_mayor*$tasa_dia; else $lote->margen_mayor = 0;
             $lote->status = 'activo';
             $lote->observaciones = $this->observaciones;
             $lote->stock= $this->cantidad;
@@ -285,7 +285,7 @@ class ProductosCreate extends Component
                 $movimiento_caja->save();
             }
             
-            $this->reset(['nombre','stock_minimo','utilidad_letal','utilidad_mayor','margen_letal','margen_mayor','exento','descuento','sucursal_id','fecha_vencimiento','generar_serial','puntos','cantidad','cod_barra','inventario_min','presentacion','precio_entrada','precio_letal','precio_mayor','modelo_id','categoria_id','observaciones','tipo_garantia','garantia','estado','proveedor_id','marca_id','file']);
+            $this->reset(['nombre','stock_minimo','utilidad_letal','utilidad_mayor','margen_letal','margen_mayor','exento','descuento','sucursal_id','fecha_vencimiento','generar_serial','puntos','cantidad','cod_barra','inventario_min','presentacion','precio_entrada','precio_letal','precio_mayor','modelo_id','categoria_id','observaciones','tipo_garantia','garantia','estado','proveedor_id','marca_id','file','total_pagar','tipo_pago','pago','utilidad_combo','margen_combo','precio_combo']);
             $this->emit('alert','Producto creado correctamente');
             $this->emitTo('productos.productos-index','render');
         }
