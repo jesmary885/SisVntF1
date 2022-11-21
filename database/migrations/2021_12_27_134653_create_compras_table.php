@@ -21,6 +21,10 @@ class CreateComprasTable extends Migration
             $table->integer('cantidad');
             $table->integer('lote')->nullable();
             $table->float('precio_compra');
+
+            $table->unsignedBigInteger('moneda_id')->nullable();
+            $table->foreign('moneda_id')->references('id')->on('monedas');
+            
             $table->float('deuda_a_proveedor')->default(0);
 
             $table->unsignedBigInteger('proveedor_id');

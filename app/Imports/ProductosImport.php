@@ -6,6 +6,7 @@ use App\Models\Categoria;
 use App\Models\Compra;
 use App\Models\Marca;
 use App\Models\Modelo;
+use App\Models\Moneda;
 use App\Models\Producto;
 use App\Models\Producto_lote;
 use App\Models\Producto_sucursal;
@@ -29,6 +30,7 @@ class ProductosImport implements ToModel, WithHeadingRow, WithBatchInserts, With
         $this->modelos = Modelo::pluck('id','nombre');
         $this->sucursal = Sucursal::pluck('id','nombre');
         $this->proveedores = Proveedor::pluck('id','nombre_proveedor');
+        $this->monedas = Moneda::pluck('id','simbolo');
     }
     /**
     
@@ -69,6 +71,7 @@ class ProductosImport implements ToModel, WithHeadingRow, WithBatchInserts, With
             'margen_letal'    => $row['margen_al_detal'],
             'margen_mayor'    => $row['margen_al_mayor'],
             'margen_combo'    => $row['margen_por_combo'],
+            'moneda_id' => $this->monedas[$row['moneda']],
             'proveedor_id' => $this->proveedores[$row['proveedor']],
             'stock'    => $row['cantidad'],
             'fecha_vencimiento'    => $row['fecha_de_vencimiento'],
@@ -85,6 +88,7 @@ class ProductosImport implements ToModel, WithHeadingRow, WithBatchInserts, With
             'total' => $total,
             'cantidad' => $row['cantidad'],
             'precio_compra'    => $row['precio_de_compra'],
+            'moneda_id' => $this->monedas[$row['moneda']],
             'deuda_a_proveedor'    => $deuda,
             'proveedor_id'    => $this->proveedores[$row['proveedor']],
             'producto_id'    => $producto->id,

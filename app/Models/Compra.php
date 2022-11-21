@@ -37,4 +37,8 @@ class Compra extends Model
         return $this->belongsTo(Metodo_pago::class);
     }
 
+    public function moneda(){
+        return $this->belongsTo(Moneda::class);
+    }
+
 }

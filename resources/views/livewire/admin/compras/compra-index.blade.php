@@ -64,9 +64,9 @@
                                 <td class="text-center">{{$compra->fecha}}</td>
                                 <td class="text-center">{{$compra->producto->nombre}} - Cod. barra: {{$compra->producto->cod_barra}} - Lote: {{$compra->lote}}</td>
                                 <td class="text-center">{{$compra->cantidad}}</td>
-                                <td class="text-center">{{$compra->precio_compra}}</td>
-                                <td class="text-center">{{$compra->deuda_a_proveedor}}</td>
-                                <td class="text-center">{{$compra->total}}</td>
+                                <td class="text-center">{{$compra->precio_compra}} {{$compra->moneda->simbolo}}</td>
+                                <td class="text-center">{{$compra->deuda_a_proveedor}} {{$compra->moneda->simbolo}}</td>
+                                <td class="text-center">{{$compra->total}} {{$compra->moneda->simbolo}}</td>
                                 <td class="text-center">{{$compra->sucursal->nombre}}</td>
                                 <td width="10px">
                                     @if ($compra->deuda_a_proveedor > 0)

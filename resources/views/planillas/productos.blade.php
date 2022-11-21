@@ -18,6 +18,7 @@
             <th>NOMBRE SUCURSAL COMO FUE CARGADO EN MODULO DE SUCURSAL</th>
             <th>PROVEEDOR</th>
             <th>PRECIO DE COMPRA</th>
+            <th>MONEDA</th>
             <th>PRECIO VENTA DETAL</th>
             <th>PRECIO VENTA MAYOR</th>
             <th>PRECIO VENTA COMBO</th>
@@ -49,11 +50,15 @@
             <td>Ejemplo. 50 (Aca debe colocar la cantidad de equipos que sera almacenados en la sucursal con el nombre de la columna, si hay mas sucursales debe agregar otra columna con el nombre de la sucursal y colocar la cantidad) - Recuerde registrar sus sucursales antes</td>
             <td>Ejemplo. XXXXXXX C.A ((Este nombre debe estar registrado en el modulo de proveedores) - Recuerde cargar primero sus proveedores)</td>
             <td>Ejemplo. 200 (Monto en Bs)</td>
+            <td>Ejemplo. $. (Simbolo de la moneda en que compro el producto, Opciones: $, Bs, €, ¥)</td>
+            <td>Ejemplo. 220 (Monto en Bs)</td>
             <td>Ejemplo. 220 (Monto en Bs)</td>
             <td>Ejemplo. 210 (Monto en Bs)</td>
             <td>Ejemplo. 20 (Monto en Bs)</td>
             <td>Ejemplo. 10 (Monto en Bs)</td>
+            <td>Ejemplo. 10 (Monto en Bs)</td>
             <td>Ejemplo. 9.10 (Valor en porcentaje)</td>
+            <td>Ejemplo. 4.80 (Valor en porcentaje)</td>
             <td>Ejemplo. 4.80 (Valor en porcentaje)</td>
             <td>Ejemplo. 3500 (El total pagado al proveedor)</td>
         </tr>

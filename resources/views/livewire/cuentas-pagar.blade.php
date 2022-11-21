@@ -24,16 +24,16 @@
                                     <td class="text-center">{{$cuenta->id}}</td>
                                     <td class="text-center">{{$cuenta->sucursal->nombre}}</td>
                                     <td class="text-center">{{$cuenta->proveedor->nombre_proveedor}}</td>
-                                    <td class="text-center">{{ $moneda_simbolo }} {{ round(($cuenta->deuda_a_proveedor/ $tasa_dia),2)}}</td>
+                                    <td class="text-center">{{ round(($cuenta->deuda_a_proveedor),2)}} {{ $cuenta->moneda->simbolo }} </td>
                                 </tr>
                             @endforeach
-                            <tr>
+                            <!-- <tr>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
                                 <td class="text-center"></td>
                                 <td class="text-center text-gray-800 font-bold">{{ $moneda_simbolo }} {{round(($total/ $tasa_dia),2)}}</td>
-                            </tr>
+                            </tr> -->
                         </tbody>
                     </table>
                 </div>

@@ -53,12 +53,11 @@
                         <tbody>
                             @foreach ($lotes as $lote)
                         
-                                <tr >
-                                    
+                                <tr >                                  
                                     <td class="text-center">{{$lote->lote}}</td>
                                     <td class="text-center">{{$lote->producto->nombre}}</td>
                                     <td class="text-justify">{{$lote->stock}}</td>
-                                    <td class="text-justify">{{round(($lote->precio_entrada / $tasa_dia),2)}} {{$moneda_simbolo}}</td>
+                                    <td class="text-justify">{{round(($lote->precio_entrada),2)}} {{$lote->moneda->simbolo}}</td>
                                     <td class="text-justify">{{round(($lote->precio_letal / $tasa_dia),2)}} {{$moneda_simbolo}}</td>
                                     <td class="text-justify">{{round(($lote->precio_mayor / $tasa_dia),2)}} {{$moneda_simbolo}}</td>
                                     <td class="text-justify">{{round(($lote->precio_combo / $tasa_dia),2)}} {{$moneda_simbolo}}</td>

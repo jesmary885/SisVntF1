@@ -39,7 +39,7 @@ class ProductosLoteEdit extends Component
     
     public function mount(){
 
-        $this->moneda_id = '1';
+        //$this->moneda_id = '1';
 
         $this->sucursal_lote_productos = Producto_sucursal::where('producto_id',$this->lote->producto_id)
             ->where('lote',$this->lote->lote)
@@ -55,6 +55,7 @@ class ProductosLoteEdit extends Component
         $this->precio_combo = $this->lote->precio_combo;
         $this->margen_combo = $this->lote->margen_combo;
         $this->utilidad_combo = $this->lote->utilidad_combo;
+        $this->moneda_id = $this->lote->moneda_id;
 
         $this->observaciones = $this->lote->observaciones;
         $this->status = $this->lote->status;
@@ -74,7 +75,7 @@ class ProductosLoteEdit extends Component
             $this->fecha_vencimiento = $this->lote->fecha_vencimiento;
         }
         $this->monedas = Moneda::all();
-        $this->moneda_select = 'Bs'; 
+        $this->moneda_select = $this->lote->moneda->simbolo; 
     }
 
     public function render()
@@ -163,7 +164,7 @@ class ProductosLoteEdit extends Component
                 "proveedor_id"      => $this->proveedor_id,
                 "producto_id"       => $this->lote->producto_id,
                 "fecha_vencimiento" => $fecha_vencimiento,
-                "precio_entrada"    => $this->precio_entrada*$tasa_dia,
+                "precio_entrada"    => $this->precio_entrada,
                 "precio_letal"      => $this->precio_letal*$tasa_dia,
                 "precio_mayor"      => $this->precio_mayor*$tasa_dia,
                 "utilidad_letal"    => $this->utilidad_letal*$tasa_dia,
@@ -175,6 +176,7 @@ class ProductosLoteEdit extends Component
                 "precio_combo"      => $this->precio_combo*$tasa_dia,
                 "utilidad_combo"    => $this->utilidad_combo*$tasa_dia,
                 "margen_combo"      => $this->margen_combo,
+                "moneda_id"         => $this->moneda_id,
             ]);
             
 
@@ -187,7 +189,7 @@ class ProductosLoteEdit extends Component
             $cantidad_old = $compra->cantidad;
 
             $compra->update([
-                'precio_compra' => $this->precio_entrada*$tasa_dia,
+                'precio_compra' => $this->precio_entrada,
                 'total' => $this->precio_entrada*$cantidad_old,
             ]);
 

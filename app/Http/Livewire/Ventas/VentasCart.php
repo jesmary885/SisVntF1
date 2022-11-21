@@ -511,7 +511,7 @@ class VentasCart extends Component
                 }
 
             }
-            /*elseif($this->monto1 != '' && $this->monto2 != '' && $this->monto3 != ''){
+          /*  elseif($this->monto1 != '' && $this->monto2 != '' && $this->monto3 != ''){
                 if($this->metodo_id_1 == 1 || $this->metodo_id_1 == 2 || $this->metodo_id_1 == 3 || $this->metodo_id_1 == 5 || $this->metodo_id_1 == 6) $moneda_1 = 'bs';
                 else $moneda_1 = '$';
                 if($this->metodo_id_2 == 1 || $this->metodo_id_2 == 2 || $this->metodo_id_2 == 3 || $this->metodo_id_2 == 5 || $this->metodo_id_2 == 6) $moneda_2 = 'bs';
@@ -525,8 +525,18 @@ class VentasCart extends Component
                 elseif($moneda_1 == '$' && $moneda_2 == '$' && $moneda_3 == '$'){
                     
                 }
-
-
+                elseif($moneda_1 == '$' && $moneda_2 == '$' && $moneda_3 == 'bs'){
+                    
+                }
+                elseif($moneda_1 == '$' && $moneda_2 == 'bs' && $moneda_3 == 'bs'){
+                    
+                }
+                elseif($moneda_1 == 'bs' && $moneda_2 == '$' && $moneda_3 == 'bs'){
+                    
+                }
+                elseif($moneda_1 == '$' && $moneda_2 == 'bs' && $moneda_3 == '$'){
+                    
+                }
 
             }*/
 

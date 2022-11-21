@@ -28,7 +28,7 @@ class ProductosAdd extends Component
     public $moneda_select,$producto, $lotes, $generar_serial, $pivot, $precio_compra, $proveedores, $cantidad, $sucursal_nombre, $sucursal_id = "", $lote_id = "",$sucursales, $proveedor_id = "";
     public $limitacion_sucursal = true, $cajas = [], $caja_id="";
     public $fecha_vencimiento,$vencimiento,$observaciones,$precio_combo,$utilidad_combo,$margen_combo;
-    public $tipo_pago = 0, $utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $precio_entrada, $precio_letal, $precio_mayor,$act_utilidades="1", $act_old_rol=0;
+    public $tipo_pago = 0, $moneda_lote, $utilidad_letal, $utilidad_mayor, $margen_letal, $margen_mayor, $precio_entrada, $precio_letal, $precio_mayor,$act_utilidades="1", $act_old_rol=0;
 
     protected $listeners = ['render' => 'render'];
       
@@ -177,7 +177,9 @@ class ProductosAdd extends Component
                 $this->margen_combo = $producto_lote_select->margen_combo;
                 $this->utilidad_mayor = $producto_lote_select->utilidad_mayor;
                 $this->utilidad_combo = $producto_lote_select->utilidad_combo;
-
+                $this->moneda_id = $producto_lote_select->moneda_id;
+                $this->moneda_select = $producto_lote_select->moneda->simbolo;
+                $this->moneda_lote = $producto_lote_select->moneda->simbolo; 
                 if($this->vencimiento == 'Si') $this->fecha_vencimiento = date("d-m-Y",strtotime($producto_lote_select->fecha_vencimiento));
             
             }
@@ -189,10 +191,10 @@ class ProductosAdd extends Component
 
        // if($this->lote_id != 'nuevo_lote') $this->moneda_lote = 'Bs'; 
 
-       if($this->lote_id != 'nuevo_lote'){
-            $this->moneda_lote = 'Bs'; 
-            $this->moneda_id = 1;    
-       } 
+       /*if($this->lote_id != 'nuevo_lote'){
+            $this->moneda_lote = $producto_lote_select->moneda->simbolo; 
+           // $this->moneda_id = 1;    
+       } */
 
         return view('livewire.productos.productos-add');
     }
@@ -238,7 +240,7 @@ class ProductosAdd extends Component
             $this->fecha_actual = date('Y-m-d');
             $usuario_auth = Auth::id();
 
-            $total_compra = (($this->precio_entrada*$tasa_dia) * $this->cantidad);
+            $total_compra = (($this->precio_entrada) * $this->cantidad);
             $stock_nuevo = $producto_select->cantidad + $this->cantidad;
             
             //Guardando movimiento de producto para kardex
@@ -273,7 +275,8 @@ class ProductosAdd extends Component
                 $nuevo_lote_producto->proveedor_id = $this->proveedor_id;
                 $nuevo_lote_producto->producto_id = $producto_select->id;
                 $nuevo_lote_producto->fecha_vencimiento = Carbon::parse($this->fecha_vencimiento); 
-                $nuevo_lote_producto->precio_entrada = $this->precio_entrada*$tasa_dia;
+                $nuevo_lote_producto->precio_entrada = $this->precio_entrada;
+                $nuevo_lote_producto->moneda_id = $this->moneda_id;
                 $nuevo_lote_producto->precio_letal = $this->precio_letal*$tasa_dia;
                 $nuevo_lote_producto->precio_mayor = $this->precio_mayor*$tasa_dia;
                 $nuevo_lote_producto->utilidad_letal = $this->utilidad_letal*$tasa_dia;
@@ -306,13 +309,14 @@ class ProductosAdd extends Component
             $compra->fecha = $this->fecha_actual;
             $compra->total = $total_compra;
             $compra->cantidad = $this->cantidad;
-            $compra->precio_compra = $this->precio_entrada*$tasa_dia;
+            $compra->precio_compra = $this->precio_entrada;
             $compra->proveedor_id = $this->proveedor_id;
             $compra->user_id = $usuario_auth;
             $compra->sucursal_id = $this->sucursal_id;
             $compra->producto_id = $producto_select->id;
             $compra->metodo_pago_id = $this->metodo_id;
             $compra->lote=$new_lote;
+            $compra->moneda_id = $this->moneda_id;
             if($this->tipo_pago == '1'){
                 $compra->deuda_a_proveedor = $total_compra - $this->pago;
                 $compra->caja_id = $this->caja_id;
@@ -358,7 +362,7 @@ class ProductosAdd extends Component
 
              //registrar movimiento de egreso en tabla de movimiento_caja
 
-             if($this->tipo_pago != '2'){
+             if($this->tipo_pago != '2'){ 
                 $movimiento_caja = new MovimientoCaja();
                 $movimiento_caja->fecha = $this->fecha_actual;
                 $movimiento_caja->tipo_movimiento = 2;

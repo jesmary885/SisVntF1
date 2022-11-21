@@ -162,7 +162,9 @@ class ProductosCreate extends Component
         else{
 
             if($this->moneda_id == '1') $tasa_dia = 1;
-            else $tasa_dia = tasa_dia::where('moneda_id',$this->moneda_id)->first()->tasa;            
+            else $tasa_dia = tasa_dia::where('moneda_id',$this->moneda_id)->first()->tasa; 
+            
+            
 
             //agregando producto en tabla productos
             $producto = new Producto();
@@ -194,7 +196,7 @@ class ProductosCreate extends Component
                     ]);
                 }
             
-            $total_compra = (round(($this->precio_entrada*$tasa_dia),2)) * $this->cantidad;
+            $total_compra = ($this->precio_entrada) * $this->cantidad;
 
             if($this->tipo_pago == 1)$deuda_proveedor = $total_compra - $this->pago;
             elseif($this->tipo_pago == 2) $deuda_proveedor = $total_compra;
@@ -205,7 +207,7 @@ class ProductosCreate extends Component
             $compra->fecha = $this->fecha_actual;
             $compra->total = $total_compra;
             $compra->cantidad = $this->cantidad;
-            if($this->precio_entrada) $compra->precio_compra = $this->precio_entrada*$tasa_dia; else $compra->precio_compra = 0;
+            if($this->precio_entrada) $compra->precio_compra = $this->precio_entrada; else $compra->precio_compra = 0;
             $compra->proveedor_id = $this->proveedor_id;
             $compra->user_id = $usuario_auth;
             $compra->sucursal_id = $this->sucursal_id;
@@ -214,6 +216,7 @@ class ProductosCreate extends Component
             if($this->tipo_pago == '1' || $this->tipo_pago == '3'){
                 $compra->caja_id = $this->caja_id;
             }
+            $compra->moneda_id = $this->moneda_id;
             $compra->lote = '1';
             $compra->save();
 
@@ -223,7 +226,7 @@ class ProductosCreate extends Component
             $lote->proveedor_id = $this->proveedor_id;
             $lote->producto_id = $producto->id;
             $lote->fecha_vencimiento = Carbon::parse($this->fecha_vencimiento);
-            if($this->precio_entrada) $lote->precio_entrada = $this->precio_entrada*$tasa_dia; else $lote->precio_entrada = 0;
+            if($this->precio_entrada) $lote->precio_entrada = $this->precio_entrada; else $lote->precio_entrada = 0;
             if($this->precio_letal) $lote->precio_letal = $this->precio_letal*$tasa_dia; else $lote->precio_letal = 0;
             if($this->precio_mayor) $lote->precio_mayor = $this->precio_mayor*$tasa_dia; else $lote->precio_mayor = 0;
             if($this->utilidad_letal) $lote->utilidad_letal = $this->utilidad_letal*$tasa_dia; else $lote->utilidad_letal = 0;
@@ -233,6 +236,8 @@ class ProductosCreate extends Component
             if($this->margen_combo) $lote->margen_combo = $this->margen_combo*$tasa_dia; else $lote->margen_combo = 0;
             if($this->margen_letal) $lote->margen_letal = $this->margen_letal*$tasa_dia; else $lote->margen_letal = 0;
             if($this->margen_mayor) $lote->margen_mayor = $this->margen_mayor*$tasa_dia; else $lote->margen_mayor = 0;
+            $lote->moneda_id =$this->moneda_id;
+            
             $lote->status = 'activo';
             $lote->observaciones = $this->observaciones;
             $lote->stock= $this->cantidad;
