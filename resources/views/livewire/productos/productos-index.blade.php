@@ -48,11 +48,7 @@
                         </thead>
                         <tbody>
                             @foreach ($productos as $producto)
-                              <?php
-                                        if($producto->cantidad <= $producto->stock_minimo) $estado_bg = 'bg-red-600';
-                                        elseif($producto->cantidad > $producto->stock_minimo  && $producto->cantidad <= ($producto->stock_minimo + 30)) $estado_bg = 'bg-yellow-500';
-                                        elseif($producto->cantidad >= ($producto->stock_minimo + 31)) $estado_bg = 'bg-green-600';
-                                    ?>  
+                           
                                 <tr >
                                     <td align="center">
                                         @if ($producto->imagen)
@@ -64,7 +60,7 @@
                                     <td class="text-center">{{$producto->cod_barra}}</td>
                                     <td class="text-justify">{{$producto->nombre}}</td>
                                     <td class="text-justify">{{$producto->marca->nombre}}/{{$producto->modelo->nombre}}</td> 
-                                    <td class="text-center {{$estado_bg}}">@livewire('productos.productos-stock-sucursal', ['producto' => $producto],key(0.,'$producto->id')) </td>
+                                    <td class="text-center ">@livewire('productos.productos-stock-sucursal', ['producto' => $producto],key(0.,'$producto->id')) </td>
                                     <td width="10px">
                                         @livewire('productos.productos-add', ['producto' => $producto],key(02.,'$producto->id'))
                                     </td>

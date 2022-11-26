@@ -29,12 +29,12 @@ class ReportesSeniatController extends Controller
         group by mp.nombre order by sum(pv.monto) desc',array('fecha_actual' => $fecha_actual));
 
         $empresa_datos = [
-            'empresa_nombre' => $this->empresa->nombre,
+            'empresa_nombre' => quitar_acentos($this->empresa->nombre),
             'empresa_tipo_documento' => $this->empresa->tipo_documento,
-            'empresa_documento' => $this->empresa->nro_documento,
-            'empresa_direccion' => $this->empresa->direccion,
-            'empresa_telefono' => $this->empresa->telefono,
-            'empresa_email' => $this->empresa->email,
+            'empresa_documento' => quitar_acentos($this->empresa->nro_documento),
+            'empresa_direccion' => quitar_acentos($this->empresa->direccion),
+            'empresa_telefono' => quitar_acentos($this->empresa->telefono),
+            'empresa_email' => quitar_acentos($this->empresa->email),
         ];
 
         $json = json_encode($total_ventas);

@@ -22,6 +22,10 @@ class VentasSeleccionCantidades extends Component
         'modelo' => null,
     ];
 
+    protected $rule_precio_manual = [
+        'precio_manual' => 'required',
+    ];
+
     public function decrement(){
         $this->qty = $this->qty - 1;
     }
@@ -42,6 +46,11 @@ class VentasSeleccionCantidades extends Component
 
     public function addItem(){
 
+        if($this->precios == '3'){
+            $rule_precio_manual = $this->rule_precio_manual;
+            $this->validate($rule_precio_manual);
+        }
+
         $producto_lote = Producto_lote::where('id',$this->producto->id)
             ->first();
 
@@ -52,12 +61,12 @@ class VentasSeleccionCantidades extends Component
             
         $this->options['exento'] = $this->producto->producto->exento;
         $this->options['descuento'] = $this->producto->producto->descuento;
-        $this->options['modelo'] = $this->producto->producto->modelo->nombre;
+        $this->options['modelo'] = quitar_acentos($this->producto->producto->modelo->nombre);
         $this->options['lote'] = $producto_lote->id;
 
 
         Cart::add([ 'id' => $this->producto->producto_id, 
-            'name' => $this->producto->producto->nombre, 
+            'name' => quitar_acentos($this->producto->producto->nombre), 
             'qty' => $this->qty, 
             'price' => $precio_venta, 
             'weight' => 0,

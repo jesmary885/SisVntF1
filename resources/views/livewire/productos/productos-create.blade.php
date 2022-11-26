@@ -122,7 +122,7 @@
             <hr class="mb-2">
 
             <div class="flex">
-                <i class="fas fa-calculator mt-1 mr-2"></i>
+                <i class="fas fa-calculator mt-1 mr-2 ml-  "></i>
                 <h2 class="text-lg">Calculo de Precio, margen y utilidad</h2>
             </div>
 

@@ -56,12 +56,15 @@
                                     </button> 
                                 </div>
 
-                                <div class="w-full mt-2" :class="{'hidden': precios != '3'}">
-                                    <div class="text-right">
-                                    <input wire:model="precio_manual" type="number" min="0" class=" ml-52 w-1/3 px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Precio manual">
-                                        <x-input-error for="precio_manual" />
+                                <div class=" mt-2" :class="{'hidden': precios != '3'}">
+                                    <div>
+                                        <div>
+                                            <input wire:model="precio_manual" type="number" min="0" class=" ml-48 w-1/3 w-full px-2 appearance-none block bg-gray-100 text-gray-700 border border-gray-200 rounded py-2 leading-tight focus:outline-none focus:bg-white focus:border-gray-500" placeholder="Precio manual">
+                                        </div>
+                                        <div>
+                                            <x-input-error class=" ml-48 w-1/3" for="precio_manual" />
+                                        </div>
                                     </div>
-                                        
                                 </div>
                                 
     <!-- <script>

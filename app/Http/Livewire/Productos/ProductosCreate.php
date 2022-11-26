@@ -237,7 +237,7 @@ class ProductosCreate extends Component
             if($this->margen_letal) $lote->margen_letal = $this->margen_letal*$tasa_dia; else $lote->margen_letal = 0;
             if($this->margen_mayor) $lote->margen_mayor = $this->margen_mayor*$tasa_dia; else $lote->margen_mayor = 0;
             $lote->moneda_id =$this->moneda_id;
-            
+            $lote->tasa_venta = $tasa_dia;
             $lote->status = 'activo';
             $lote->observaciones = $this->observaciones;
             $lote->stock= $this->cantidad;

@@ -50,7 +50,7 @@ class ProductosIndex extends Component
                 ->latest('id')
                 ->paginate(20);
 
-                $this->item_buscar = "la categoria del producto a buscar";
+   
             }
             elseif($this->buscador == 2){
 
@@ -61,9 +61,8 @@ class ProductosIndex extends Component
                 ->latest('id')
                 ->paginate(20);
 
-                $this->item_buscar = "la marca del producto a buscar";
+               
             }
-
 
             elseif($this->buscador == 3){
                 $productos = Producto::whereHas('modelo',function(Builder $query){
@@ -74,7 +73,7 @@ class ProductosIndex extends Component
                 ->paginate(20);
             }
 
-            elseif($this->buscador == 4){
+            else{
                 $productos = Producto::where('nombre', 'LIKE', '%' . $this->search . '%')
                 ->where('estado','Habilitado')
                 ->latest('id')

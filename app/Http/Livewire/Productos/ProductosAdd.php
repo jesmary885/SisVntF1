@@ -287,6 +287,7 @@ class ProductosAdd extends Component
                 if($this->precio_combo) $this->precio_combo*$tasa_dia;
                 if($this->margen_combo) $this->margen_combo*$tasa_dia;
                 $nuevo_lote_producto->stock = $this->cantidad;
+                $nuevo_lote_producto->tasa_venta = $tasa_dia;
                 $nuevo_lote_producto->status = 'activo';
                 $nuevo_lote_producto->observaciones = $this->observaciones;
                 $nuevo_lote_producto->save();

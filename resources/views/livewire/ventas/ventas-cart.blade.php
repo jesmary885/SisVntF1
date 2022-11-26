@@ -474,12 +474,19 @@
 
                                     <hr class="mt-4 mb-3">
                                     <div>
-                                    <p class="flex justify-between items-center text-4xl font-bold">
-                                            <span>Total a pagar</span>
+                                    <div class="flex justify-between items-center ">
+                                        <p class="text-3xl font-bold">Total a pagar</p>
 
-                                            {{ $moneda_simbolo }} {{round(($total_venta / $tasa_dia),2)}}
+                                        <p class="text-3xl font-bold">{{ $moneda_simbolo }} {{round(($total_venta / $tasa_dia),2)}}</p> 
                 
+                                    </div>
+                                    <div class="flex justify-end">
+                                        <p class="text-2xl font-semibold">
+                                           $ {{round(($total_venta / $tasa_dolar),2)}}
                                         </p>
+
+                                    </div>
+                                        
                                         
                                     </div>
                                         

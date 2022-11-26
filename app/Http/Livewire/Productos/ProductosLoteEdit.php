@@ -45,9 +45,10 @@ class ProductosLoteEdit extends Component
             ->where('lote',$this->lote->lote)
             ->get();
 
-        $this->precio_letal = $this->lote->precio_letal;
+
+       $this->precio_letal = $this->lote->precio_letal;
         $this->utilidad_letal = $this->lote->utilidad_letal;
-        $this->precio_entrada = $this->lote->precio_entrada;
+       $this->precio_entrada = round($this->lote->precio_entrada,2);
         $this->precio_mayor = $this->lote->precio_mayor;
         $this->margen_mayor = $this->lote->margen_mayor;
         $this->margen_letal = $this->lote->margen_letal;
@@ -82,17 +83,17 @@ class ProductosLoteEdit extends Component
     {
         if($this->precio_entrada != ''){
             if($this->act_utilidades == 1){
-                if($this->margen_letal != ''){
+                if($this->margen_letal != '' && $this->margen_letal != 0 ){
                     $this->reset(['precio_letal','utilidad_letal']);
                     $this->precio_letal = round(($this->precio_entrada / (1 - ($this->margen_letal / 100))),2);
                     $this->utilidad_letal = round(($this->precio_letal - $this->precio_entrada),2);
                 }
-                if($this->margen_mayor != ''){
+                if($this->margen_mayor != '' && $this->margen_mayor != 0){
                     $this->reset(['precio_mayor','utilidad_mayor']);
                     $this->precio_mayor = round(($this->precio_entrada / (1- ($this->margen_mayor / 100))),2);
                     $this->utilidad_mayor = round(($this->precio_mayor - $this->precio_entrada),2);
                 }
-                if($this->margen_combo != ''){
+                if($this->margen_combo != '' && $this->margen_mayor != 0){
                     $this->reset(['precio_combo','utilidad_combo']);
                     $this->precio_combo = round(($this->precio_entrada / (1- ($this->margen_combo / 100))),2);
                     $this->utilidad_combo = round(($this->precio_combo - $this->precio_entrada),2);
@@ -100,17 +101,17 @@ class ProductosLoteEdit extends Component
             }
         
             elseif($this->act_utilidades == 2){
-                if($this->utilidad_letal != ''){
+                if($this->utilidad_letal != '' && $this->utilidad_letal != 0){
                     $this->reset(['precio_letal','margen_letal']);
                     $this->precio_letal = round(($this->precio_entrada + $this->utilidad_letal),2);
                     $this->margen_letal = round((($this->utilidad_letal / $this->precio_letal) * 100),2);
                 }
-                if($this->utilidad_mayor != ''){
+                if($this->utilidad_mayor != '' && $this->utilidad_mayor != 0){
                     $this->reset(['precio_mayor','margen_mayor']);
                     $this->precio_mayor = round(($this->precio_entrada + $this->utilidad_mayor),2);
                     $this->margen_mayor = round((($this->utilidad_mayor / $this->precio_mayor) * 100),2);
                 }
-                if($this->utilidad_combo != ''){
+                if($this->utilidad_combo != '' && $this->utilidad_combo != 0){
                     $this->reset(['precio_combo','margen_combo']);
                     $this->precio_combo = round(($this->precio_entrada + $this->utilidad_combo),2);
                     $this->margen_combo = round((($this->utilidad_combo / $this->precio_combo) * 100),2);
@@ -177,6 +178,7 @@ class ProductosLoteEdit extends Component
                 "utilidad_combo"    => $this->utilidad_combo*$tasa_dia,
                 "margen_combo"      => $this->margen_combo,
                 "moneda_id"         => $this->moneda_id,
+                "tasa_venta"        => $tasa_dia,
             ]);
             
 

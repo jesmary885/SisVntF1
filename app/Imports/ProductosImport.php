@@ -18,6 +18,7 @@ use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithBatchInserts;
 use Maatwebsite\Excel\Concerns\WithChunkReading;
 use Maatwebsite\Excel\Concerns\WithHeadingRow;
+use Illuminate\Support\Str;
 
 class ProductosImport implements ToModel, WithHeadingRow, WithBatchInserts, WithChunkReading
 {
@@ -40,10 +41,13 @@ class ProductosImport implements ToModel, WithHeadingRow, WithBatchInserts, With
     */
     public function model(array $row)
     {
+        if($row['codigo_de_barras'])$cod_barra = $row['codigo_de_barras'];
+        else $cod_barra= Str::random(8);
+        
   
         $producto = Producto::create([
             'nombre'  => $row['nombre'],
-            'cod_barra'    => $row['codigo_de_barras'],
+            'cod_barra'    => $cod_barra ,
             'cantidad'    => $row['cantidad'],
             'estado'    => 'Habilitado',
             'categoria_id' => $this->categories[$row['categoria']],
@@ -74,7 +78,8 @@ class ProductosImport implements ToModel, WithHeadingRow, WithBatchInserts, With
             'moneda_id' => $this->monedas[$row['moneda']],
             'proveedor_id' => $this->proveedores[$row['proveedor']],
             'stock'    => $row['cantidad'],
-            'fecha_vencimiento'    => $row['fecha_de_vencimiento'],
+            'fecha_vencimiento'    => date("Y-m-d ", strtotime($row['fecha_de_vencimiento'])),
+          //  'fecha_vencimiento'    => $row['fecha_de_vencimiento'],
             'status'    => 'activo',
             'observaciones'    => 'Sin observaciones',
         ]);
